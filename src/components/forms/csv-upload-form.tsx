@@ -71,7 +71,6 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                         if (sourceError) throw sourceError
 
                         let importedCount = 0
-                        let updatedCount = 0
 
                         for (const row of validRows as any[]) {
                             const unitCode = row['Sigla']?.trim() || ''

@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { CsvUploadForm } from '@/components/forms/csv-upload-form'
+import { PdfUploadForm } from '@/components/forms/pdf-upload-form'
 
 interface DataSource {
     id: string
@@ -171,15 +172,72 @@ export default function DataCenter() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="pdf" className="space-y-8 outline-none">
-                        <div className="p-12 rounded-[3rem] border-2 border-dashed border-slate-800 bg-slate-900/40 flex flex-col items-center justify-center text-center">
-                            <div className="p-8 rounded-[2rem] bg-slate-950 mb-6 shadow-2xl">
-                                <FileText className="h-10 w-10 text-emerald-500" />
+                    <TabsContent value="pdf" className="grid gap-8 lg:grid-cols-12 outline-none">
+                        <div className="lg:col-span-12">
+                            <PdfUploadForm onImportComplete={fetchSources} />
+                        </div>
+
+                        <div className="lg:col-span-12 space-y-4">
+                            <div className="flex flex-col">
+                                <h2 className="text-xl font-black tracking-tighter text-white uppercase italic">Histórico de Conhecimento</h2>
+                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">Gerencie os arquivos PDF processados pela IA</p>
                             </div>
-                            <h2 className="text-2xl font-black text-white tracking-tighter uppercase italic mb-2">Editor de Conhecimento IA</h2>
-                            <p className="max-w-md text-slate-500 text-xs font-bold uppercase tracking-widest leading-relaxed">
-                                Em breve: Editar diretamente a base de conhecimento e feedbacks qualitativos processados pela inteligência artificial.
-                            </p>
+
+                            <Card className="bg-slate-900 border-none ring-1 ring-slate-800 rounded-[2.5rem] overflow-hidden">
+                                <CardContent className="p-0">
+                                    <ScrollArea className="h-[400px]">
+                                        {sources.filter(s => s.file_type === 'pdf').length === 0 ? (
+                                            <div className="flex flex-col items-center justify-center h-full py-20 opacity-20 italic">
+                                                <FileText className="h-12 w-12 mb-4" />
+                                                <p className="text-xs uppercase font-black tracking-widest">Nenhum arquivo PDF cadastrado</p>
+                                            </div>
+                                        ) : (
+                                            <div className="divide-y divide-slate-800">
+                                                <AnimatePresence>
+                                                    {sources.filter(s => s.file_type === 'pdf').map((source) => (
+                                                        <motion.div
+                                                            key={source.id}
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: 20 }}
+                                                            className="flex items-center justify-between p-6 hover:bg-slate-800/30 transition-all group"
+                                                        >
+                                                            <div className="flex items-center gap-6">
+                                                                <div className="p-4 rounded-2xl bg-slate-950 text-indigo-500 shadow-inner group-hover:text-indigo-400 transition-colors">
+                                                                    <FileText className="h-6 w-6" />
+                                                                </div>
+                                                                <div className="flex flex-col gap-1">
+                                                                    <p className="text-sm font-black text-white uppercase tracking-tight">{source.filename}</p>
+                                                                    <div className="flex items-center gap-4">
+                                                                        <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                                                            <Calendar className="h-3 w-3" />
+                                                                            Processado em: {formatDate(source.extraction_date)}
+                                                                        </span>
+                                                                        <span className="text-[10px] text-slate-700">•</span>
+                                                                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                                                                            Upload: {formatDate(source.created_at)}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="ghost"
+                                                                    onClick={() => deleteSource(source.id, source.filename)}
+                                                                    className="h-12 w-12 text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-2xl"
+                                                                >
+                                                                    <Trash2 className="h-5 w-5" />
+                                                                </Button>
+                                                            </div>
+                                                        </motion.div>
+                                                    ))}
+                                                </AnimatePresence>
+                                            </div>
+                                        )}
+                                    </ScrollArea>
+                                </CardContent>
+                            </Card>
                         </div>
                     </TabsContent>
                 </Tabs>

@@ -4,7 +4,6 @@ import { supabase } from '@/lib/supabase'
 import { WeeklyComparisonTable } from '@/components/charts/weekly-comparison-table'
 import { NpsEvolutionChart } from '@/components/charts/nps-evolution-chart'
 import { CsvUploadForm } from '@/components/forms/csv-upload-form'
-import { PdfUploadForm } from '@/components/forms/pdf-upload-form'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -300,9 +299,6 @@ export default function DashboardPage() {
                                     className="space-y-6"
                                 >
                                     <CsvUploadForm onImportComplete={fetchAllMetrics} />
-                                    <div className="p-[1px] rounded-[2rem] bg-gradient-to-br from-indigo-500 to-emerald-500 shadow-xl overflow-hidden">
-                                        <PdfUploadForm />
-                                    </div>
                                 </motion.div>
                             ) : (
                                 <motion.div

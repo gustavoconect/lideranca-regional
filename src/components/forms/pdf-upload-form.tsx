@@ -6,11 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { Loader2, FileText, AlertCircle, CheckCircle, Info, Sparkles, TrendingDown, TrendingUp, Minus } from 'lucide-react'
+import { Loader2, CheckCircle, Sparkles } from 'lucide-react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { supabase } from '@/lib/supabase'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import * as pdfjsLib from 'pdfjs-dist'
 
@@ -41,6 +39,10 @@ interface AnalysisProgress {
     current: number
     total: number
     currentUnit: string
+}
+
+interface PdfUploadFormProps {
+    onImportComplete?: () => void
 }
 
 /**
@@ -315,11 +317,10 @@ REGRAS:
     }
 }
 
-export function PdfUploadForm() {
+export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
     const [loading, setLoading] = useState(false)
     const [step, setStep] = useState<'idle' | 'extracting' | 'processing' | 'analyzing' | 'macro'>('idle')
     const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0])
-    const [unitsFound, setUnitsFound] = useState<UnitData[] | null>(null)
     const [progress, setProgress] = useState<AnalysisProgress | null>(null)
     const [results, setResults] = useState<{ saved: number; skipped: string[] } | null>(null)
 
@@ -332,40 +333,44 @@ export function PdfUploadForm() {
 
         setLoading(true)
         setStep('extracting')
-        setUnitsFound(null)
         setProgress(null)
         setResults(null)
 
         try {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) throw new Error('Usuário não autenticado')
+
             // ETAPA 1: Extrair texto bruto do PDF
             console.log('📄 Extraindo texto do PDF...')
             const rawText = await extractTextFromPdf(file)
-            console.log('📄 Texto extraído:', rawText.substring(0, 500) + '...')
+
+            // Registrar fonte de dados no início
+            const { data: dataSource, error: sourceError } = await supabase
+                .from('data_sources')
+                .insert({
+                    filename: file.name,
+                    file_type: 'pdf',
+                    extraction_date: reportDate,
+                    created_by: user.id
+                })
+                .select()
+                .single()
+
+            if (sourceError) throw sourceError
 
             // ETAPA 2: Cortar por unidade usando Regex
             setStep('processing')
-            console.log('✂️ Separando por unidade...')
             const unitTexts = splitTextByUnit(rawText)
-            console.log(`✂️ Encontrados ${unitTexts.size} códigos de unidade`)
 
             if (unitTexts.size === 0) {
-                toast.error('Nenhuma unidade encontrada no PDF. Verifique se o formato está correto.')
+                toast.error('Nenhuma unidade encontrada no PDF.')
                 setLoading(false)
                 setStep('idle')
                 return
             }
 
             // ETAPA 3 & 4: Sanitizar e cruzar com dados do CSV
-            console.log('🔄 Cruzando com dados do banco...')
             const enrichedUnits = await enrichWithCsvData(unitTexts)
-            setUnitsFound(enrichedUnits)
-
-            if (enrichedUnits.length === 0) {
-                toast.error('Nenhuma unidade do PDF foi encontrada no banco. Verifique os códigos.')
-                setLoading(false)
-                setStep('idle')
-                return
-            }
 
             // ETAPA 5: Analisar com IA
             setStep('analyzing')
@@ -376,21 +381,10 @@ export function PdfUploadForm() {
 
             for (let i = 0; i < unitsToAnalyze.length; i++) {
                 const unit = unitsToAnalyze[i]
-
-                setProgress({
-                    current: i + 1,
-                    total: unitsToAnalyze.length,
-                    currentUnit: unit.name
-                })
+                setProgress({ current: i + 1, total: unitsToAnalyze.length, currentUnit: unit.name })
 
                 try {
-                    console.log(`🧠 Analisando ${unit.name}...`)
-                    console.log(`   📊 NPS: ${unit.currentNps}, Variação: ${unit.npsVariation}, Comentários: ${unit.comments.length}`)
-
                     const analysis = await analyzeWithGemini(unit)
-                    console.log(`   ✅ Análise gerada (${analysis.length} chars)`)
-
-                    // Buscar unit_id
                     const { data: unitRecord } = await supabase
                         .from('units')
                         .select('id')
@@ -398,8 +392,9 @@ export function PdfUploadForm() {
                         .single()
 
                     if (unitRecord) {
-                        const { error } = await supabase.from('qualitative_reports').insert({
+                        await supabase.from('qualitative_reports').insert({
                             unit_id: unitRecord.id,
+                            source_id: dataSource.id, // VÍNCULO COM A FONTE
                             report_date: reportDate,
                             ai_summary: {
                                 type: 'unit',
@@ -409,202 +404,130 @@ export function PdfUploadForm() {
                                 nps_score: unit.currentNps,
                                 nps_variation: unit.npsVariation,
                                 markdown_report: analysis,
-                                priority_level: unit.currentNps === null ? 'media' :
-                                    unit.currentNps < 50 ? 'critica' :
-                                        unit.currentNps < 70 ? 'alta' : 'media'
+                                priority_level: unit.currentNps === null ? 'média' :
+                                    unit.currentNps < 50 ? 'alta' :
+                                        unit.currentNps < 70 ? 'média' : 'baixa'
                             }
                         })
-
-                        if (!error) {
-                            savedCount++
-                            console.log(`✅ Relatório salvo: ${unit.name}`)
-                        } else {
-                            console.error(`❌ Erro ao salvar ${unit.name}:`, error)
-                            skippedUnits.push(unit.name + ' (erro banco)')
-                        }
+                        savedCount++
                     }
-
-                    // Delay de 1 segundo entre chamadas para evitar rate limit
-                    if (i < unitsToAnalyze.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 1000))
-                    }
-                } catch (err: any) {
-                    console.error(`❌ Erro ao analisar ${unit.name}:`, err)
-                    console.error(`   Mensagem: ${err?.message || 'Desconhecido'}`)
-                    console.error(`   Stack: ${err?.stack || 'N/A'}`)
-                    skippedUnits.push(unit.name + ' (erro IA)')
+                    if (i < unitsToAnalyze.length - 1) await new Promise(r => setTimeout(r, 1000))
+                } catch (err) {
+                    skippedUnits.push(unit.name)
                 }
             }
 
-            // Unidades sem comentários suficientes
-            enrichedUnits
-                .filter(u => u.comments.length < MIN_COMMENTS_FOR_ANALYSIS)
-                .forEach(u => skippedUnits.push(`${u.name} (${u.comments.length} comentários)`))
+            // ETAPA FINAL: Regional Macro
+            setStep('macro')
+            const regionalAnalysis = await analyzeRegionalMacro(enrichedUnits)
+            const totalFeedbacks = enrichedUnits.reduce((acc, u) => acc + u.feedbackCount, 0)
+            const avgNps = enrichedUnits.reduce((acc, u) => acc + (u.currentNps || 0), 0) / (enrichedUnits.filter(u => u.currentNps !== null).length || 1)
+
+            await supabase.from('qualitative_reports').insert({
+                unit_id: null,
+                source_id: dataSource.id, // VÍNCULO COM A FONTE
+                report_date: reportDate,
+                ai_summary: {
+                    type: 'regional',
+                    total_feedbacks: totalFeedbacks,
+                    overall_sentiment: avgNps >= 70 ? 'positivo' : avgNps >= 50 ? 'neutro' : 'negativo',
+                    avg_nps: avgNps,
+                    markdown_report: regionalAnalysis,
+                    key_insight: 'Relatório Macro Regional Gerado'
+                }
+            })
 
             setResults({ saved: savedCount, skipped: skippedUnits })
-
-            if (savedCount > 0) {
-                // ETAPA FINAL: Gerar Relatório Macro Regional
-                setStep('macro')
-                console.log('🌎 Gerando análise macro regional...')
-                try {
-                    const regionalAnalysis = await analyzeRegionalMacro(enrichedUnits)
-                    const totalFeedbacks = enrichedUnits.reduce((acc, u) => acc + u.feedbackCount, 0)
-                    const avgNps = enrichedUnits.reduce((acc, u) => acc + (u.currentNps || 0), 0) / (enrichedUnits.filter(u => u.currentNps !== null).length || 1)
-
-                    await supabase.from('qualitative_reports').insert({
-                        unit_id: null, // Relatório Regional não tem unidade específica (Schema alterado para nullable)
-                        report_date: reportDate,
-                        ai_summary: {
-                            type: 'regional',
-                            total_feedbacks: totalFeedbacks,
-                            overall_sentiment: avgNps >= 70 ? 'positivo' : avgNps >= 50 ? 'neutro' : 'negativo',
-                            avg_nps: avgNps,
-                            markdown_report: regionalAnalysis,
-                            key_insight: 'Relatório Macro Regional Gerado com Sucesso'
-                        }
-                    })
-                    console.log('✅ Relatório Regional salvo!')
-                } catch (macroErr) {
-                    console.error('Erro na análise macro:', macroErr)
-                }
-
-                toast.success(`Análise concluída! ${savedCount} relatórios salvos e visão macro gerada.`)
-            } else {
-                toast.warning('Nenhum relatório foi gerado. Verifique os logs.')
-            }
+            toast.success('Processamento de PDF concluído!')
+            onImportComplete?.()
 
         } catch (e: any) {
-            console.error('Erro no pipeline:', e)
             toast.error('Erro: ' + e.message)
         } finally {
             setLoading(false)
             setStep('idle')
-            setProgress(null)
         }
     }
 
-    const getTrendIcon = (variation: number | null) => {
-        if (variation === null) return <Minus className="h-4 w-4 text-gray-400" />
-        if (variation > 0) return <TrendingUp className="h-4 w-4 text-green-600" />
-        if (variation < 0) return <TrendingDown className="h-4 w-4 text-red-600" />
-        return <Minus className="h-4 w-4 text-gray-400" />
-    }
-
     return (
-        <Card className="border-indigo-100 bg-indigo-50/20">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-indigo-600" />
-                    Análise Qualitativa (IA)
-                </CardTitle>
-                <CardDescription>
-                    Upload PDF → Extrai comentários → Cruza com NPS → Analisa com IA
-                </CardDescription>
+        <Card className="bg-slate-900 border-slate-800 rounded-[2rem] overflow-hidden">
+            <CardHeader className="p-8 pb-4">
+                <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-400">
+                        <Sparkles className="h-6 w-6" />
+                    </div>
+                    <div className="flex flex-col">
+                        <CardTitle className="text-2xl font-black tracking-tighter text-white uppercase italic">Análise de Feedback PDF</CardTitle>
+                        <CardDescription className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Processar comentários qualitativos com Gemini 3 Flash</CardDescription>
+                    </div>
+                </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="reportDate">Data de Referência</Label>
+            <CardContent className="p-8 pt-4 space-y-6">
+                <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <Label htmlFor="reportDate" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Data de Referência</Label>
                         <Input
                             id="reportDate"
                             type="date"
                             value={reportDate}
                             onChange={(e) => setReportDate(e.target.value)}
+                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20 invert"
                             disabled={loading}
                         />
                     </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="pdf">Arquivo PDF</Label>
-                        <Input id="pdf" name="pdf" type="file" accept=".pdf" disabled={loading} required />
+                    <div className="space-y-3">
+                        <Label htmlFor="pdf" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Arquivo PDF de Feedbacks</Label>
+                        <Input
+                            id="pdf"
+                            name="pdf"
+                            type="file"
+                            accept=".pdf"
+                            disabled={loading}
+                            required
+                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20 file:bg-indigo-500 file:text-slate-950 file:font-black file:uppercase file:text-[10px] file:px-4 file:h-14 file:border-none file:mr-4 hover:file:bg-indigo-400 transition-all"
+                        />
                     </div>
-                    <Button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700">
+                    <Button type="submit" disabled={loading} className="h-14 md:col-span-2 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-black uppercase tracking-widest rounded-2xl border-none shadow-2xl shadow-indigo-500/10 transition-all">
                         {loading ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                {step === 'extracting' ? 'Extraindo PDF...' :
-                                    step === 'processing' ? 'Processando...' :
-                                        'Analisando com IA...'}
+                                <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                                {step === 'extracting' ? 'Extraindo Dados...' :
+                                    step === 'processing' ? 'Cruzando com CSV...' :
+                                        step === 'analyzing' ? 'IA: Analisando Unidades...' :
+                                            'IA: Gerando Visão Regional...'}
                             </>
                         ) : (
                             <>
-                                <Sparkles className="mr-2 h-4 w-4" />
-                                Iniciar Análise
+                                <Sparkles className="mr-3 h-5 w-5" />
+                                Iniciar Processamento Inteligente
                             </>
                         )}
                     </Button>
                 </form>
 
-                {/* Progress Bar */}
                 {progress && (
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                            <span className="flex items-center gap-2">
-                                <Sparkles className="h-4 w-4 text-indigo-600 animate-pulse" />
-                                Analisando: {progress.currentUnit}
+                    <div className="space-y-3 bg-slate-950/30 p-6 rounded-2xl border border-slate-800/50">
+                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                            <span className="text-indigo-400 flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+                                Processando: {progress.currentUnit}
                             </span>
-                            <span>{progress.current}/{progress.total}</span>
+                            <span className="text-slate-500">{progress.current} / {progress.total}</span>
                         </div>
-                        <Progress value={(progress.current / progress.total) * 100} />
+                        <Progress value={(progress.current / progress.total) * 100} className="h-2 bg-slate-800" />
                     </div>
                 )}
 
-                {/* Units Found Preview */}
-                {unitsFound && !progress && (
-                    <div className="space-y-2">
-                        <p className="text-sm font-medium flex items-center gap-2">
-                            <Info className="h-4 w-4" />
-                            {unitsFound.length} unidades encontradas no banco:
-                        </p>
-                        <div className="grid gap-2 max-h-[250px] overflow-y-auto">
-                            {unitsFound.map((unit, i) => (
-                                <div key={i} className="flex items-center justify-between p-2 border rounded text-sm bg-white">
-                                    <div className="flex items-center gap-2">
-                                        {getTrendIcon(unit.npsVariation)}
-                                        <span className="font-medium">{unit.name}</span>
-                                        <span className="text-xs text-muted-foreground">({unit.code})</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Badge variant="outline">{unit.comments.length} comentários</Badge>
-                                        {unit.currentNps !== null && (
-                                            <Badge className={
-                                                unit.currentNps >= 70 ? 'bg-green-100 text-green-800' :
-                                                    unit.currentNps >= 50 ? 'bg-yellow-100 text-yellow-800' :
-                                                        'bg-red-100 text-red-800'
-                                            }>
-                                                NPS {unit.currentNps.toFixed(0)}
-                                            </Badge>
-                                        )}
-                                        {unit.comments.length >= MIN_COMMENTS_FOR_ANALYSIS ? (
-                                            <CheckCircle className="h-4 w-4 text-green-600" />
-                                        ) : (
-                                            <AlertCircle className="h-4 w-4 text-yellow-600" />
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Results */}
                 {results && (
-                    <div className="space-y-2">
+                    <div className="grid gap-4">
                         {results.saved > 0 && (
-                            <Alert>
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                <AlertDescription>
-                                    {results.saved} relatórios salvos! <a href="/reports" className="underline font-medium">Ver Relatórios</a>
-                                </AlertDescription>
-                            </Alert>
-                        )}
-                        {results.skipped.length > 0 && (
-                            <Alert variant="destructive">
-                                <AlertCircle className="h-4 w-4" />
-                                <AlertDescription>
-                                    Não analisadas: {results.skipped.join(', ')}
-                                </AlertDescription>
-                            </Alert>
+                            <div className="flex items-center gap-4 bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl">
+                                <CheckCircle className="h-6 w-6 text-emerald-500" />
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black uppercase text-emerald-500 tracking-widest">Sucesso</span>
+                                    <p className="text-xs font-bold text-white uppercase">{results.saved} Relatórios gerados e sincronizados.</p>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}

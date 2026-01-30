@@ -185,50 +185,58 @@ export default function ReportsPage() {
 
             const prompt = `
             VOCÊ É UM CIÊNTISTA DE DADOS E CONSULTOR ESTRATÉGICO DE CX (CUSTOMER EXPERIENCE). 
-            Sua missão é gerar um DOSSIÊ EXECUTIVO DE ALTA PRECISÃO, cruzando métricas numéricas com evidências textuais.
+            Sua missão é gerar um DOSSIÊ EXECUTIVO DE ALTA PRECISÃO. Você deve cruzar métricas numéricas com evidências textuais de forma EXAUSTIVA.
 
             DADOS DISPONÍVEIS:
             ---
             UNIDADES (ID, NOME, SIGLA):
             ${JSON.stringify(units.map(u => ({ id: u.id, nome: u.name, sigla: u.code })))}
 
-            MÉTRICAS NPS RECENTES (QUANTITATIVO):
-            ${JSON.stringify(metricsData?.slice(0, units.length * 3))}
+            MÉTRICAS NPS RECENTES E METAS (QUANTITATIVO):
+            ${JSON.stringify(metricsData?.map(m => ({
+                unit_id: m.unit_id,
+                nps: m.nps_score,
+                meta: m.goal_2026_1,
+                respostas: m.responses_count
+            })))}
 
             FEEDBACKS BRUTOS EXTRAÍDOS DE PDFS (QUALITATIVO):
             ${pdfTexts}
             ---
 
-            DIRETRIZES PARA O RELATÓRIO REGIONAL:
-            1. MAPA DE CALOR DE PROBLEMAS: Crie uma tabela comparativa (Markdown) entre as unidades contando ocorrências de: "Manutenção", "Professor/Atendimento" e "Limpeza".
-            2. EFETIVIDADE DE CONTATO: Analise os campos "Feedback 1" e "Resolução" no texto. Identifique o % de detratores que foram contatados vs. "Sem sucesso/Não autorizado".
-            3. INSIGHT MACRO: Qual o maior ofensor sistêmico da regional hoje?
+            TAREFA 1: RELATÓRIO REGIONAL CONSOLIDADO
+            - MAPA DE CALOR: Tabela Markdown com as unidades nas linhas e o total de menções a "Manutenção", "Atendimento/Equipe" e "Limpeza" nas colunas.
+            - AUDITORIA DE CONTATO: Analise a coluna "Resolução/Feedback 1". Calcule o % de eficácia de contato (contatado vs. sem sucesso).
+            - INSIGHT ESTRATÉGICO: Qual o maior risco sistêmico para a meta de 75.0?
 
-            DIRETRIZES PARA O DOSSIÊ DE UNIDADE:
-            1. DIAGNÓSTICO DE CAUSA RAIZ: Use a técnica de "5 Porquês" ou similar para explicar variações no NPS vs. Meta.
-            2. EVIDÊNCIAS CIRÚRGICAS: Liste os comentários mais relevantes (anonimizado), descartando reclamações superficiais.
-            3. PLANO DE AÇÃO 5W2H: 
-               - O que (What), Por que (Why), Onde (Where), Quem (Who - use cargos, ex: Gerente, Manutenção), Quando (When), Como (How), Quanto (How Much).
-            4. CORRELAÇÃO NPS VS META: Explique quão longe a unidade está da meta de 75.0 e o impacto financeiro/operacional disso.
+            TAREFA 2: DOSSIÊ INDIVIDUAL POR UNIDADE (Obrigatório para cada unidade com dados)
+            Você deve analisar cada unidade INDIVIDUALMENTE e EXAUSTIVAMENTE. Esperamos relatórios LONGOS e detalhados.
+            - DIAGNÓSTICO DE CAUSA RAIZ: Use "5 Porquês" baseados no texto real. Vá fundo no problema técnico.
+            - EVIDÊNCIAS: Cite múltiplos fragmentos de comentários relevantes.
+            - PLANO DE AÇÃO 5W2H COMPLETO: Crie uma tabela Markdown 5W2H para cada ofensor identificado. Seja ultra-específico nos processos.
+            - CORRELAÇÃO: Explique matematicamente como os problemas citados no PDF estão impedindo a unidade de atingir a meta de 75.0.
 
             REGRAS DE OURO:
-            - NUNCA use nomes de alunos ou colaboradores. Use termos como "O Cliente" ou "A Equipe".
-            - EVITE clichês como "alinhamento de equipe". Seja técnico (ex: "Sincronização de check-list de manutenção preventiva").
-            - O tom deve ser IMPLACÁVEL, EXECUTIVO e ORIENTADO A RESULTADOS.
+            - NÃO use nomes de pessoas.
+            - SEJA IMPLACÁVEL. Se o gerente não está conseguindo falar com detratores, aponte como uma falha crítica de liderança.
+            - Escreva pelo menos 300-500 palavras de análise técnica por unidade que possua feedbacks.
+            - Use tabelas Markdown dentro do campo "markdown_report" para organizar os planos de ação.
 
-            SAÍDA: Retorne APENAS um JSON válido no formato:
+            SAÍDA: Retorne APENAS um JSON válido:
             {
                 "regional": { 
                     "total_feedbacks": number, 
                     "overall_sentiment": "crítico|alerta|estável", 
                     "key_insight": "...", 
-                    "markdown_report": "# DOSSIÊ REGIONAL\\n[Tabela de Mapa de Calor]\\n[Relatório de Efetividade]\\n[Resumo Estratégico]" 
+                    "markdown_report": "..." 
                 },
                 "units": [
                    { 
-                     "unit_id": "ID", 
+                     "unit_id": "ID",
+                     "nps_at_time": number,
+                     "feedback_count": number,
                      "priority_level": "alta|média|baixa", 
-                     "markdown_report": "# ANÁLISE TÁTICA\\n[Causa Raiz]\\n[Evidências]\\n[Plano de Ação 5W2H]" 
+                     "markdown_report": "# ANÁLISE EXAUSTIVA - [NOME]\\n..." 
                    }
                 ]
             }
@@ -285,6 +293,8 @@ export default function ReportsPage() {
                         ai_summary: {
                             type: 'unit',
                             unit_name: unit.name,
+                            nps_score: unitAnalysis.nps_at_time || 0,
+                            feedback_count: unitAnalysis.feedback_count || 0,
                             priority_level: unitAnalysis.priority_level || 'média',
                             markdown_report: unitAnalysis.markdown_report || ''
                         }

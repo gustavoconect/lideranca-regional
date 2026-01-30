@@ -66,10 +66,21 @@ create table if not exists units (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- DATA SOURCES (Rastreamento de arquivos enviados)
+create table if not exists data_sources (
+  id uuid default uuid_generate_v4() primary key,
+  filename text not null,
+  file_type text check (file_type in ('csv', 'pdf')),
+  extraction_date date,
+  created_by uuid references profiles(id),
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- NPS METRICS (Dados Quantitativos do CSV)
 create table if not exists nps_metrics (
   id uuid default uuid_generate_v4() primary key,
   unit_id uuid references units(id) not null,
+  source_id uuid references data_sources(id) on delete cascade,
   week_start_date date not null,
   position_ranking int,
   responses_count int default 0,
@@ -84,6 +95,7 @@ create table if not exists nps_metrics (
 create table if not exists qualitative_reports (
   id uuid default uuid_generate_v4() primary key,
   unit_id uuid references units(id) not null,
+  source_id uuid references data_sources(id) on delete cascade,
   report_date date default current_date,
   original_pdf_url text,
   ai_summary jsonb, -- { highlights: [], risks: [], action_plan: [] }
@@ -116,6 +128,13 @@ alter table units enable row level security;
 alter table nps_metrics enable row level security;
 alter table qualitative_reports enable row level security;
 alter table tasks enable row level security;
+alter table data_sources enable row level security;
+
+-- DATA SOURCES POLICIES
+DROP POLICY IF EXISTS "Regional full access data_sources" ON data_sources;
+create policy "Regional full access data_sources" on data_sources for all using (
+  exists (select 1 from profiles where id = auth.uid() and role = 'regional_leader')
+);
 
 -- PROFILES POLICIES
 DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;

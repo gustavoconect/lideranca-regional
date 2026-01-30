@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase'
 
 export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => void }) {
     const [loading, setLoading] = useState(false)
+    const [extractionDate, setExtractionDate] = useState(() => new Date().toISOString().split('T')[0])
     const [weekDate, setWeekDate] = useState(() => {
         const now = new Date()
         const monday = new Date(now)
@@ -42,9 +43,6 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                 delimiter: csv.includes(';') ? ';' : ',',
                 complete: async (results) => {
                     try {
-                        console.log('CSV Headers:', results.meta.fields)
-                        console.log('First Row Sample:', results.data[0])
-
                         const validRows = results.data.filter((row: any) => {
                             return row['Empresa'] || row['Sigla'] || row['Nome']
                         })
@@ -58,31 +56,38 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                         const { data: { user } } = await supabase.auth.getUser()
                         if (!user) throw new Error('Usuário não autenticado')
 
+                        // 1. Criar registro da fonte de dados
+                        const { data: dataSource, error: sourceError } = await supabase
+                            .from('data_sources')
+                            .insert({
+                                filename: file.name,
+                                file_type: 'csv',
+                                extraction_date: extractionDate,
+                                created_by: user.id
+                            })
+                            .select()
+                            .single()
+
+                        if (sourceError) throw sourceError
+
                         let importedCount = 0
                         let updatedCount = 0
 
                         for (const row of validRows as any[]) {
-                            // MAPEAMENTO CORRETO:
-                            // Sigla = código único (SBRSPCBUT01)
-                            // Nome = nome REAL da unidade (Butantã, Rio Pequeno)
-                            // Empresa = nome da regional (SP15 - Alex Ribeiro)
                             const unitCode = row['Sigla']?.trim() || ''
-                            const unitName = row['Nome']?.trim() || unitCode  // NOME é o nome da unidade!
+                            const unitName = row['Nome']?.trim() || unitCode
                             const regionalGroup = row['Empresa']?.trim() || row['Grupo de unidades']?.trim() || ''
 
-                            if (!unitCode) {
-                                console.warn('Skipping row without Sigla:', row)
-                                continue
-                            }
+                            if (!unitCode) continue
 
-                            // Check if unit exists
-                            const { data: existingUnit } = await supabase
+                            // Get or Create Unit
+                            let { data: unit } = await supabase
                                 .from('units')
                                 .select('id')
                                 .eq('code', unitCode)
                                 .single()
 
-                            let unitId = existingUnit?.id
+                            let unitId = unit?.id
 
                             if (!unitId) {
                                 const { data: newUnit, error: createError } = await supabase
@@ -96,14 +101,11 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                                     .select()
                                     .single()
 
-                                if (createError) {
-                                    console.error('Error creating unit:', unitCode, createError)
-                                    continue
-                                }
+                                if (createError) continue
                                 unitId = newUnit.id
                             }
 
-                            // Parse metrics - Brazilian format
+                            // Parse metrics
                             const parseMetric = (val: string) => {
                                 if (!val) return 0
                                 return parseFloat(val.replace('%', '').replace(',', '.').trim()) || 0
@@ -113,16 +115,9 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                                 return parseInt(val.replace(/\D/g, ''), 10) || 0
                             }
 
-                            // Check if metric for this week already exists
-                            const { data: existingMetric } = await supabase
-                                .from('nps_metrics')
-                                .select('id')
-                                .eq('unit_id', unitId)
-                                .eq('week_start_date', weekDate)
-                                .single()
-
                             const metricData = {
                                 unit_id: unitId,
+                                source_id: dataSource.id,
                                 week_start_date: weekDate,
                                 position_ranking: parseIntMetric(row['Pos.'] || row['Posição']),
                                 responses_count: parseIntMetric(row['Resposta'] || row['Respostas']),
@@ -132,27 +127,17 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
                                 goal_2026_1: parseMetric(row['Meta 2026/1'] || row['Meta'])
                             }
 
-                            if (existingMetric) {
-                                const { error } = await supabase
-                                    .from('nps_metrics')
-                                    .update(metricData)
-                                    .eq('id', existingMetric.id)
+                            // No upsert here because we want to track by source. 
+                            // If user uploads same week twice, it might duplicate unless we handle it.
+                            // But for "Data Center" management, having one entry per source is better.
+                            const { error } = await supabase
+                                .from('nps_metrics')
+                                .insert(metricData)
 
-                                if (!error) updatedCount++
-                            } else {
-                                const { error } = await supabase
-                                    .from('nps_metrics')
-                                    .insert(metricData)
-
-                                if (!error) importedCount++
-                            }
+                            if (!error) importedCount++
                         }
 
-                        const message = updatedCount > 0
-                            ? `Sucesso! ${importedCount} novos, ${updatedCount} atualizados.`
-                            : `Sucesso! ${importedCount} registros importados.`
-
-                        toast.success(message)
+                        toast.success(`Sucesso! ${importedCount} registros importados da fonte "${file.name}".`)
                         onImportComplete?.()
 
                     } catch (error: any) {
@@ -172,44 +157,63 @@ export function CsvUploadForm({ onImportComplete }: { onImportComplete?: () => v
     }
 
     return (
-        <Card>
+        <Card className="bg-slate-900 border-slate-800 rounded-[2rem] overflow-hidden">
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Upload className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white uppercase italic tracking-tighter">
+                    <Upload className="h-5 w-5 text-emerald-500" />
                     Upload de Métricas (CSV)
                 </CardTitle>
-                <CardDescription>
-                    Importe o CSV do ranking NPS. Selecione a data da semana.
+                <CardDescription className="text-slate-500 uppercase text-[10px] font-bold tracking-widest">
+                    Importe o CSV do ranking NPS e registre a data de extração.
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="week" className="flex items-center gap-2">
-                        <CalendarDays className="h-4 w-4" />
-                        Data da Semana
-                    </Label>
-                    <Input
-                        id="week"
-                        type="date"
-                        value={weekDate}
-                        onChange={(e) => setWeekDate(e.target.value)}
-                        disabled={loading}
-                    />
+            <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="extraction" className="flex items-center gap-2 text-slate-400 text-[10px] uppercase font-black">
+                            <CalendarDays className="h-4 w-4" />
+                            Data da Extração
+                        </Label>
+                        <Input
+                            id="extraction"
+                            type="date"
+                            value={extractionDate}
+                            onChange={(e) => setExtractionDate(e.target.value)}
+                            className="bg-slate-950 border-slate-800 text-white rounded-xl"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="week" className="flex items-center gap-2 text-slate-400 text-[10px] uppercase font-black">
+                            <CalendarDays className="h-4 w-4" />
+                            Semana de Referência
+                        </Label>
+                        <Input
+                            id="week"
+                            type="date"
+                            value={weekDate}
+                            onChange={(e) => setWeekDate(e.target.value)}
+                            className="bg-slate-950 border-slate-800 text-white rounded-xl"
+                        />
+                    </div>
                 </div>
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Label htmlFor="csv">Arquivo CSV</Label>
-                    <Input
-                        id="csv"
-                        type="file"
-                        accept=".csv"
-                        onChange={handleFileUpload}
-                        disabled={loading}
-                    />
-                    {loading && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Loader2 className="animate-spin h-4 w-4" /> Processando...
-                        </div>
-                    )}
+
+                <div className="space-y-2">
+                    <Label htmlFor="csv" className="text-slate-400 text-[10px] uppercase font-black">Arquivo CSV</Label>
+                    <div className="relative">
+                        <Input
+                            id="csv"
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileUpload}
+                            disabled={loading}
+                            className="bg-slate-950 border-slate-800 text-white rounded-xl file:bg-emerald-500 file:text-slate-950 file:border-none file:rounded-lg file:px-4 file:mr-4 file:font-black file:uppercase file:text-[10px] h-12 flex items-center"
+                        />
+                        {loading && (
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-xs text-emerald-500 font-bold uppercase tracking-widest">
+                                <Loader2 className="animate-spin h-4 w-4" />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </CardContent>
         </Card>

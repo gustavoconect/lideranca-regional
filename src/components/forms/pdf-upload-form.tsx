@@ -472,7 +472,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                             type="date"
                             value={reportDate}
                             onChange={(e) => setReportDate(e.target.value)}
-                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20 invert"
+                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20"
                             disabled={loading}
                         />
                     </div>

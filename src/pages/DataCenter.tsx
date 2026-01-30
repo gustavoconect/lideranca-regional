@@ -187,7 +187,7 @@ export default function DataCenter() {
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             exit={{ opacity: 0, x: 20 }}
-                                                            className="flex items-center justify-between p-6 hover:bg-slate-800/30 transition-all group"
+                                                            className="flex items-center justify-between p-6 bg-slate-900/50 hover:bg-slate-800 transition-all group border-b border-slate-800/50 last:border-none"
                                                         >
                                                             <div className="flex items-center gap-6">
                                                                 <div className="p-4 rounded-2xl bg-slate-950 text-indigo-500 shadow-inner group-hover:text-indigo-400 transition-colors">
@@ -269,7 +269,7 @@ export default function DataCenter() {
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             exit={{ opacity: 0, x: 20 }}
-                                                            className="flex items-center justify-between p-6 hover:bg-slate-800/30 transition-all group"
+                                                            className="flex items-center justify-between p-6 bg-slate-900/50 hover:bg-slate-800 transition-all group border-b border-slate-800/50 last:border-none"
                                                         >
                                                             <div className="flex items-center gap-6">
                                                                 <div className="p-4 rounded-2xl bg-slate-950 text-indigo-500 shadow-inner group-hover:text-indigo-400 transition-colors">

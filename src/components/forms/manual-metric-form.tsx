@@ -135,7 +135,7 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
                                 type="date"
                                 value={weekDate}
                                 onChange={e => setWeekDate(e.target.value)}
-                                className="bg-slate-950 border-slate-800 rounded-xl h-14 text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500/50"
+                                className="bg-slate-950/50 border-slate-800 rounded-xl h-14 text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500/50 text-white"
                             />
                         </div>
                     </div>

@@ -244,7 +244,7 @@ export default function TasksPage() {
                                                     type="date"
                                                     value={dueDate}
                                                     onChange={(e) => setDueDate(e.target.value)}
-                                                    className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-amber-500/20 invert"
+                                                    className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-amber-500/20"
                                                     required
                                                 />
                                             </div>
@@ -312,7 +312,7 @@ export default function TasksPage() {
                                 className="group relative"
                             >
                                 <div
-                                    className={`relative flex flex-col md:flex-row md:items-center justify-between p-8 bg-slate-900/40 rounded-[2rem] border border-slate-800/50 hover:border-amber-500/30 hover:bg-slate-900/60 transition-all duration-500 overflow-hidden ring-1 ring-white/5`}
+                                    className={`relative flex flex-col md:flex-row md:items-center justify-between p-8 bg-slate-900/80 rounded-[2rem] border border-slate-800/50 hover:border-amber-500/30 hover:bg-slate-900 transition-all duration-500 overflow-hidden ring-1 ring-white/5 shadow-2xl shadow-black/20`}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     {/* Indicador de Status Visual */}

@@ -142,4 +142,62 @@
     .dark .custom-scrollbar::-webkit-scrollbar-thumb {
         @apply bg-slate-800 rounded-full;
     }
+
+    /* Markdown Table Styling */
+    .markdown-content table {
+        @apply w-full border-collapse mb-8 mt-4 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800;
+        display: table !important;
+    }
+
+    .markdown-content th {
+        @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-black text-[10px] uppercase tracking-widest p-4 text-left border-b border-slate-200 dark:border-slate-700;
+    }
+
+    .markdown-content td {
+        @apply p-4 text-sm font-medium text-slate-600 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/50;
+    }
+
+    .markdown-content tr:last-child td {
+        @apply border-none;
+    }
+
+    .markdown-content tr:hover td {
+        @apply bg-slate-50/50 dark:bg-slate-800/30 transition-colors;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3 {
+        @apply text-xl font-black text-slate-900 dark:text-white mt-8 mb-4 uppercase italic border-b pb-2 dark:border-slate-800;
+    }
+
+    .markdown-content p {
+        @apply mb-4 leading-relaxed;
+    }
+}
+
+@layer base {
+    .dark {
+        --background: 222.2 47.4% 1.9%;
+        /* Slightly darker background */
+        --card: 222.2 47.4% 3.9%;
+        /* Distinct card color */
+        --popover: 222.2 47.4% 3.9%;
+        --foreground: 210 40% 98%;
+        --card-foreground: 210 40% 98%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+    }
 }

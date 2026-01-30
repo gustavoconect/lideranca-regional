@@ -233,7 +233,7 @@ export default function AdminUnits() {
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                     >
-                                        <Card className="bg-slate-900/50 border-slate-800 hover:border-emerald-500/30 transition-all group rounded-[2rem] overflow-hidden relative">
+                                        <Card className="bg-slate-900 border-slate-800 hover:border-emerald-500/30 transition-all group rounded-[2rem] overflow-hidden relative shadow-2xl shadow-black/40">
                                             <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-all" />
                                             <CardContent className="p-6">
                                                 <div className="flex justify-between items-start mb-6">

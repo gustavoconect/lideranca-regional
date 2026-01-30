@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Maximize2, Trash2, Plus, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface ActionItem {
     acao: string
@@ -416,16 +418,13 @@ export default function ReportsPage() {
                                                 <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
                                                     <Building2 className="h-64 w-64" />
                                                 </div>
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: report.ai_summary.markdown_report
-                                                            .replace(/\n/g, '<br/>')
-                                                            .replace(/\|/g, '<span class="text-slate-300">|</span>') // Estilizar separadores de tabela
-                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-950 font-black">$1</strong>')
-                                                            .replace(/#{1,3}\s(.*?)(<br\/>|$)/g, '<h3 class="text-xl font-black text-slate-900 border-b pb-2 mb-4 mt-8 uppercase italic">$1</h3>')
-                                                    }}
-                                                    className="whitespace-pre-wrap font-body leading-relaxed text-slate-700 text-lg relative z-10"
-                                                />
+                                                <div className="markdown-content relative z-10">
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkGfm]}
+                                                    >
+                                                        {report.ai_summary.markdown_report}
+                                                    </ReactMarkdown>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className="grid md:grid-cols-2 gap-8">
@@ -675,21 +674,13 @@ export default function ReportsPage() {
                                         {/* Conteúdo Markdown Direto com Custom Styling */}
                                         {selectedReport.ai_summary?.markdown_report ? (
                                             <div className="prose prose-slate max-w-none">
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: selectedReport.ai_summary.markdown_report
-                                                            .replace(/\n/g, '<br />')
-                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-extrabold">$1</strong>')
-                                                            // Padronização de Seções (Trata variações de labels da IA)
-                                                            .replace(/^[0-9]\.? (?:DIAGNÓSTICO|Diagnóstico).*?$/gmi, '<h4 class="text-2xl font-black mt-12 mb-6 text-slate-900 uppercase tracking-tighter border-b-2 border-slate-100 pb-3 italic">I. DIAGNÓSTICO ESTRATÉGICO</h4>')
-                                                            .replace(/^[0-9]\.? (?:PROBLEMA RAIZ|Principal Ofensor|Pain Point).*?$/gmi, '<h4 class="text-2xl font-black mt-12 mb-6 text-slate-900 uppercase tracking-tighter border-b-2 border-slate-100 pb-3 italic">II. PRINCIPAIS OFENSORES</h4>')
-                                                            .replace(/^[0-9]\.? (?:Ponto Forte|Strengths).*?$/gmi, '<h4 class="text-2xl font-black mt-12 mb-6 text-slate-900 uppercase tracking-tighter border-b-2 border-slate-100 pb-3 italic">III. PONTOS FORTES OPERACIONAIS</h4>')
-                                                            .replace(/^[0-9]\.? (?:Plano de Ação|Action Plan).*?$/gmi, '<h4 class="text-2xl font-black mt-12 mb-6 text-slate-900 uppercase tracking-tighter border-b-2 border-slate-100 pb-3 italic">IV. PLANO DE AÇÃO TÁTICO</h4>')
-                                                            // Estilização de itens de lista ou parágrafos importantes
-                                                            .replace(/^\d\. (.*?)$/gm, '<div class="flex gap-5 mb-6 items-start bg-slate-50/80 p-6 rounded-[2rem] border border-slate-100 relative overflow-hidden"><div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rotate-45 -mr-8 -mt-8" /><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white text-[12px] font-black italic shadow-lg shadow-slate-200">!</span><p class="text-base font-medium leading-relaxed text-slate-700 mt-1">$1</p></div>')
-                                                    }}
-                                                    className="font-body"
-                                                />
+                                                <div className="markdown-content">
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkGfm]}
+                                                    >
+                                                        {selectedReport.ai_summary.markdown_report}
+                                                    </ReactMarkdown>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-20 text-slate-300 gap-4">

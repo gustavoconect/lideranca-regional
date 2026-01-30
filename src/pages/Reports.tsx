@@ -184,31 +184,52 @@ export default function ReportsPage() {
             const pdfTexts = sources.map(s => `Arquivo: ${s.filename}\nTexto: ${s.extracted_text}`).join('\n\n')
 
             const prompt = `
-            Você é um Consultor Estratégico de Elite da Regional. Sua tarefa é cruzar dados QUANTITATIVOS (Métricas NPS Manuais) 
-            com dados QUALITATIVOS (Comentários extraídos de PDFs).
+            VOCÊ É UM CIÊNTISTA DE DADOS E CONSULTOR ESTRATÉGICO DE CX (CUSTOMER EXPERIENCE). 
+            Sua missão é gerar um DOSSIÊ EXECUTIVO DE ALTA PRECISÃO, cruzando métricas numéricas com evidências textuais.
 
-            UNIDADES CADASTRADAS:
+            DADOS DISPONÍVEIS:
+            ---
+            UNIDADES (ID, NOME, SIGLA):
             ${JSON.stringify(units.map(u => ({ id: u.id, nome: u.name, sigla: u.code })))}
 
-            MÉTRICAS RECENTES (NPS Semanal, Meta, NPS Semestral):
-            ${JSON.stringify(metricsData?.slice(0, units.length * 2))}
+            MÉTRICAS NPS RECENTES (QUANTITATIVO):
+            ${JSON.stringify(metricsData?.slice(0, units.length * 3))}
 
-            FEEDBACKS DOS PDFS (CONHECIMENTO EXTRAÍDO):
+            FEEDBACKS BRUTOS EXTRAÍDOS DE PDFS (QUALITATIVO):
             ${pdfTexts}
+            ---
 
-            DIRETRIZES DE ANÁLISE:
-            1. ASSOCIAÇÃO: Use a sigla (ex: SBRSPCBNF01) presente no feedback para identificar a unidade.
-            2. PRIORIDADE: 
-               - ALTA: NPS < Meta E muitos comentários negativos.
-               - MÉDIA: NPS > Meta mas com reclamações pontuais críticas.
-               - BAIXA: NPS alto e elogios consistentes.
-            3. RELATÓRIO: Use Markdown. Seja direto, executivo e aponte ações claras.
+            DIRETRIZES PARA O RELATÓRIO REGIONAL:
+            1. MAPA DE CALOR DE PROBLEMAS: Crie uma tabela comparativa (Markdown) entre as unidades contando ocorrências de: "Manutenção", "Professor/Atendimento" e "Limpeza".
+            2. EFETIVIDADE DE CONTATO: Analise os campos "Feedback 1" e "Resolução" no texto. Identifique o % de detratores que foram contatados vs. "Sem sucesso/Não autorizado".
+            3. INSIGHT MACRO: Qual o maior ofensor sistêmico da regional hoje?
+
+            DIRETRIZES PARA O DOSSIÊ DE UNIDADE:
+            1. DIAGNÓSTICO DE CAUSA RAIZ: Use a técnica de "5 Porquês" ou similar para explicar variações no NPS vs. Meta.
+            2. EVIDÊNCIAS CIRÚRGICAS: Liste os comentários mais relevantes (anonimizado), descartando reclamações superficiais.
+            3. PLANO DE AÇÃO 5W2H: 
+               - O que (What), Por que (Why), Onde (Where), Quem (Who - use cargos, ex: Gerente, Manutenção), Quando (When), Como (How), Quanto (How Much).
+            4. CORRELAÇÃO NPS VS META: Explique quão longe a unidade está da meta de 75.0 e o impacto financeiro/operacional disso.
+
+            REGRAS DE OURO:
+            - NUNCA use nomes de alunos ou colaboradores. Use termos como "O Cliente" ou "A Equipe".
+            - EVITE clichês como "alinhamento de equipe". Seja técnico (ex: "Sincronização de check-list de manutenção preventiva").
+            - O tom deve ser IMPLACÁVEL, EXECUTIVO e ORIENTADO A RESULTADOS.
 
             SAÍDA: Retorne APENAS um JSON válido no formato:
             {
-                "regional": { "total_feedbacks": number, "overall_sentiment": string, "key_insight": string, "markdown_report": "..." },
+                "regional": { 
+                    "total_feedbacks": number, 
+                    "overall_sentiment": "crítico|alerta|estável", 
+                    "key_insight": "...", 
+                    "markdown_report": "# DOSSIÊ REGIONAL\\n[Tabela de Mapa de Calor]\\n[Relatório de Efetividade]\\n[Resumo Estratégico]" 
+                },
                 "units": [
-                   { "unit_id": "ID_DA_UNIDADE", "priority_level": "alta|média|baixa", "markdown_report": "..." }
+                   { 
+                     "unit_id": "ID", 
+                     "priority_level": "alta|média|baixa", 
+                     "markdown_report": "# ANÁLISE TÁTICA\\n[Causa Raiz]\\n[Evidências]\\n[Plano de Ação 5W2H]" 
+                   }
                 ]
             }
             `
@@ -389,7 +410,9 @@ export default function ReportsPage() {
                                                     dangerouslySetInnerHTML={{
                                                         __html: report.ai_summary.markdown_report
                                                             .replace(/\n/g, '<br/>')
-                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-black">$1</strong>')
+                                                            .replace(/\|/g, '<span class="text-slate-300">|</span>') // Estilizar separadores de tabela
+                                                            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-950 font-black">$1</strong>')
+                                                            .replace(/#{1,3}\s(.*?)(<br\/>|$)/g, '<h3 class="text-xl font-black text-slate-900 border-b pb-2 mb-4 mt-8 uppercase italic">$1</h3>')
                                                     }}
                                                     className="whitespace-pre-wrap font-body leading-relaxed text-slate-700 text-lg relative z-10"
                                                 />

@@ -80,10 +80,25 @@ Acesse: **http://localhost:5173**
 
 ---
 
-## 🔑 Variáveis de Ambiente
+## � Deploy no Vercel & GitHub
 
-Já configuradas no `.env`:
+### 1. Preparar Repositório
+O projeto já está inicializado com Git localmente. Para subir para o GitHub:
+1. Crie um novo repositório vazio no GitHub.
+2. Rode os comandos fornecidos pelo GitHub:
+```bash
+git remote add origin https://github.com/SEU_USUARIO/NOME_DO_REPO.git
+git branch -M main
+git push -u origin main
+```
 
-- `VITE_SUPABASE_URL` - URL do projeto Supabase
-- `VITE_SUPABASE_ANON_KEY` - Chave pública do Supabase
-- `VITE_GOOGLE_GENERATIVE_AI_API_KEY` - API Key do Gemini
+### 2. Configurar no Vercel
+1. Conecte sua conta do GitHub ao [Vercel](https://vercel.com).
+2. Importe o repositório criado.
+3. **Importante:** Adicione as seguintes Variáveis de Ambiente no Vercel (copie do seu `.env` local):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_GOOGLE_GENERATIVE_AI_API_KEY`
+4. Clique em **Deploy**.
+
+O arquivo `vercel.json` já está configurado para lidar com as rotas do React Router.

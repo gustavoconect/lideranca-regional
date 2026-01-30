@@ -202,8 +202,7 @@ async function enrichWithCsvData(unitTexts: Map<string, string>): Promise<UnitDa
  * ETAPA 5: Monta dossiê e envia para Gemini
  */
 async function analyzeWithGemini(unit: UnitData, retryCount = 0): Promise<string> {
-    // Usar Flash Lite que tem quota separada
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash' })
 
     // Construir contexto numérico
     let npsContext = ''
@@ -235,17 +234,19 @@ Comentários extraídos do PDF: ${unit.comments.length}
 ${unit.comments.length > 0 ? unit.comments.map((c, i) => `${i + 1}. "${c}"`).join('\n') : 'Nenhum comentário extraído.'}
 
 ## SUA TAREFA
-Você é um Especialista Sênior em Customer Experience.
-Baseado na variação do NPS E nos comentários acima:
+Você é um Especialista Sênior em Customer Experience para a rede de unidades Regionais.
+Baseado na variação do NPS (extraído do CSV) E nos comentários (extraídos do PDF):
 
-1. **Diagnóstico**: O que explica a variação (ou estabilidade) da nota?
-2. **Problema Raiz**: Qual é o principal ofensor identificado nos comentários?
-3. **Ação Recomendada**: Uma ação prática e imediata para o gerente da unidade.
+1. **Cruzamento de Dados**: Valide se os comentários realmente pertencem à unidade em questão buscando referências à sigla "${unit.code}" ou ao nome "${unit.name}" no contexto.
+2. **Diagnóstico Estratégico**: O que explica a variação (ou estabilidade) da nota? Conecte o sintoma numérico com a evidência textual.
+3. **Problema Raiz**: Qual é o principal ofensor identificado nos comentários dos alunos?
+4. **Ação Recomendada**: Prescreva uma ação prática e imediata para o gerente da unidade.
 
-REGRAS:
-- Seja ESPECÍFICO. Cite detalhes dos comentários.
+REGRAS CRÍTICAS:
+- Seja EXECUTIVO e DIRETO.
+- Mencione se o NPS está acima ou abaixo da meta de 75.
 - Se a nota SUBIU, identifique o que está funcionando bem.
-- Se a nota CAIU, identifique a causa raiz.
+- Se a nota CAIU, identifique a causa raiz de forma implacável.
 - Máximo 150 palavras.
 - Use **negrito** para destacar pontos críticos.`
 
@@ -268,7 +269,7 @@ REGRAS:
  * ETAPA 6: Gera Relatório Macro Regional (Consolidado)
  */
 async function analyzeRegionalMacro(allUnits: UnitData[], retryCount = 0): Promise<string> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash' })
 
     const totalFeedbacks = allUnits.reduce((acc, u) => acc + u.feedbackCount, 0)
     const avgNps = allUnits.reduce((acc, u) => acc + (u.currentNps || 0), 0) / (allUnits.filter(u => u.currentNps !== null).length || 1)

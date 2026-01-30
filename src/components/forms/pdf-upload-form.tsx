@@ -204,7 +204,7 @@ async function enrichWithCsvData(unitTexts: Map<string, string>): Promise<UnitDa
  * ETAPA 5: Monta dossiê e envia para Gemini
  */
 async function analyzeWithGemini(unit: UnitData, retryCount = 0): Promise<string> {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' })
 
     // Construir contexto numérico
     let npsContext = ''

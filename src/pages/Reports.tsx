@@ -179,7 +179,7 @@ export default function ReportsPage() {
             setGenProgress('Analisando correlações com Gemini...')
 
             const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY)
-            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+            const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' })
 
             const pdfTexts = sources.map(s => `Arquivo: ${s.filename}\nTexto: ${s.extracted_text}`).join('\n\n')
 

@@ -217,43 +217,66 @@ export default function ReportsPage() {
             const response = await result.response
             const text = response.text()
 
-            // Limpar possível formatação de bloco de código markdown do JSON
-            const jsonStr = text.replace(/```json|```/g, '').trim()
-            const analysis = JSON.parse(jsonStr)
+            console.log('AI Response:', text)
+
+            // Tentar extrair JSON de forma mais resiliente
+            let analysis: any
+            try {
+                const jsonStr = text.includes('```json')
+                    ? text.split('```json')[1].split('```')[0].trim()
+                    : text.trim()
+                analysis = JSON.parse(jsonStr)
+            } catch (pError) {
+                console.error('Erro ao processar JSON da IA:', pError)
+                throw new Error('A resposta da IA não está no formato esperado. Tente novamente.')
+            }
+
+            if (!analysis.regional || !analysis.units) {
+                throw new Error('A IA retornou um formato incompleto (faltando regional ou unidades).')
+            }
 
             setGenProgress('Salvando dossiês estratégicos...')
 
             // Salvar relatório regional
-            await supabase.from('qualitative_reports').insert({
-                title: 'Relatório Consolidado Regional',
-                summary: analysis.regional.key_insight,
-                full_content: analysis.regional.markdown_report,
-                priority_level: 'média',
-                report_type: 'regional',
-                sentiment_score: 0 // Placeholder
+            const { error: regError } = await supabase.from('qualitative_reports').insert({
+                report_date: new Date().toISOString().split('T')[0],
+                ai_summary: {
+                    type: 'regional',
+                    total_feedbacks: analysis.regional.total_feedbacks || 0,
+                    overall_sentiment: analysis.regional.overall_sentiment || 'neutro',
+                    key_insight: analysis.regional.key_insight || '',
+                    markdown_report: analysis.regional.markdown_report || ''
+                }
             })
+
+            if (regError) {
+                console.error('Erro Supabase Regional:', regError)
+                throw new Error('Erro ao salvar relatório regional no banco de dados.')
+            }
 
             // Salvar relatórios de unidade
             for (const unitAnalysis of analysis.units) {
                 const unit = units.find(u => u.id === unitAnalysis.unit_id)
                 if (unit) {
-                    await supabase.from('qualitative_reports').insert({
+                    const { error: unitError } = await supabase.from('qualitative_reports').insert({
                         unit_id: unit.id,
-                        title: `Dossiê Estratégico - ${unit.name}`,
-                        summary: `Análise tática baseada em cruzamento de dados para a unidade ${unit.code}.`,
-                        full_content: unitAnalysis.markdown_report,
-                        priority_level: unitAnalysis.priority_level,
-                        report_type: 'unit',
-                        sentiment_score: 0
+                        report_date: new Date().toISOString().split('T')[0],
+                        ai_summary: {
+                            type: 'unit',
+                            unit_name: unit.name,
+                            priority_level: unitAnalysis.priority_level || 'média',
+                            markdown_report: unitAnalysis.markdown_report || ''
+                        }
                     })
+                    if (unitError) console.error(`Erro ao salvar unidade ${unit.name}:`, unitError)
                 }
             }
 
             toast.success('Relatórios gerados e salvos com sucesso!')
             fetchReports()
         } catch (error: any) {
-            console.error(error)
-            toast.error('Erro na análise: ' + error.message)
+            console.error('Erro completo na geração:', error)
+            toast.error(error.message || 'Erro inesperado na geração do relatório.')
         } finally {
             setIsGenerating(false)
             setGenProgress('')

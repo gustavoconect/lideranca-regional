@@ -9,8 +9,9 @@ import { ArrowLeft, FileText, Database, ShieldCheck, Trash2, Calendar, FileSprea
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
-import { CsvUploadForm } from '@/components/forms/csv-upload-form'
+import { ManualMetricForm } from '@/components/forms/manual-metric-form'
 import { PdfUploadForm } from '@/components/forms/pdf-upload-form'
+import { Settings, Building2 } from 'lucide-react'
 
 interface DataSource {
     id: string
@@ -20,8 +21,25 @@ interface DataSource {
     created_at: string
 }
 
+interface NpsMetric {
+    id: string
+    unit_id: string
+    nps_score: number
+    nps_semestral: number
+    goal_2026_1: number
+    week_start_date: string
+    week_label: string
+    responses_count: number
+    created_at: string
+    units: {
+        name: string
+        code: string
+    }
+}
+
 export default function DataCenter() {
     const navigate = useNavigate()
+    const [metrics, setMetrics] = useState<NpsMetric[]>([])
     const [sources, setSources] = useState<DataSource[]>([])
 
     const fetchSources = async () => {
@@ -35,9 +53,39 @@ export default function DataCenter() {
         }
     }
 
+    const fetchManualMetrics = async () => {
+        const { data, error } = await supabase
+            .from('nps_metrics')
+            .select('*, units (name, code)')
+            .order('week_start_date', { ascending: false })
+
+        if (!error && data) {
+            setMetrics(data)
+        }
+    }
+
     useEffect(() => {
         fetchSources()
+        fetchManualMetrics()
     }, [])
+
+    const deleteManualMetric = async (id: string) => {
+        if (!confirm('Deseja realmente excluir este registro semanal?')) return
+
+        try {
+            const { error } = await supabase
+                .from('nps_metrics')
+                .delete()
+                .eq('id', id)
+
+            if (error) throw error
+
+            setMetrics(prev => prev.filter(m => m.id !== id))
+            toast.success('Registro removido.')
+        } catch (error: any) {
+            toast.error('Erro ao excluir: ' + error.message)
+        }
+    }
 
     const deleteSource = async (id: string, filename: string) => {
         const confirmDelete = window.confirm(`Tem certeza que deseja excluir "${filename}"? Todos os dados vinculados a este arquivo serão removidos permanentemente.`)
@@ -52,7 +100,7 @@ export default function DataCenter() {
             if (error) throw error
 
             setSources(prev => prev.filter(s => s.id !== id))
-            toast.success(`Fonte "${filename}" e todos os dados vinculados foram removidos.`)
+            toast.success(`Fonte "${filename}" removida.`)
         } catch (error: any) {
             toast.error('Erro ao excluir: ' + error.message)
         }
@@ -75,6 +123,14 @@ export default function DataCenter() {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate('/units')}
+                        className="gap-2 h-11 px-6 rounded-xl border-slate-800 bg-slate-900/50 text-slate-300 hover:text-white hover:bg-slate-800 font-bold uppercase text-[10px] tracking-widest transition-all"
+                    >
+                        <Settings className="h-4 w-4" /> Gestão de Unidades
+                    </Button>
                     <Badge className="bg-emerald-500/10 text-emerald-500 border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
                         DB SECURE: AES-256
                     </Badge>
@@ -105,49 +161,62 @@ export default function DataCenter() {
 
                     <TabsContent value="metrics" className="grid gap-8 lg:grid-cols-12 outline-none">
                         <div className="lg:col-span-12">
-                            <CsvUploadForm onImportComplete={fetchSources} />
+                            <ManualMetricForm onSave={fetchManualMetrics} />
                         </div>
 
                         <div className="lg:col-span-12 space-y-4">
                             <div className="flex flex-col">
-                                <h2 className="text-xl font-black tracking-tighter text-white uppercase italic">Histórico de Importações</h2>
-                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">Gerencie as fontes de métricas NPS</p>
+                                <h2 className="text-xl font-black tracking-tighter text-white uppercase italic">Histórico de Performance</h2>
+                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">Registros semanais alimentados manualmente</p>
                             </div>
 
                             <Card className="bg-slate-900 border-none ring-1 ring-slate-800 rounded-[2.5rem] overflow-hidden">
                                 <CardContent className="p-0">
                                     <ScrollArea className="h-[400px]">
-                                        {sources.filter(s => s.file_type === 'csv').length === 0 ? (
+                                        {metrics.length === 0 ? (
                                             <div className="flex flex-col items-center justify-center h-full py-20 opacity-20 italic">
                                                 <Database className="h-12 w-12 mb-4" />
-                                                <p className="text-xs uppercase font-black tracking-widest">Nenhuma fonte de métricas cadastrada</p>
+                                                <p className="text-xs uppercase font-black tracking-widest">Nenhum dado registrado ainda</p>
                                             </div>
                                         ) : (
                                             <div className="divide-y divide-slate-800">
                                                 <AnimatePresence>
-                                                    {sources.filter(s => s.file_type === 'csv').map((source) => (
+                                                    {metrics.map((metric) => (
                                                         <motion.div
-                                                            key={source.id}
+                                                            key={metric.id}
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             exit={{ opacity: 0, x: 20 }}
                                                             className="flex items-center justify-between p-6 hover:bg-slate-800/30 transition-all group"
                                                         >
                                                             <div className="flex items-center gap-6">
-                                                                <div className="p-4 rounded-2xl bg-slate-950 text-emerald-500 shadow-inner group-hover:text-emerald-400 transition-colors">
-                                                                    <FileSpreadsheet className="h-6 w-6" />
+                                                                <div className="p-4 rounded-2xl bg-slate-950 text-indigo-500 shadow-inner group-hover:text-indigo-400 transition-colors">
+                                                                    <Building2 className="h-6 w-6" />
                                                                 </div>
                                                                 <div className="flex flex-col gap-1">
-                                                                    <p className="text-sm font-black text-white uppercase tracking-tight">{source.filename}</p>
+                                                                    <div className="flex items-center gap-3">
+                                                                        <p className="text-sm font-black text-white uppercase tracking-tight">{metric.units?.name}</p>
+                                                                        <Badge className="bg-slate-800 text-slate-400 border-none text-[8px] font-black px-2">
+                                                                            {metric.units?.code}
+                                                                        </Badge>
+                                                                    </div>
                                                                     <div className="flex items-center gap-4">
                                                                         <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                                                                             <Calendar className="h-3 w-3" />
-                                                                            Extraído em: {formatDate(source.extraction_date)}
+                                                                            {metric.week_label || formatDate(metric.week_start_date)}
                                                                         </span>
                                                                         <span className="text-[10px] text-slate-700">•</span>
-                                                                        <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                                                                            Upload: {formatDate(source.created_at)}
+                                                                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                                                                            NPS Semana: {metric.nps_score?.toFixed(1)}
                                                                         </span>
+                                                                        {metric.nps_semestral && (
+                                                                            <>
+                                                                                <span className="text-[10px] text-slate-700">•</span>
+                                                                                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">
+                                                                                    NPS Semestral: {metric.nps_semestral.toFixed(1)}
+                                                                                </span>
+                                                                            </>
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -155,7 +224,7 @@ export default function DataCenter() {
                                                                 <Button
                                                                     size="icon"
                                                                     variant="ghost"
-                                                                    onClick={() => deleteSource(source.id, source.filename)}
+                                                                    onClick={() => deleteManualMetric(metric.id)}
                                                                     className="h-12 w-12 text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-2xl"
                                                                 >
                                                                     <Trash2 className="h-5 w-5" />

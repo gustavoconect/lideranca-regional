@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { WeeklyComparisonTable } from '@/components/charts/weekly-comparison-table'
 import { NpsEvolutionChart } from '@/components/charts/nps-evolution-chart'
-import { CsvUploadForm } from '@/components/forms/csv-upload-form'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -60,7 +60,7 @@ export default function DashboardPage() {
                     )
                 `)
                 .order('week_start_date', { ascending: false })
-                .order('position_ranking', { ascending: true })
+                .order('nps_score', { ascending: false })
 
             if (error) throw error
 
@@ -298,7 +298,43 @@ export default function DashboardPage() {
                                     transition={{ delay: 0.5 }}
                                     className="space-y-6"
                                 >
-                                    <CsvUploadForm onImportComplete={fetchAllMetrics} />
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between px-2">
+                                            <div className="flex flex-col">
+                                                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Ranking de Performance</h3>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Top Unidades da Semana</p>
+                                            </div>
+                                            <Badge className="bg-emerald-500 text-white border-none rounded-lg text-[10px] font-black italic">TOP 1: {metrics[0]?.units?.name}</Badge>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            {metrics.slice(0, 5).map((metric, idx) => (
+                                                <div key={metric.id} className="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between hover:shadow-md transition-all">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="text-lg font-black text-slate-300 italic">#0{idx + 1}</span>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-black text-slate-900 uppercase">{metric.units?.name}</span>
+                                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{metric.units?.code}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex flex-col items-end">
+                                                        <span className={`text-sm font-black ${metric.nps_score >= (metric.goal_2026_1 || 75) ? 'text-emerald-500' : 'text-amber-500'}`}>
+                                                            {metric.nps_score.toFixed(1)}
+                                                        </span>
+                                                        <Progress value={Math.min(100, (metric.nps_score / 100) * 100)} className="h-1 w-16 bg-slate-100" />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full text-xs font-bold text-slate-400 uppercase hover:text-slate-900"
+                                            onClick={() => navigate('/reports')}
+                                        >
+                                            Ver relatório completo →
+                                        </Button>
+                                    </div>
                                 </motion.div>
                             ) : (
                                 <motion.div

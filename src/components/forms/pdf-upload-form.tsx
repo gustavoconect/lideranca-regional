@@ -351,7 +351,8 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                     filename: file.name,
                     file_type: 'pdf',
                     extraction_date: reportDate,
-                    created_by: user.id
+                    created_by: user.id,
+                    extracted_text: rawText // SALVANDO TEXTO EXTRAÍDO
                 })
                 .select()
                 .single()

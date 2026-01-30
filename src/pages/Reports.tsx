@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Maximize2, Trash2, Plus } from 'lucide-react'
+import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Maximize2, Trash2, Plus, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 interface ActionItem {
     acao: string
@@ -65,6 +66,8 @@ export default function ReportsPage() {
     const [loading, setLoading] = useState(true)
     const [selectedReport, setSelectedReport] = useState<QualitativeReport | null>(null)
     const [filterPriority, setFilterPriority] = useState<string | null>(null)
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [genProgress, setGenProgress] = useState('')
 
     useEffect(() => {
         checkAuth()
@@ -135,6 +138,128 @@ export default function ReportsPage() {
         }
     }
 
+    const handleGenerateReports = async () => {
+        if (!confirm('Deseja iniciar a geração de novos relatórios com IA? Isso cruzará os dados manuais da Central de Dados com os PDFs processados.')) return
+
+        setIsGenerating(true)
+        setGenProgress('Buscando métricas e fontes de dados...')
+
+        try {
+            // 1. Buscar métricas mais recentes de cada unidade
+            const { data: units } = await supabase.from('units').select('*')
+            if (!units) throw new Error('Nenhuma unidade cadastrada.')
+
+            const { data: metricsData } = await supabase
+                .from('nps_metrics')
+                .select('*')
+                .order('created_at', { ascending: false })
+
+            // 2. Buscar PDFs processados
+            const { data: sources } = await supabase
+                .from('data_sources')
+                .select('*')
+                .eq('file_type', 'pdf')
+                .order('created_at', { ascending: false })
+
+            if (!sources || sources.length === 0) {
+                toast.error('Nenhum PDF encontrado na Central de Dados para análise.')
+                setIsGenerating(false)
+                return
+            }
+
+            // Para simplificar, pegaremos o relatório qualitativo "bruto" (texto) que seria extraído dos PDFs
+            // Nota: No projeto original, o texto do PDF era processado no momento do upload.
+            // Para manter a promessa de "cruzar dados", precisaremos que o texto do PDF esteja acessível.
+            // Vou assumir que o sistema extrai o texto no momento do clique se necessário, ou que os dados qualitativos
+            // estão vindo dos DataSources. 
+
+            // ATENÇÃO: O usuário quer que ao clicar ele analise TODOS os PDFs e Dados.
+            // Vou simular o processo de "conhecimento acumulado".
+
+            setGenProgress('Analisando correlações com Gemini...')
+
+            const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY)
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+
+            const pdfTexts = sources.map(s => `Arquivo: ${s.filename}\nTexto: ${s.extracted_text}`).join('\n\n')
+
+            const prompt = `
+            Você é um Consultor Estratégico de Elite da Regional. Sua tarefa é cruzar dados QUANTITATIVOS (Métricas NPS Manuais) 
+            com dados QUALITATIVOS (Comentários extraídos de PDFs).
+
+            UNIDADES CADASTRADAS:
+            ${JSON.stringify(units.map(u => ({ id: u.id, nome: u.name, sigla: u.code })))}
+
+            MÉTRICAS RECENTES (NPS Semanal, Meta, NPS Semestral):
+            ${JSON.stringify(metricsData?.slice(0, units.length * 2))}
+
+            FEEDBACKS DOS PDFS (CONHECIMENTO EXTRAÍDO):
+            ${pdfTexts}
+
+            DIRETRIZES DE ANÁLISE:
+            1. ASSOCIAÇÃO: Use a sigla (ex: SBRSPCBNF01) presente no feedback para identificar a unidade.
+            2. PRIORIDADE: 
+               - ALTA: NPS < Meta E muitos comentários negativos.
+               - MÉDIA: NPS > Meta mas com reclamações pontuais críticas.
+               - BAIXA: NPS alto e elogios consistentes.
+            3. RELATÓRIO: Use Markdown. Seja direto, executivo e aponte ações claras.
+
+            SAÍDA: Retorne APENAS um JSON válido no formato:
+            {
+                "regional": { "total_feedbacks": number, "overall_sentiment": string, "key_insight": string, "markdown_report": "..." },
+                "units": [
+                   { "unit_id": "ID_DA_UNIDADE", "priority_level": "alta|média|baixa", "markdown_report": "..." }
+                ]
+            }
+            `
+
+            const result = await model.generateContent(prompt)
+            const response = await result.response
+            const text = response.text()
+
+            // Limpar possível formatação de bloco de código markdown do JSON
+            const jsonStr = text.replace(/```json|```/g, '').trim()
+            const analysis = JSON.parse(jsonStr)
+
+            setGenProgress('Salvando dossiês estratégicos...')
+
+            // Salvar relatório regional
+            await supabase.from('qualitative_reports').insert({
+                title: 'Relatório Consolidado Regional',
+                summary: analysis.regional.key_insight,
+                full_content: analysis.regional.markdown_report,
+                priority_level: 'média',
+                report_type: 'regional',
+                sentiment_score: 0 // Placeholder
+            })
+
+            // Salvar relatórios de unidade
+            for (const unitAnalysis of analysis.units) {
+                const unit = units.find(u => u.id === unitAnalysis.unit_id)
+                if (unit) {
+                    await supabase.from('qualitative_reports').insert({
+                        unit_id: unit.id,
+                        title: `Dossiê Estratégico - ${unit.name}`,
+                        summary: `Análise tática baseada em cruzamento de dados para a unidade ${unit.code}.`,
+                        full_content: unitAnalysis.markdown_report,
+                        priority_level: unitAnalysis.priority_level,
+                        report_type: 'unit',
+                        sentiment_score: 0
+                    })
+                }
+            }
+
+            toast.success('Relatórios gerados e salvos com sucesso!')
+            fetchReports()
+        } catch (error: any) {
+            console.error(error)
+            toast.error('Erro na análise: ' + error.message)
+        } finally {
+            setIsGenerating(false)
+            setGenProgress('')
+        }
+    }
+
     const handleDeleteReport = async (id: string) => {
         if (!confirm('Deseja realmente excluir este dossiê? Esta ação é irreversível.')) return
 
@@ -181,7 +306,22 @@ export default function ReportsPage() {
                     <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase italic">Intelligence & Reports</h1>
                     <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.3em]">Executive Dossier System</p>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto flex items-center gap-3">
+                    <Button
+                        onClick={handleGenerateReports}
+                        disabled={isGenerating}
+                        className="gap-2 h-11 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase text-[10px] tracking-widest shadow-lg shadow-indigo-600/20 transition-all"
+                    >
+                        {isGenerating ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" /> {genProgress}
+                            </>
+                        ) : (
+                            <>
+                                <Sparkles className="h-4 w-4" /> Criar Relatório com IA
+                            </>
+                        )}
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => window.print()} className="gap-2 h-11 px-6 rounded-xl border-slate-200 text-slate-900 hover:bg-slate-50 font-bold uppercase text-[10px] tracking-widest shadow-sm">
                         <MonitorPlay className="h-4 w-4" /> Gerar PDF / Imprimir
                     </Button>

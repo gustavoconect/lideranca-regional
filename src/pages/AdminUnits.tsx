@@ -137,7 +137,7 @@ export default function AdminUnits() {
                 </div>
                 <div className="flex items-center gap-4">
                     <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
-                        ADMIN ACCESS
+                        ACESSO ADMINISTRATIVO
                     </Badge>
                 </div>
             </header>

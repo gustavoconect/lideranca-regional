@@ -221,7 +221,7 @@ export default function UnitDashboardPage() {
             <nav className="fixed bottom-0 left-0 right-0 h-20 bg-background/80 backdrop-blur-xl border-t border-border flex items-center justify-around px-6 z-50">
                 <button onClick={() => navigate('/unit-dashboard')} className="flex flex-col items-center gap-1 text-primary">
                     <LayoutDashboard className="h-6 w-6" />
-                    <span className="text-[8px] font-black uppercase">Home</span>
+                    <span className="text-[8px] font-black uppercase">Início</span>
                 </button>
                 <button onClick={() => navigate('/tasks')} className="flex flex-col items-center gap-1 text-muted-foreground">
                     <ClipboardList className="h-6 w-6" />

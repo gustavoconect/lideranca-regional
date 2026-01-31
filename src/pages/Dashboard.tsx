@@ -168,7 +168,7 @@ export default function DashboardPage() {
                             </motion.div>
                             <div className="flex flex-col">
                                 <span className="text-lg font-black tracking-tighter text-foreground border-none leading-none">SmartFit <span className="text-primary italic">SP15</span></span>
-                                <span className="text-[10px] font-bold text-muted-foreground tracking-[0.2em] mt-1 uppercase italic">Regional SP15 Hub</span>
+                                <span className="text-[10px] font-bold text-muted-foreground tracking-[0.2em] mt-1 uppercase italic">Hub Regional SP15</span>
                             </div>
                         </div>
 
@@ -208,10 +208,10 @@ export default function DashboardPage() {
                 <header className={`sticky top-0 z-30 flex h-20 items-center gap-4 px-4 md:px-8 border-b transition-all duration-700 ${presentationMode ? 'bg-background/80 border-border text-foreground backdrop-blur-xl' : 'bg-background/80 border-border backdrop-blur-md'}`}>
                     <div className="flex flex-col">
                         <h1 className="text-xl font-black tracking-tight md:text-2xl uppercase italic">
-                            {presentationMode ? 'SMARTFIT SP15 STRATEGIC HUB' : 'SmartFit SP15 • Dashboard Executivo'}
+                            {presentationMode ? 'HUB ESTRATÉGICO SMARTFIT SP15' : 'SmartFit SP15 • Dashboard Executivo'}
                         </h1>
                         <p className={`text-[10px] font-black uppercase tracking-[0.3em] ${presentationMode ? 'text-primary' : 'text-muted-foreground'}`}>
-                            {presentationMode ? 'NPS ANALYTICS ENGINE V.3' : 'Resumo Semanal de Unidades'}
+                            {presentationMode ? 'MOTOR DE ANÁLISE NPS V.3' : 'Resumo Semanal de Unidades'}
                         </p>
                     </div>
 
@@ -365,7 +365,7 @@ export default function DashboardPage() {
                                                     <div className="flex items-center gap-3">
                                                         <div className="h-1 w-12 bg-primary rounded-full" />
                                                         <h3 className="text-sm font-black text-foreground uppercase tracking-[0.3em]">
-                                                            Strategic Insights
+                                                            Insights Estratégicos
                                                         </h3>
                                                     </div>
                                                     <div className="space-y-4">
@@ -391,7 +391,7 @@ export default function DashboardPage() {
                                 className="space-y-12 max-w-5xl mx-auto py-12"
                             >
                                 <div className="space-y-2">
-                                    <Badge className="bg-primary text-black font-black px-4 py-1.5 rounded-full text-xs uppercase italic tracking-tighter">Strategic Execution Slide</Badge>
+                                    <Badge className="bg-primary text-black font-black px-4 py-1.5 rounded-full text-xs uppercase italic tracking-tighter">Slide de Execução Estratégica</Badge>
                                     <h2 className="text-6xl font-black text-foreground italic uppercase tracking-tighter leading-none">Diretrizes Críticas <br /><span className="text-primary">da Semana</span></h2>
                                     <p className="text-muted-foreground font-bold uppercase tracking-[0.3em] text-sm">Monitoramento de execução tática • Ponto de atenção na reunião</p>
                                 </div>
@@ -480,7 +480,7 @@ export default function DashboardPage() {
                                     <div className="h-3 w-3 rounded-full bg-primary" />
                                     <span className={`text-[10px] font-bold uppercase ${presentationMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Média Rede</span>
                                 </div>
-                                <Badge variant="outline" className={`rounded-lg px-3 py-1 font-bold ${presentationMode ? 'border-slate-800 text-slate-500' : 'border-slate-100'}`}>Live Update</Badge>
+                                <Badge variant="outline" className={`rounded-lg px-3 py-1 font-bold ${presentationMode ? 'border-slate-800 text-slate-500' : 'border-slate-100'}`}>Tempo Real</Badge>
                             </div>
                         </div>
                         <div className="h-[400px]">
@@ -490,8 +490,8 @@ export default function DashboardPage() {
                 </main>
 
                 <footer className={`h-16 flex items-center px-10 text-[9px] font-bold uppercase tracking-[0.3em] transition-colors duration-700 ${presentationMode ? 'bg-background text-muted-foreground' : 'bg-background text-muted-foreground border-t'}`}>
-                    <span>SmartFit SP15 Executive Dashboard • build v2.1.0-elite</span>
-                    <span className="ml-auto opacity-50">Authorized Use Only</span>
+                    <span>SmartFit SP15 Dashboard Executivo • build v2.1.0-elite</span>
+                    <span className="ml-auto opacity-50">Apenas para Uso Autorizado</span>
                 </footer>
             </div>
         </div>

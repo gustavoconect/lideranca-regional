@@ -213,7 +213,7 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
                         <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-none mb-1">Cálculo de NPS Estimado</span>
                             <span className="text-3xl font-black tracking-tighter text-white italic">
-                                {calculateNPS().toFixed(1)} <span className="text-[10px] tracking-normal not-italic font-bold text-slate-600 ml-1">POINTS</span>
+                                {calculateNPS().toFixed(1)} <span className="text-[10px] tracking-normal not-italic font-bold text-slate-600 ml-1">PONTOS</span>
                             </span>
                         </div>
                         <Button

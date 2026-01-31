@@ -373,8 +373,8 @@ export default function ReportsPage() {
                     <ArrowLeft className="h-5 w-5 text-slate-600" />
                 </Button>
                 <div className="flex flex-col">
-                    <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase italic">Intelligence & Reports</h1>
-                    <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Executive Dossier System</p>
+                    <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase italic">Inteligência & Relatórios</h1>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Sistema de Dossiês Executivos</p>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
                     <Button
@@ -415,7 +415,7 @@ export default function ReportsPage() {
                                             Dossiê Estratégico <span className="text-primary">Regional</span>
                                         </CardTitle>
                                         <CardDescription className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-                                            Analysis of {regionalReports[0]?.ai_summary.total_feedbacks} high-value feedback points
+                                            Análise de {regionalReports[0]?.ai_summary.total_feedbacks} feedbacks de alto valor
                                         </CardDescription>
                                     </div>
                                     <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest h-fit">
@@ -449,7 +449,7 @@ export default function ReportsPage() {
                                                         </div>
                                                         <p className="font-black text-emerald-400 flex items-center gap-2 mb-4 uppercase tracking-[0.2em] text-[10px]">
                                                             <Target className="h-4 w-4" />
-                                                            Strategic Core Insight
+                                                            Insight Estratégico Central
                                                         </p>
                                                         <p className="text-2xl font-bold leading-tight tracking-tight relative z-10">{report.ai_summary.key_insight}</p>
                                                     </div>
@@ -459,7 +459,7 @@ export default function ReportsPage() {
                                                     <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/20">
                                                         <h4 className="font-black text-slate-900 flex items-center gap-2 mb-6 text-xs uppercase tracking-[0.2em]">
                                                             <div className="h-6 w-1 bg-primary rounded-full" />
-                                                            Regional Strengths
+                                                            Pontos Fortes Regionais
                                                         </h4>
                                                         <ul className="space-y-4">
                                                             {report.ai_summary.regional_strengths.map((s: string, i: number) => (
@@ -476,7 +476,7 @@ export default function ReportsPage() {
                                                     <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/20">
                                                         <h4 className="font-black text-slate-900 flex items-center gap-2 mb-6 text-xs uppercase tracking-[0.2em]">
                                                             <div className="h-6 w-1 bg-amber-500 rounded-full" />
-                                                            Critical Vulnerabilities
+                                                            Vulnerabilidades Críticas
                                                         </h4>
                                                         <ul className="space-y-4">
                                                             {(report.ai_summary.top_issues || report.ai_summary.systemic_issues)?.map((s: string, i: number) => (
@@ -505,9 +505,9 @@ export default function ReportsPage() {
                                 <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
                                     <Calculator className="h-5 w-5" />
                                 </div>
-                                Target Optimizer
+                                Otimizador de Metas
                             </CardTitle>
-                            <CardDescription className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Growth calculation for 2026</CardDescription>
+                            <CardDescription className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Cálculo de crescimento para 2026</CardDescription>
                         </CardHeader>
                         <CardContent className="h-full">
                             <div className="space-y-3 pb-8">
@@ -548,8 +548,8 @@ export default function ReportsPage() {
                     <div className="md:col-span-2 flex flex-col gap-6">
                         <div className="flex items-end justify-between px-2">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-2xl font-black tracking-tighter text-slate-900 uppercase">Unit Investigations</h2>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{unitReports.length} individual reports published</p>
+                                <h2 className="text-2xl font-black tracking-tighter text-slate-900 uppercase">Investigações por Unidade</h2>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{unitReports.length} dossiês individuais publicados</p>
                             </div>
                             <div className="flex gap-2">
                                 <Button
@@ -562,14 +562,14 @@ export default function ReportsPage() {
                                     <SelectTrigger className="h-10 px-4 bg-white border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-600 rounded-xl transition-all shadow-sm">
                                         <div className="flex items-center gap-2">
                                             <AlertTriangle className="h-3.5 w-3.5" />
-                                            {filterPriority ? `RISK: ${filterPriority}` : 'FILTER PRIORITY'}
+                                            {filterPriority ? `RISCO: ${filterPriority}` : 'FILTRAR PRIORIDADE'}
                                         </div>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">ALL UNITS</SelectItem>
-                                        <SelectItem value="alta">CRITICAL RISK</SelectItem>
-                                        <SelectItem value="média">MEDIUM RISK</SelectItem>
-                                        <SelectItem value="baixa">LOW RISK</SelectItem>
+                                        <SelectItem value="all">TODAS AS UNIDADES</SelectItem>
+                                        <SelectItem value="alta">RISCO CRÍTICO</SelectItem>
+                                        <SelectItem value="média">RISCO MÉDIO</SelectItem>
+                                        <SelectItem value="baixa">RISCO BAIXO</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -578,7 +578,7 @@ export default function ReportsPage() {
                         {unitReports.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center py-20 bg-white border border-slate-100 rounded-[2rem] border-dashed">
                                 <FileText className="h-16 w-16 text-slate-200 mb-6" />
-                                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Waiting for Data Upload</p>
+                                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Aguardando Upload de Dados</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -606,7 +606,7 @@ export default function ReportsPage() {
 
                                                 <div className="flex justify-between items-start mb-6">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Investigation Unit</span>
+                                                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Unidade sob Investigação</span>
                                                         <h4 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors leading-tight">
                                                             {unitName}
                                                         </h4>
@@ -633,7 +633,7 @@ export default function ReportsPage() {
                                                     <div className="flex items-center justify-between pt-2">
                                                         <div className="flex items-center gap-2 text-[9px] font-black uppercase text-indigo-600 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
                                                             <Maximize2 className="h-3.5 w-3.5" />
-                                                            Explore Dossier
+                                                            Explorar Dossiê
                                                         </div>
                                                         <Button
                                                             variant="ghost"
@@ -672,14 +672,14 @@ export default function ReportsPage() {
                                             selectedReport.ai_summary.priority_level === 'média' ? 'bg-amber-500 text-white shadow-amber-500/20' :
                                                 'bg-slate-900 text-white shadow-slate-900/20'
                                             }`}>
-                                            Risk: {selectedReport.ai_summary.priority_level || 'Normal'}
+                                            Risco: {selectedReport.ai_summary.priority_level || 'Normal'}
                                         </Badge>
                                     </div>
                                     <DialogTitle className="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">
-                                        Executive Unit Report
+                                        Relatório Executivo da Unidade
                                     </DialogTitle>
                                     <DialogDescription className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2">
-                                        Qualitative Sentiment Analysis • {selectedReport.ai_summary.feedback_count} Points
+                                        Análise Qualitativa de Sentimento • {selectedReport.ai_summary.feedback_count} Pontos
                                     </DialogDescription>
                                 </DialogHeader>
 
@@ -699,7 +699,7 @@ export default function ReportsPage() {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-20 text-slate-300 gap-4">
                                                 <AlertTriangle className="h-12 w-12 opacity-20" />
-                                                <p className="text-xs font-black uppercase tracking-[0.3em]">No Processed Data Available</p>
+                                                <p className="text-xs font-black uppercase tracking-[0.3em]">Nenhum dado processado disponível</p>
                                             </div>
                                         )}
                                     </div>

@@ -28,7 +28,7 @@ export default function LoginPage() {
                         SmartFit <span className="text-primary border-none">SP15</span>
                     </h1>
                     <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1 text-center">
-                        High-Performance Leadership
+                        Liderança de Alta Performance
                     </p>
                 </div>
 

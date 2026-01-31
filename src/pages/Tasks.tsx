@@ -267,10 +267,10 @@ export default function TasksPage() {
     }
 
     const getStatusBadge = (t: Task) => {
-        if (t.status === 'verified') return <Badge className="bg-primary text-black font-black px-3 rounded-full uppercase text-[9px]">Verified</Badge>
-        if (t.status === 'completed') return <Badge className="bg-primary/20 text-primary border-primary/20 px-3 rounded-full uppercase text-[9px]">Awaiting Audit</Badge>
-        if (new Date(t.due_date) < new Date() && t.status === 'pending') return <Badge className="bg-red-500 text-white px-3 rounded-full uppercase text-[9px]">Overdue</Badge>
-        return <Badge className="bg-muted text-muted-foreground px-3 rounded-full uppercase text-[9px]">In Progress</Badge>
+        if (t.status === 'verified') return <Badge className="bg-primary text-black font-black px-3 rounded-full uppercase text-[9px]">Verificado</Badge>
+        if (t.status === 'completed') return <Badge className="bg-primary/20 text-primary border-primary/20 px-3 rounded-full uppercase text-[9px]">Aguardando Auditoria</Badge>
+        if (new Date(t.due_date) < new Date() && t.status === 'pending') return <Badge className="bg-red-500 text-white px-3 rounded-full uppercase text-[9px]">Atrasado</Badge>
+        return <Badge className="bg-muted text-muted-foreground px-3 rounded-full uppercase text-[9px]">Em Andamento</Badge>
     }
 
     return (
@@ -285,7 +285,7 @@ export default function TasksPage() {
                         SmartFit <span className="text-primary">SP15</span>
                         <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                     </h1>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em]">Tactical Oversight Console</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em]">Console de Supervisão Tática</p>
                 </div>
 
                 {userRole === 'regional_leader' && (
@@ -359,13 +359,13 @@ export default function TasksPage() {
                                                     <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-xl border border-border">
                                                         <Clock className="h-3.5 w-3.5 text-primary" />
                                                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                                                            Time remaining: {Math.max(0, Math.ceil((new Date(task.due_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} days
+                                                            Tempo restante: {Math.max(0, Math.ceil((new Date(task.due_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} dias
                                                         </span>
                                                     </div>
                                                     {task.validation_type === 'photo' && (
                                                         <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20">
                                                             <Target className="h-3.5 w-3.5 text-primary" />
-                                                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Evidence Required</span>
+                                                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Evidência Obrigatória</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -373,7 +373,7 @@ export default function TasksPage() {
 
                                             <div className="mt-8 md:mt-0 flex items-center justify-between md:justify-end gap-6 border-t md:border-none border-border pt-6 md:pt-0">
                                                 <div className="flex flex-col items-end gap-1">
-                                                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Directive Status</span>
+                                                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Status da Diretriz</span>
                                                     {getStatusBadge(task)}
                                                 </div>
 
@@ -424,14 +424,14 @@ export default function TasksPage() {
                                 </div>
                                 <div className="flex flex-col">
                                     <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-foreground">Nova Diretriz</DialogTitle>
-                                    <DialogDescription className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest text-left">Set tactical priorities for the units</DialogDescription>
+                                    <DialogDescription className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest text-left">Defina as prioridades táticas para as unidades</DialogDescription>
                                 </div>
                             </div>
                         </DialogHeader>
 
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Objective Title</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Título do Objetivo</Label>
                                 <Input
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
@@ -442,21 +442,21 @@ export default function TasksPage() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Priority</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prioridade</Label>
                                     <Select value={priority} onValueChange={(v: any) => setPriority(v)}>
                                         <SelectTrigger className="h-14 bg-muted border-border rounded-2xl text-[10px] font-black uppercase tracking-widest">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent className="bg-card border-border">
-                                            <SelectItem value="low">Low</SelectItem>
-                                            <SelectItem value="medium">Medium</SelectItem>
-                                            <SelectItem value="high">High</SelectItem>
-                                            <SelectItem value="critical">Critical</SelectItem>
+                                            <SelectItem value="low">Baixa</SelectItem>
+                                            <SelectItem value="medium">Média</SelectItem>
+                                            <SelectItem value="high">Alta</SelectItem>
+                                            <SelectItem value="critical">Crítica</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Deadline</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prazo Final</Label>
                                     <Input
                                         type="date"
                                         value={dueDate}
@@ -467,7 +467,7 @@ export default function TasksPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Target Unit</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Unidade Alvo</Label>
                                 <Select value={targetUnit} onValueChange={setTargetUnit}>
                                     <SelectTrigger className="h-14 bg-muted border-border rounded-2xl text-[10px] font-black uppercase tracking-widest">
                                         <SelectValue />
@@ -554,8 +554,8 @@ export default function TasksPage() {
                                                     <Upload className="h-6 w-6" />
                                                 </div>
                                                 <div className="flex flex-col items-center">
-                                                    <span className="text-xs font-black uppercase text-muted-foreground tracking-widest">Upload Photo</span>
-                                                    <span className="text-[9px] text-muted-foreground/60 font-bold uppercase tracking-widest mt-1">JPG, PNG (MAX 5MB)</span>
+                                                    <span className="text-xs font-black uppercase text-muted-foreground tracking-widest">Upload de Foto</span>
+                                                    <span className="text-[9px] text-muted-foreground/60 font-bold uppercase tracking-widest mt-1">JPG, PNG (MÁX 5MB)</span>
                                                 </div>
                                             </>
                                         )}
@@ -639,7 +639,7 @@ export default function TasksPage() {
                                 </div>
                                 <div className="space-y-4">
                                     <div className="p-6 bg-muted rounded-3xl border border-border flex flex-col gap-1">
-                                        <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Metadata de Auditoria</span>
+                                        <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Metadados de Auditoria</span>
                                         <div className="flex items-center gap-2 mt-2">
                                             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                                 <Database className="h-4 w-4" />

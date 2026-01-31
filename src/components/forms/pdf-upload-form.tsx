@@ -259,7 +259,7 @@ REGRAS CRÍTICAS:
         // Retry automático em caso de rate limit (429)
         if (error?.message?.includes('429') && retryCount < 3) {
             const waitTime = Math.pow(2, retryCount + 1) * 5000 // 10s, 20s, 40s
-            console.log(`⏳ Rate limit atingido, aguardando ${waitTime / 1000}s antes de tentar novamente...`)
+            // Rate limit handled
             await new Promise(resolve => setTimeout(resolve, waitTime))
             return analyzeWithGemini(unit, retryCount + 1)
         }
@@ -341,7 +341,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
             if (!user) throw new Error('Usuário não autenticado')
 
             // ETAPA 1: Extrair texto bruto do PDF
-            console.log('📄 Extraindo texto do PDF...')
+            // Extraction starting
             const rawText = await extractTextFromPdf(file)
 
             // Registrar fonte de dados no início

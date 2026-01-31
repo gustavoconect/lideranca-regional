@@ -20,7 +20,8 @@ import {
     X,
     Upload,
     ShieldAlert,
-    Loader2
+    Loader2,
+    Database
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -125,21 +126,35 @@ export default function TasksPage() {
         if (!userId) return
 
         try {
-            const newTask = {
-                title,
-                description,
-                priority,
-                due_date: new Date(dueDate).toISOString(),
-                validation_type: requiresEvidence ? 'photo' : 'checkbox',
-                regional_leader_id: userId,
-                // If 'all', we might need to insert multiple records or handle it in a trigger.
-                // For now, let's assume we assign to a specific leader or self.
-                unit_leader_id: targetUnit === 'all' ? userId : (units.find(u => u.id === targetUnit)?.leader_id || userId),
-                status: 'pending'
-            }
+            if (targetUnit === 'all') {
+                const tasksToInsert = units.map(unit => ({
+                    title,
+                    description,
+                    priority,
+                    due_date: new Date(dueDate).toISOString(),
+                    validation_type: requiresEvidence ? 'photo' : 'checkbox',
+                    regional_leader_id: userId,
+                    unit_leader_id: unit.leader_id,
+                    status: 'pending'
+                }))
 
-            const { error } = await supabase.from('tasks').insert(newTask)
-            if (error) throw error
+                const { error } = await supabase.from('tasks').insert(tasksToInsert)
+                if (error) throw error
+            } else {
+                const newTask = {
+                    title,
+                    description,
+                    priority,
+                    due_date: new Date(dueDate).toISOString(),
+                    validation_type: requiresEvidence ? 'photo' : 'checkbox',
+                    regional_leader_id: userId,
+                    unit_leader_id: units.find(u => u.id === targetUnit)?.leader_id || userId,
+                    status: 'pending'
+                }
+
+                const { error } = await supabase.from('tasks').insert(newTask)
+                if (error) throw error
+            }
 
             toast.success('Diretriz operacional disparada para a rede!')
             setIsCreateModalOpen(false)
@@ -582,67 +597,77 @@ export default function TasksPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Modal de Auditoria do Regional */}
+            {/* Modal de Auditoria do Regional - Elite Version */}
             <Dialog open={!!viewingProof} onOpenChange={(open) => !open && setViewingProof(null)}>
-                <DialogContent className="bg-slate-900 border-slate-800 text-slate-200 rounded-[2.5rem] sm:max-w-[600px] overflow-hidden p-0 ring-1 ring-white/10 shadow-2xl">
-                    <div className="h-2 bg-emerald-500 w-full" />
-                    <div className="p-8">
-                        <DialogHeader className="mb-6 text-left">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500">
-                                    <ShieldAlert className="h-6 w-6" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-white">Auditoria de Diretriz</DialogTitle>
-                                    <DialogDescription className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Validar evidência operacional enviada</DialogDescription>
-                                </div>
-                            </div>
-                        </DialogHeader>
-
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50">
-                                    <span className="text-[8px] font-black text-slate-600 uppercase tracking-[0.2em] block mb-1">Objetivo</span>
-                                    <p className="text-xs font-bold text-white border-none leading-relaxed line-clamp-2">{viewingProof?.title}</p>
-                                </div>
-                                <div className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50">
-                                    <span className="text-[8px] font-black text-slate-600 uppercase tracking-[0.2em] block mb-1">Concluído em</span>
-                                    <p className="text-xs font-bold text-white border-none">{viewingProof?.completed_at ? new Date(viewingProof.completed_at).toLocaleString() : '---'}</p>
+                <DialogContent className="bg-[#020617] border-white/5 text-slate-200 rounded-[3rem] sm:max-w-[750px] overflow-hidden p-0 ring-1 ring-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                    <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-indigo-500 to-emerald-500 w-full" />
+                    <div className="p-0">
+                        {viewingProof?.proof_url ? (
+                            <div className="relative aspect-[16/10] w-full bg-slate-950 flex items-center justify-center overflow-hidden group">
+                                <motion.img
+                                    initial={{ scale: 1.1, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    src={viewingProof.proof_url}
+                                    className="object-contain w-full h-full transition-transform duration-700 group-hover:scale-105"
+                                    alt="Task Proof"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80" />
+                                <div className="absolute bottom-10 left-12 right-12 z-10">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <Badge className="bg-emerald-500 text-slate-950 font-black italic border-none text-[8px] px-2">EVIDÊNCIA VISUAL</Badge>
+                                        <span className="text-white/40 text-[8px] font-black uppercase tracking-[0.3em]">Captured via SP15 Mobile</span>
+                                    </div>
+                                    <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter leading-none">{viewingProof.title}</h3>
                                 </div>
                             </div>
+                        ) : (
+                            <div className="h-80 flex flex-col items-center justify-center bg-slate-950/50 text-slate-600 gap-4">
+                                <div className="p-5 rounded-full bg-slate-900 border border-slate-800">
+                                    <AlertCircle className="h-10 w-10 opacity-20" />
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em]">No Visual Assets Detected</span>
+                            </div>
+                        )}
 
-                            {viewingProof?.proof_url ? (
-                                <div className="space-y-3">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Evidência Fotográfica</Label>
-                                    <div className="relative rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl aspect-video bg-slate-950">
-                                        <img src={viewingProof.proof_url} alt="Proof" className="w-full h-full object-contain" />
+                        <div className="p-12 space-y-10">
+                            <div className="grid grid-cols-2 gap-8">
+                                <div className="space-y-2">
+                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-1">Detalhes da Execução</span>
+                                    <div className="p-6 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-sm">
+                                        <p className="text-sm font-bold text-slate-300 leading-relaxed italic">"{viewingProof?.description}"</p>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="p-8 border-2 border-dashed border-slate-800 rounded-3xl flex flex-col items-center gap-3">
-                                    <AlertCircle className="h-8 w-8 text-slate-700" />
-                                    <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Nenhuma foto anexada</span>
+                                <div className="space-y-4">
+                                    <div className="p-6 bg-white/5 rounded-3xl border border-white/5 flex flex-col gap-1">
+                                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Metadata de Auditoria</span>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <div className="h-8 w-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                                                <Database className="h-4 w-4" />
+                                            </div>
+                                            <span className="text-xs font-black text-white italic">{viewingProof?.completed_at ? new Date(viewingProof.completed_at).toLocaleString('pt-BR') : 'Sem registro'}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
 
-                        <DialogFooter className="mt-10 flex gap-3 text-left">
-                            <Button
-                                variant="ghost"
-                                onClick={() => setViewingProof(null)}
-                                className="h-14 flex-1 text-slate-500 hover:text-white font-black uppercase tracking-widest text-xs rounded-2xl border-none"
-                            >
-                                Fechar
-                            </Button>
-                            <Button
-                                onClick={() => viewingProof && handleVerifyTask(viewingProof.id)}
-                                disabled={verifying}
-                                className="h-14 flex-[2] bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-emerald-500/10 transition-all border-none"
-                            >
-                                {verifying ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <CheckCircle className="h-5 w-5 mr-3" />}
-                                Validar Diretriz
-                            </Button>
-                        </DialogFooter>
+                            <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                                <Button
+                                    onClick={() => viewingProof && handleVerifyTask(viewingProof.id)}
+                                    disabled={verifying}
+                                    className="h-20 flex-[3] bg-emerald-500 hover:bg-emerald-400 text-[#020617] font-black uppercase text-sm tracking-[0.1em] rounded-3xl shadow-[0_10px_30px_rgba(16,185,129,0.2)] border-none transition-all active:scale-[0.98]"
+                                >
+                                    {verifying ? <Loader2 className="h-6 w-6 animate-spin mr-3" /> : <CheckCircle className="h-6 w-6 mr-3" />}
+                                    Aprovar Conformidade Operacional
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setViewingProof(null)}
+                                    className="h-20 flex-1 text-slate-500 hover:text-white font-black uppercase text-[10px] tracking-widest rounded-3xl border border-white/10 hover:bg-white/5 transition-all"
+                                >
+                                    Pular / Fechar
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </DialogContent>
             </Dialog>

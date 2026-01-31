@@ -262,7 +262,7 @@ export default function ReportsPage() {
             const response = await result.response
             const text = response.text()
 
-            console.log('AI Response:', text)
+            // console.log('AI Response:', text)
 
             // Tentar extrair JSON de forma mais resiliente
             let analysis: any

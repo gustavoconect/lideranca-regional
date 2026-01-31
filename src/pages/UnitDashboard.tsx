@@ -98,10 +98,10 @@ export default function UnitDashboardPage() {
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                         <h1 className="text-2xl font-black tracking-tight text-white uppercase italic">
-                            Unidade <span className="text-emerald-400">{metrics?.units?.name || '---'}</span>
+                            SP15 <span className="text-emerald-400">Unidade</span>
                         </h1>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                            Dashboard Operacional • Líder: {userName}
+                            Unidade: {metrics?.units?.name} • Líder: {userName}
                         </p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={handleLogout} className="text-slate-400 hover:text-white">

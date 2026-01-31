@@ -163,6 +163,11 @@ export default function ReportsPage() {
                 .eq('file_type', 'pdf')
                 .order('created_at', { ascending: false })
 
+            // 3. Buscar tarefas (Tasks) para análise de Compliance
+            const { data: tasksData } = await supabase
+                .from('tasks')
+                .select('unit_leader_id, status, title, validation_type')
+
             if (!sources || sources.length === 0) {
                 toast.error('Nenhum PDF encontrado na Central de Dados para análise.')
                 setIsGenerating(false)
@@ -204,16 +209,25 @@ export default function ReportsPage() {
 
             FEEDBACKS BRUTOS EXTRAÍDOS DE PDFS (QUALITATIVO):
             ${pdfTexts}
+
+            COMPLIANCE OPERACIONAL (TAREFAS CONCLUÍDAS):
+            ${JSON.stringify(tasksData?.map(t => ({
+                status: t.status,
+                titulo: t.title,
+                lider_id: t.unit_leader_id
+            })))}
             ---
 
             TAREFA 1: RELATÓRIO REGIONAL CONSOLIDADO
             - MAPA DE CALOR: Tabela Markdown com as unidades nas linhas e o total de menções a "Manutenção", "Atendimento/Equipe" e "Limpeza" nas colunas.
             - AUDITORIA DE CONTATO: Analise a coluna "Resolução/Feedback 1". Calcule o % de eficácia de contato (contatado vs. sem sucesso).
+            - COMPLIANCE VS NPS: Correlacione o % de tarefas concluídas com a média de NPS da rede.
             - INSIGHT ESTRATÉGICO: Qual o maior risco sistêmico para a meta de 75.0?
 
             TAREFA 2: DOSSIÊ INDIVIDUAL POR UNIDADE (Obrigatório para cada unidade com dados)
             Você deve analisar cada unidade INDIVIDUALMENTE e EXAUSTIVAMENTE. Esperamos relatórios LONGOS e detalhados.
             - DIAGNÓSTICO DE CAUSA RAIZ: Use "5 Porquês" baseados no texto real. Vá fundo no problema técnico.
+            - ADERÊNCIA OPERACIONAL: Analise se as tarefas concluídas pela unidade coincidem com as dores relatadas nos feedbacks (Ex: Se há reclamação de limpeza e a tarefa de 'Auditoria de Higiene' foi ignorada, aponte isso).
             - EVIDÊNCIAS: Cite múltiplos fragmentos de comentários relevantes.
             - PLANO DE AÇÃO 5W2H COMPLETO: Crie uma tabela Markdown 5W2H para cada ofensor identificado. Seja ultra-específico nos processos.
             - CORRELAÇÃO: Explique matematicamente como os problemas citados no PDF estão impedindo a unidade de atingir a meta de 75.0.

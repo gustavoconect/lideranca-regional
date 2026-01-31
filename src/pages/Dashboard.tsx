@@ -8,7 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, TrendingUp, TrendingDown, Target, Users, FileText, Database } from 'lucide-react'
+import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, TrendingDown, Target, Users, FileText, Database, ShieldAlert } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface Metric {
@@ -34,16 +34,39 @@ export default function DashboardPage() {
     const [selectedWeek, setSelectedWeek] = useState<string>('')
     const [loading, setLoading] = useState(true)
     const [presentationMode, setPresentationMode] = useState(false)
+    const [complianceRate, setComplianceRate] = useState(0)
+    const [auditPendingCount, setAuditPendingCount] = useState(0)
 
     useEffect(() => {
         checkAuth()
         fetchAllMetrics()
+        fetchOperationalCompliance()
     }, [])
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
             navigate('/login')
+        }
+    }
+
+    const fetchOperationalCompliance = async () => {
+        try {
+            const { data: tasks, error } = await supabase
+                .from('tasks')
+                .select('status')
+
+            if (error) throw error
+
+            if (tasks && tasks.length > 0) {
+                const verified = tasks.filter(t => t.status === 'verified').length
+                const completed = tasks.filter(t => t.status === 'completed').length
+                const total = tasks.length
+                setComplianceRate((verified / total) * 100)
+                setAuditPendingCount(completed)
+            }
+        } catch (error) {
+            console.error('Error fetching compliance:', error)
         }
     }
 
@@ -67,17 +90,15 @@ export default function DashboardPage() {
             const metricsData = (data || []) as Metric[]
             setAllMetrics(metricsData)
 
-            // Extract unique weeks
             const weeks = [...new Set(metricsData.map(m => m.week_start_date))].sort().reverse()
             setAvailableWeeks(weeks)
 
-            // Select most recent week by default
             if (weeks.length > 0 && !selectedWeek) {
                 setSelectedWeek(weeks[0])
             }
 
-            // Filter metrics for selected week
-            const currentWeekMetrics = metricsData.filter(m => m.week_start_date === (selectedWeek || weeks[0]))
+            const currentWeekWeek = selectedWeek || weeks[0]
+            const currentWeekMetrics = metricsData.filter(m => m.week_start_date === currentWeekWeek)
             setMetrics(currentWeekMetrics)
 
         } catch (error) {
@@ -123,7 +144,6 @@ export default function DashboardPage() {
 
     return (
         <div className={`flex min-h-screen w-full font-sans transition-colors duration-700 ${presentationMode ? 'bg-[#020617]' : 'bg-slate-50/50'}`}>
-            {/* Nav Sidebar (Modo Elite) */}
             {!presentationMode && (
                 <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r bg-white lg:block shadow-[1px_0_0_0_rgba(0,0,0,0.05)]">
                     <div className="flex h-full flex-col gap-2 p-6">
@@ -221,12 +241,11 @@ export default function DashboardPage() {
                 </header>
 
                 <main className={`flex flex-1 flex-col gap-8 p-4 md:gap-10 md:p-10 transition-colors duration-700 ${presentationMode ? 'bg-[#020617]' : ''}`}>
-                    {/* Header de Metas Elite - Decision Cards */}
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                         {[
                             { title: 'NPS Regional', value: (metrics.reduce((acc, curr) => acc + curr.nps_score, 0) / (metrics.length || 1)).toFixed(1), icon: Target, color: 'emerald', meta: 'META 2026: 75.0', trend: 2.1 },
                             { title: 'Amostragem', value: metrics.reduce((acc, curr) => acc + curr.responses_count, 0), icon: Users, color: 'navy', meta: 'Feedbacks processados', trend: 12 },
-                            { title: 'Performance', value: metrics.filter(m => m.nps_score >= m.goal_2026_1).length, icon: TrendingUp, color: 'emerald', meta: 'Unidades na Meta', trend: 1 },
+                            { title: 'Compliance', value: complianceRate.toFixed(1) + '%', icon: ShieldAlert, color: 'emerald', meta: `${auditPendingCount} aguardando auditoria`, trend: 0 },
                             { title: 'Risco Operacional', value: metrics.filter(m => m.nps_score < 50).length, icon: TrendingDown, color: 'amber', meta: 'Unidades em Risco', trend: -1 },
                         ].map((card, idx) => (
                             <motion.div
@@ -263,7 +282,7 @@ export default function DashboardPage() {
                                             <div className={`h-1 w-full rounded-full ${presentationMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
                                                 <motion.div
                                                     initial={{ width: 0 }}
-                                                    animate={{ width: card.title === 'NPS Regional' ? `${Math.min(100, (Number(card.value) / 75) * 100)}%` : '100%' }}
+                                                    animate={{ width: card.title === 'NPS Regional' ? `${Math.min(100, (Number(card.value) / 75) * 100)}%` : card.title === 'Compliance' ? `${complianceRate}%` : '100%' }}
                                                     className={`h-full rounded-full ${card.color === 'emerald' ? 'bg-emerald-500' : card.color === 'amber' ? 'text-amber-500' : 'bg-slate-600'}`}
                                                 />
                                             </div>
@@ -274,7 +293,6 @@ export default function DashboardPage() {
                         ))}
                     </div>
 
-                    {/* Main Analytics Section */}
                     <div className="grid gap-8 lg:grid-cols-3">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -343,7 +361,6 @@ export default function DashboardPage() {
                                     transition={{ delay: 0.5 }}
                                     className="rounded-[2rem] p-10 bg-slate-900/40 ring-1 ring-white/10 flex flex-col justify-center relative overflow-hidden h-full"
                                 >
-                                    {/* Arte abstrata de fundo */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[60px]" />
                                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/10 blur-[60px]" />
 
@@ -375,7 +392,6 @@ export default function DashboardPage() {
                         </div>
                     </div>
 
-                    {/* Evolution Chart Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

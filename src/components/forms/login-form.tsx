@@ -32,8 +32,23 @@ export function LoginForm() {
                 return
             }
 
-            toast.success('Login realizado com sucesso!')
-            navigate('/dashboard')
+            // Get user profile to check role
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', user.id)
+                    .single()
+
+                toast.success('Login realizado com sucesso!')
+
+                if (profile?.role === 'regional_leader') {
+                    navigate('/dashboard')
+                } else {
+                    navigate('/unit-dashboard')
+                }
+            }
         } catch (err: any) {
             setError(err.message)
         } finally {

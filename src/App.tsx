@@ -6,6 +6,8 @@ import TasksPage from '@/pages/Tasks'
 import ReportsPage from '@/pages/Reports'
 import DataCenterPage from '@/pages/DataCenter'
 import AdminUnitsPage from '@/pages/AdminUnits'
+import UnitDashboardPage from '@/pages/UnitDashboard'
+import { ProtectedRoute } from '@/components/auth/protected-route'
 import { Toaster } from '@/components/ui/sonner'
 
 function App() {
@@ -13,11 +15,44 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/tasks" element={<TasksPage />} />
-                <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/data-center" element={<DataCenterPage />} />
-                <Route path="/units" element={<AdminUnitsPage />} />
+
+                {/* Rotas Comuns */}
+                <Route path="/tasks" element={
+                    <ProtectedRoute>
+                        <TasksPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Rotas de Líder de Unidade */}
+                <Route path="/unit-dashboard" element={
+                    <ProtectedRoute allowedRoles={['unit_leader']}>
+                        <UnitDashboardPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Rotas de Regional (Admin) */}
+                <Route path="/dashboard" element={
+                    <ProtectedRoute allowedRoles={['regional_leader']}>
+                        <DashboardPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/reports" element={
+                    <ProtectedRoute allowedRoles={['regional_leader']}>
+                        <ReportsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/data-center" element={
+                    <ProtectedRoute allowedRoles={['regional_leader']}>
+                        <DataCenterPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/units" element={
+                    <ProtectedRoute allowedRoles={['regional_leader']}>
+                        <AdminUnitsPage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Redirecionamento Base */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Routes>
             <Toaster />

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
-import { Calculator, Save, Calendar, Building2, Target, Percent } from 'lucide-react'
+import { Calculator, Save, Calendar, Building2, Target, Percent, TrendingUp, Users, Info } from 'lucide-react'
 
 interface Unit {
     id: string
@@ -23,7 +23,6 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
     const [selectedUnitId, setSelectedUnitId] = useState<string>('')
     const [weekDate, setWeekDate] = useState(new Date().toISOString().split('T')[0])
 
-    // Metrics
     const [npsSemestral, setNpsSemestral] = useState('')
     const [meta, setMeta] = useState('')
     const [responses, setResponses] = useState('')
@@ -48,6 +47,8 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
         return ((p - d) / r) * 100
     }
 
+    const npsValue = calculateNPS()
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!selectedUnitId || !weekDate || !responses) {
@@ -57,9 +58,6 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
 
         setIsSubmitting(true)
         try {
-            const npsScore = calculateNPS()
-
-            // Gerar label da semana (ex: formatar a data para semana do ano)
             const date = new Date(weekDate)
             const weekLabel = `Semana de ${date.toLocaleDateString('pt-BR')}`
 
@@ -72,16 +70,14 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
                     responses_count: parseInt(responses),
                     promoters_count: parseInt(promoters) || 0,
                     detractors_count: parseInt(detractors) || 0,
-                    nps_score: npsScore,
+                    nps_score: npsValue,
                     nps_semestral: parseFloat(npsSemestral) || null,
                     goal_2026_1: parseFloat(meta) || null,
-                    // source_id é null para entradas manuais
                 })
 
             if (error) throw error
 
             toast.success('Dados salvos com sucesso!')
-            // Limpar campos exceto unidade e data para facilitar próximas entradas
             setNpsSemestral('')
             setMeta('')
             setResponses('')
@@ -96,135 +92,174 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
     }
 
     return (
-        <Card className="bg-slate-900 border-slate-800 rounded-[2.5rem] overflow-hidden">
-            <CardHeader className="p-8 pb-4">
-                <CardTitle className="text-xl font-black uppercase tracking-tighter text-white flex items-center gap-3 italic">
-                    <div className="p-3 rounded-2xl bg-indigo-500/20 text-indigo-400">
-                        <Calculator className="h-6 w-6" />
+        <Card className="bg-black/40 border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-sm">
+            <CardHeader className="p-10 pb-4">
+                <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(240,185,11,0.1)]">
+                        <Calculator className="h-7 w-7" />
                     </div>
-                    Alimentação Manual de Métricas
-                </CardTitle>
-                <CardDescription className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Insira os indicadores semanais de performance</CardDescription>
+                    <div>
+                        <CardTitle className="text-2xl font-black uppercase tracking-tight text-white italic skew-x-[-10deg]">
+                            Feeding <span className="text-primary">Manual</span>
+                        </CardTitle>
+                        <CardDescription className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] mt-1">Sincronização de métricas semanais de performance</CardDescription>
+                    </div>
+                </div>
             </CardHeader>
-            <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* Configuracoes Basicas */}
-                    <div className="space-y-6 md:col-span-2 lg:col-span-3 pb-6 border-b border-slate-800 grid md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <Building2 className="h-3 w-3 text-indigo-400" /> Unidade Operacional
+
+            <CardContent className="p-10">
+                <form onSubmit={handleSubmit} className="space-y-10">
+
+                    {/* Tier 1: Core Config */}
+                    <div className="grid md:grid-cols-2 gap-10 p-8 rounded-[2rem] bg-white/5 border border-white/5">
+                        <div className="space-y-3">
+                            <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2 mb-2">
+                                <Building2 className="h-3.5 w-3.5" /> Unidade Operacional
                             </Label>
                             <Select value={selectedUnitId} onValueChange={setSelectedUnitId}>
-                                <SelectTrigger className="bg-slate-950 border-slate-700 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:ring-2 focus:ring-indigo-500/50 shadow-inner">
-                                    <SelectValue placeholder="Escolha a unidade..." />
+                                <SelectTrigger className="bg-black/60 border-white/10 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:border-primary/50 focus:ring-0 text-white shadow-2xl">
+                                    <SelectValue placeholder="Selecione a unidade estratégica" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-slate-900 border-slate-700 text-slate-100">
+                                <SelectContent className="bg-slate-900 border-white/10 text-white">
                                     {units.map(u => (
-                                        <SelectItem key={u.id} value={u.id}>
+                                        <SelectItem key={u.id} value={u.id} className="font-bold uppercase text-[11px] tracking-widest focus:bg-primary focus:text-black">
                                             {u.name} ({u.code})
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                                <Calendar className="h-3 w-3 text-indigo-400" /> Data de Referência
+                        <div className="space-y-3">
+                            <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2 mb-2">
+                                <Calendar className="h-3.5 w-3.5" /> Data de Referência
                             </Label>
                             <Input
                                 type="date"
                                 value={weekDate}
                                 onChange={e => setWeekDate(e.target.value)}
-                                className="bg-slate-950 border-slate-700 rounded-xl h-14 text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500/50 text-white shadow-inner"
+                                className="bg-black/60 border-white/10 rounded-xl h-14 text-sm font-bold uppercase focus:border-primary/50 focus:ring-0 text-white shadow-2xl"
                             />
                         </div>
                     </div>
 
-                    {/* Metas e Historico */}
-                    <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                            <Percent className="h-3 w-3 text-indigo-500" /> NPS Semestral
-                        </Label>
-                        <Input
-                            type="number"
-                            step="0.1"
-                            placeholder="75.0"
-                            value={npsSemestral}
-                            onChange={e => setNpsSemestral(e.target.value)}
-                            className="bg-slate-950 border-slate-800 rounded-xl h-14 text-lg font-black tracking-tight"
-                        />
+                    {/* Tier 2: Goals & Volume */}
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="space-y-4">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-white/40 flex items-center gap-2">
+                                <Percent className="h-3.5 w-3.5 text-primary" /> NPS Semestral
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    step="0.1"
+                                    placeholder="00.0"
+                                    value={npsSemestral}
+                                    onChange={e => setNpsSemestral(e.target.value)}
+                                    className="bg-white/5 border-white/5 rounded-xl h-16 text-xl font-black tracking-tighter text-white focus:border-primary/50 transition-all pl-6"
+                                />
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-white/20 uppercase tracking-widest">%</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-white/40 flex items-center gap-2">
+                                <Target className="h-3.5 w-3.5 text-primary" /> Meta Semanal
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    step="0.1"
+                                    placeholder="00.0"
+                                    value={meta}
+                                    onChange={e => setMeta(e.target.value)}
+                                    className="bg-white/5 border-white/5 rounded-xl h-16 text-xl font-black tracking-tighter text-primary focus:border-primary/50 transition-all pl-6 placeholder:text-primary/20"
+                                />
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary/30 uppercase tracking-widest">GOAL</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-white/40 flex items-center gap-2">
+                                <Users className="h-3.5 w-3.5 text-primary" /> Pesquisas Totais
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    placeholder="000"
+                                    value={responses}
+                                    onChange={e => setResponses(e.target.value)}
+                                    className="bg-white/5 border-white/5 rounded-xl h-16 text-xl font-black tracking-tighter text-white focus:border-primary/50 transition-all pl-6"
+                                />
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-black text-white/20 uppercase tracking-widest">RESP</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                            <Target className="h-3 w-3 text-emerald-500" /> Meta NPS Semanal
-                        </Label>
-                        <Input
-                            type="number"
-                            step="0.1"
-                            placeholder="80.0"
-                            value={meta}
-                            onChange={e => setMeta(e.target.value)}
-                            className="bg-slate-950 border-slate-800 rounded-xl h-14 text-lg font-black tracking-tight text-emerald-500"
-                        />
+                    {/* Tier 3: Breakdown & Result */}
+                    <div className="flex flex-col lg:flex-row gap-10 items-stretch border-t border-white/5 pt-10">
+                        <div className="flex-1 grid sm:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-2">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                    Promotores (9-10)
+                                </Label>
+                                <Input
+                                    type="number"
+                                    placeholder="0"
+                                    value={promoters}
+                                    onChange={e => setPromoters(e.target.value)}
+                                    className="bg-emerald-500/5 border-emerald-500/20 rounded-xl h-16 text-2xl font-black tracking-tighter text-emerald-500 focus:border-emerald-500/50 transition-all text-center"
+                                />
+                            </div>
+
+                            <div className="space-y-4">
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 flex items-center gap-2">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                                    Detratores (0-6)
+                                </Label>
+                                <Input
+                                    type="number"
+                                    placeholder="0"
+                                    value={detractors}
+                                    onChange={e => setDetractors(e.target.value)}
+                                    className="bg-red-500/5 border-red-500/20 rounded-xl h-16 text-2xl font-black tracking-tighter text-red-500 focus:border-red-500/50 transition-all text-center"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="lg:w-[350px] relative p-8 rounded-3xl bg-primary flex flex-col justify-center items-center shadow-2xl overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-20 transform translate-x-1/4 -translate-y-1/4 group-hover:scale-110 transition-transform">
+                                <TrendingUp className="h-32 w-32 text-black" />
+                            </div>
+                            <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em] text-black/60 mb-2">Calculated <span className="text-black">NPS</span></span>
+                            <div className="relative z-10 flex items-baseline gap-2">
+                                <span className="text-6xl font-black tracking-tighter text-black italic skew-x-[-5deg]">
+                                    {npsValue.toFixed(1)}
+                                </span>
+                                <span className="text-[10px] font-black text-black/40 uppercase tracking-widest">Points</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                            Total de Pesquisas
-                        </Label>
-                        <Input
-                            type="number"
-                            placeholder="150"
-                            value={responses}
-                            onChange={e => setResponses(e.target.value)}
-                            className="bg-slate-950 border-slate-800 rounded-xl h-14 text-lg font-black tracking-tight"
-                        />
-                    </div>
-
-                    {/* Breakdown */}
-                    <div className="space-y-2 lg:col-start-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-2">
-                            Promotores (9-10)
-                        </Label>
-                        <Input
-                            type="number"
-                            placeholder="120"
-                            value={promoters}
-                            onChange={e => setPromoters(e.target.value)}
-                            className="bg-emerald-500/5 border-emerald-500/20 rounded-xl h-14 text-lg font-black tracking-tight text-emerald-500"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-red-500 flex items-center gap-2">
-                            Detratores (0-6)
-                        </Label>
-                        <Input
-                            type="number"
-                            placeholder="10"
-                            value={detractors}
-                            onChange={e => setDetractors(e.target.value)}
-                            className="bg-red-500/5 border-red-500/20 rounded-xl h-14 text-lg font-black tracking-tight text-red-500"
-                        />
-                    </div>
-
-                    <div className="md:col-span-2 lg:col-span-3 pt-6 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-slate-800 mt-4">
-                        <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-none mb-1">Cálculo de NPS Estimado</span>
-                            <span className="text-3xl font-black tracking-tighter text-white italic">
-                                {calculateNPS().toFixed(1)} <span className="text-[10px] tracking-normal not-italic font-bold text-slate-600 ml-1">PONTOS</span>
-                            </span>
+                    <div className="flex items-center justify-between gap-6 bg-white/5 p-6 rounded-2xl border border-white/5 mt-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
+                                <Info className="h-5 w-5 text-white/30" />
+                            </div>
+                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider leading-relaxed max-w-lg">
+                                Verifique cuidadosamente os valores antes de registrar. O NPS é calculado em tempo real com base nos promotores, detratores e volume total de pesquisas.
+                            </p>
                         </div>
                         <Button
-                            className="w-full md:w-64 h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl shadow-2xl shadow-indigo-600/20 transition-all gap-3"
+                            type="submit"
+                            className="w-full md:w-64 h-16 bg-primary hover:bg-[#e0ad0a] text-black font-black uppercase text-[12px] tracking-[0.2em] rounded-xl shadow-[0_15px_35px_rgba(240,185,11,0.2)] transition-all hover:scale-[1.02] active:scale-[0.98] gap-3"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? (
-                                'Processando...'
+                                'SYNCING...'
                             ) : (
                                 <>
-                                    <Save className="h-4 w-4" /> Registrar Semana
+                                    <Save className="h-5 w-5" /> Registrar Dados
                                 </>
                             )}
                         </Button>

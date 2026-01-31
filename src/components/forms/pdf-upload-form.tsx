@@ -6,10 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { Loader2, CheckCircle, Sparkles } from 'lucide-react'
+import { Loader2, CheckCircle, Sparkles, Calendar, FileText, Info } from 'lucide-react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
-import { Progress } from '@/components/ui/progress'
 import * as pdfjsLib from 'pdfjs-dist'
 
 // Configurar worker do PDF.js para Vite
@@ -323,13 +323,22 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
     const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0])
     const [progress, setProgress] = useState<AnalysisProgress | null>(null)
     const [results, setResults] = useState<{ saved: number; skipped: string[] } | null>(null)
+    const [fileName, setFileName] = useState<string>('')
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) setFileName(file.name)
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const file = formData.get('pdf') as File
 
-        if (!file) return
+        if (!file) {
+            toast.error('Por favor, selecione um arquivo PDF.')
+            return
+        }
 
         setLoading(true)
         setStep('extracting')
@@ -340,11 +349,8 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) throw new Error('Usuário não autenticado')
 
-            // ETAPA 1: Extrair texto bruto do PDF
-            // Extraction starting
             const rawText = await extractTextFromPdf(file)
 
-            // Registrar fonte de dados no início
             const { data: dataSource, error: sourceError } = await supabase
                 .from('data_sources')
                 .insert({
@@ -352,14 +358,13 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                     file_type: 'pdf',
                     extraction_date: reportDate,
                     created_by: user.id,
-                    extracted_text: rawText // SALVANDO TEXTO EXTRAÍDO
+                    extracted_text: rawText
                 })
                 .select()
                 .single()
 
             if (sourceError) throw sourceError
 
-            // ETAPA 2: Cortar por unidade usando Regex
             setStep('processing')
             const unitTexts = splitTextByUnit(rawText)
 
@@ -370,10 +375,8 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                 return
             }
 
-            // ETAPA 3 & 4: Sanitizar e cruzar com dados do CSV
             const enrichedUnits = await enrichWithCsvData(unitTexts)
 
-            // ETAPA 5: Analisar com IA
             setStep('analyzing')
             const unitsToAnalyze = enrichedUnits.filter(u => u.comments.length >= MIN_COMMENTS_FOR_ANALYSIS)
 
@@ -395,7 +398,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                     if (unitRecord) {
                         await supabase.from('qualitative_reports').insert({
                             unit_id: unitRecord.id,
-                            source_id: dataSource.id, // VÍNCULO COM A FONTE
+                            source_id: dataSource.id,
                             report_date: reportDate,
                             ai_summary: {
                                 type: 'unit',
@@ -418,7 +421,6 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                 }
             }
 
-            // ETAPA FINAL: Regional Macro
             setStep('macro')
             const regionalAnalysis = await analyzeRegionalMacro(enrichedUnits)
             const totalFeedbacks = enrichedUnits.reduce((acc, u) => acc + u.feedbackCount, 0)
@@ -426,7 +428,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
 
             await supabase.from('qualitative_reports').insert({
                 unit_id: null,
-                source_id: dataSource.id, // VÍNCULO COM A FONTE
+                source_id: dataSource.id,
                 report_date: reportDate,
                 ai_summary: {
                     type: 'regional',
@@ -451,88 +453,166 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
     }
 
     return (
-        <Card className="bg-slate-900 border-slate-800 rounded-[2rem] overflow-hidden">
-            <CardHeader className="p-8 pb-4">
-                <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-400">
-                        <Sparkles className="h-6 w-6" />
+        <Card className="bg-black/40 border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-sm">
+            <CardHeader className="p-10 pb-4">
+                <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(240,185,11,0.1)]">
+                        <Sparkles className="h-7 w-7" />
                     </div>
-                    <div className="flex flex-col">
-                        <CardTitle className="text-2xl font-black tracking-tighter text-white uppercase italic">Análise de Feedback PDF</CardTitle>
-                        <CardDescription className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Processar comentários qualitativos com Gemini 3 Flash</CardDescription>
+                    <div>
+                        <CardTitle className="text-2xl font-black uppercase tracking-tight text-white italic skew-x-[-10deg]">
+                            Intelligence <span className="text-primary">Knowledge</span>
+                        </CardTitle>
+                        <CardDescription className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] mt-1">Análise qualitativa profunda via Gemini 3 Flash</CardDescription>
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="p-8 pt-4 space-y-6">
-                <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <Label htmlFor="reportDate" className="text-[10px] font-black uppercase tracking-widest text-slate-300 ml-1">Data de Referência</Label>
-                        <Input
-                            id="reportDate"
-                            type="date"
-                            value={reportDate}
-                            onChange={(e) => setReportDate(e.target.value)}
-                            className="h-14 bg-slate-950 border-slate-700 text-white rounded-2xl focus:ring-indigo-500/30 shadow-inner"
-                            disabled={loading}
-                        />
+            <CardContent className="p-10 pt-4 space-y-10">
+                <form onSubmit={handleSubmit} className="space-y-10">
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                            <Label htmlFor="reportDate" className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                <Calendar className="h-4 w-4" /> Data de Referência
+                            </Label>
+                            <Input
+                                id="reportDate"
+                                type="date"
+                                value={reportDate}
+                                onChange={(e) => setReportDate(e.target.value)}
+                                className="h-16 bg-black/60 border-white/10 text-white rounded-xl focus:border-primary/50 focus:ring-0 shadow-2xl text-sm font-bold uppercase transition-all"
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="space-y-4">
+                            <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                <FileText className="h-4 w-4" /> Fonte de Dados (PDF)
+                            </Label>
+                            <div className="relative group">
+                                <Input
+                                    id="pdf"
+                                    name="pdf"
+                                    type="file"
+                                    accept=".pdf"
+                                    onChange={handleFileChange}
+                                    disabled={loading}
+                                    className="hidden"
+                                />
+                                <Label
+                                    htmlFor="pdf"
+                                    className={`flex flex-col items-center justify-center h-16 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 ${fileName
+                                        ? 'bg-primary/20 border-primary shadow-[0_0_20px_rgba(240,185,11,0.1)]'
+                                        : 'bg-white/5 border-white/10 hover:border-primary/50 hover:bg-white/10'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <FileText className={`h-5 w-5 ${fileName ? 'text-primary animate-pulse' : 'text-white/40'}`} />
+                                        <span className={`text-[10px] font-black uppercase tracking-widest ${fileName ? 'text-white' : 'text-white/40'}`}>
+                                            {fileName || 'Selecionar PDF Estratégico'}
+                                        </span>
+                                    </div>
+                                </Label>
+                            </div>
+                        </div>
                     </div>
-                    <div className="space-y-3">
-                        <Label htmlFor="pdf" className="text-[10px] font-black uppercase tracking-widest text-slate-300 ml-1">Arquivo PDF de Feedbacks</Label>
-                        <Input
-                            id="pdf"
-                            name="pdf"
-                            type="file"
-                            accept=".pdf"
-                            disabled={loading}
-                            required
-                            className="h-14 bg-slate-950 border-slate-700 text-white rounded-2xl focus:ring-indigo-500/30 file:bg-primary file:text-black file:font-black file:uppercase file:text-[10px] file:px-4 file:h-14 file:border-none file:mr-4 hover:file:bg-primary/90 transition-all shadow-inner"
-                        />
-                    </div>
-                    <Button type="submit" disabled={loading} className="h-14 md:col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest rounded-2xl border-none shadow-2xl shadow-indigo-600/20 transition-all">
+
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-16 bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-[0.2em] italic text-sm rounded-2xl border-none shadow-[0_10px_40px_rgba(240,185,11,0.2)] transition-all active:scale-[0.98]"
+                    >
                         {loading ? (
-                            <>
-                                <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                                {step === 'extracting' ? 'Extraindo Dados...' :
-                                    step === 'processing' ? 'Cruzando com CSV...' :
-                                        step === 'analyzing' ? 'IA: Analisando Unidades...' :
-                                            'IA: Gerando Visão Regional...'}
-                            </>
+                            <div className="flex items-center gap-3">
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                                <span>
+                                    {step === 'extracting' ? 'Extracação Bruta...' :
+                                        step === 'processing' ? 'Cruzamento CSV...' :
+                                            step === 'analyzing' ? 'IA: Unidades...' :
+                                                'IA: Visão Regional...'}
+                                </span>
+                            </div>
                         ) : (
-                            <>
-                                <Sparkles className="mr-3 h-5 w-5" />
-                                Iniciar Processamento Inteligente
-                            </>
+                            <div className="flex items-center gap-3">
+                                <Sparkles className="h-5 w-5" />
+                                <span>Iniciar Processamento de Elite</span>
+                            </div>
                         )}
                     </Button>
                 </form>
 
-                {progress && (
-                    <div className="space-y-3 bg-slate-950/30 p-6 rounded-2xl border border-slate-800/50">
-                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                            <span className="text-indigo-400 flex items-center gap-2">
-                                <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
-                                Processando: {progress.currentUnit}
-                            </span>
-                            <span className="text-slate-500">{progress.current} / {progress.total}</span>
-                        </div>
-                        <Progress value={(progress.current / progress.total) * 100} className="h-2 bg-slate-800" />
-                    </div>
-                )}
-
-                {results && (
-                    <div className="grid gap-4">
-                        {results.saved > 0 && (
-                            <div className="flex items-center gap-4 bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl">
-                                <CheckCircle className="h-6 w-6 text-emerald-500" />
+                <AnimatePresence>
+                    {progress && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-4 bg-white/5 p-8 rounded-3xl border border-white/5"
+                        >
+                            <div className="flex justify-between items-end">
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-black uppercase text-emerald-500 tracking-widest">Sucesso</span>
-                                    <p className="text-xs font-bold text-white uppercase">{results.saved} Relatórios gerados e sincronizados.</p>
+                                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Deep Analysis</span>
+                                    <span className="text-lg font-black text-white uppercase italic">{progress.currentUnit}</span>
                                 </div>
+                                <span className="text-2xl font-black text-primary italic">
+                                    {Math.round((progress.current / progress.total) * 100)}%
+                                </span>
                             </div>
-                        )}
+                            <div className="relative h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                                <motion.div
+                                    className="absolute top-0 left-0 h-full bg-primary"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(progress.current / progress.total) * 100}%` }}
+                                    transition={{ duration: 0.5 }}
+                                />
+                            </div>
+                            <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-white/30">
+                                <span>Módulo: {step}</span>
+                                <span>{progress.current} de {progress.total} unidades</span>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {results && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="p-8 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-6"
+                        >
+                            <div className="p-4 rounded-2xl bg-emerald-500/20 text-emerald-500">
+                                <CheckCircle className="h-8 w-8" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase text-emerald-500 tracking-widest mb-1">Upload de Sucesso</span>
+                                <p className="text-sm font-bold text-white uppercase tracking-tight">
+                                    {results.saved} registros qualitativos processados e integrados à Regional.
+                                </p>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Dicas de Elite */}
+                {!loading && !results && (
+                    <div className="pt-6 border-t border-white/5 flex gap-10">
+                        <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-2 text-[10px] font-black text-white/40 uppercase tracking-widest">
+                                <Info className="h-3 w-3" /> Tip: Formato Ideal
+                            </div>
+                            <p className="text-[10px] font-medium text-white/20 uppercase tracking-wide leading-relaxed">
+                                Certifique-se de que o PDF contém os códigos SBRSP para garantir a precisão do mapeamento por unidade.
+                            </p>
+                        </div>
+                        <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-2 text-[10px] font-black text-white/40 uppercase tracking-widest">
+                                <Info className="h-3 w-3" /> Tip: IA Analítica
+                            </div>
+                            <p className="text-[10px] font-medium text-white/20 uppercase tracking-wide leading-relaxed">
+                                O processamento leva em média 3-5 segundos por unidade para garantir insights de alta qualidade.
+                            </p>
+                        </div>
                     </div>
                 )}
             </CardContent>
         </Card>
     )
 }
+

@@ -122,3 +122,4 @@ dist
 .agent
 .gemini
 _backup_nextjs
+.vercel

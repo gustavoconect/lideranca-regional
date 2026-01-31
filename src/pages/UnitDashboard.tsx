@@ -34,6 +34,7 @@ interface UnitMetrics {
     id: string
     nps_score: number
     responses_count: number
+    unit_id: string
     position_ranking: number
     goal_2026_1: number
     week_start_date: string
@@ -66,7 +67,9 @@ export default function UnitDashboardPage() {
     const [userName, setUserName] = useState('')
     const [rankingPosition, setRankingPosition] = useState<number | null>(null)
     const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+    const [isRankingOpen, setIsRankingOpen] = useState(false)
     const [selectedHistoryReport, setSelectedHistoryReport] = useState<QualitativeReport | null>(null)
+    const [rankingList, setRankingList] = useState<any[]>([])
 
     useEffect(() => {
         fetchUnitData()
@@ -130,6 +133,18 @@ export default function UnitDashboardPage() {
 
                         const position = sortedMetrics.findIndex((m: any) => m.unit_id === unitData.id) + 1;
                         setRankingPosition(position);
+
+                        // Prepare Ranking List for Modal
+                        const rankedListWithDetails = await Promise.all(sortedMetrics.map(async (m: any, index: number) => {
+                            const { data: u } = await supabase.from('units').select('name, code').eq('id', m.unit_id).single();
+                            return {
+                                ...m,
+                                rank: index + 1,
+                                unit_name: u?.name || 'Unknown',
+                                unit_code: u?.code || '---'
+                            };
+                        }));
+                        setRankingList(rankedListWithDetails);
                     }
                 }
 
@@ -480,11 +495,78 @@ export default function UnitDashboardPage() {
                     <ClipboardList className="h-6 w-6" />
                     <span className="text-[8px] font-black uppercase">Tarefas</span>
                 </button>
-                <button onClick={() => setIsHistoryOpen(true)} className="flex flex-col items-center gap-1 text-muted-foreground">
+                <button onClick={() => setIsRankingOpen(true)} className="flex flex-col items-center gap-1 text-muted-foreground">
                     <History className="h-6 w-6" />
                     <span className="text-[8px] font-black uppercase">Ranking</span>
                 </button>
             </nav>
+
+            {/* MODAL DE RANKING */}
+            <Dialog open={isRankingOpen} onOpenChange={setIsRankingOpen}>
+                <DialogContent className="max-w-3xl bg-card border-border text-foreground rounded-[2.5rem] p-0 overflow-hidden shadow-2xl">
+                    <div className="h-2 bg-primary w-full" />
+                    <div className="p-8">
+                        <DialogHeader className="mb-8">
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500">
+                                    <TrendingUp className="h-6 w-6" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-foreground">Ranking Regional</DialogTitle>
+                                    <DialogDescription className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Performance Comparativa SP15</DialogDescription>
+                                </div>
+                            </div>
+                        </DialogHeader>
+
+                        <div className="rounded-3xl border border-border overflow-hidden">
+                            <table className="w-full text-left">
+                                <thead className="bg-muted/50">
+                                    <tr>
+                                        <th className="p-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground w-16 text-center">#</th>
+                                        <th className="p-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Unidade</th>
+                                        <th className="p-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground text-right">NPS</th>
+                                        <th className="p-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground text-right">Gap Meta</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border/50">
+                                    {rankingList.map((unit) => {
+                                        const isCurrentUser = unit.unit_id === metrics?.unit_id;
+                                        return (
+                                            <tr key={unit.unit_id} className={`group transition-colors ${isCurrentUser ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-muted/50'}`}>
+                                                <td className="p-4 text-center">
+                                                    <span className={`text-lg font-black italic ${unit.rank <= 3 ? 'text-amber-500' : 'text-muted-foreground'}`}>#{unit.rank}</span>
+                                                </td>
+                                                <td className="p-4">
+                                                    <div className="flex flex-col">
+                                                        <span className={`text-sm font-bold uppercase ${isCurrentUser ? 'text-primary' : 'text-foreground'}`}>{unit.unit_name}</span>
+                                                        <span className="text-[9px] font-bold text-muted-foreground">{unit.unit_code}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 text-right">
+                                                    <span className={`text-sm font-black tracking-tighter ${unit.nps_score >= 75 ? 'text-emerald-500' : unit.nps_score >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
+                                                        {unit.nps_score.toFixed(1)}
+                                                    </span>
+                                                </td>
+                                                <td className="p-4 text-right">
+                                                    <span className="text-xs font-medium text-muted-foreground">
+                                                        {unit.nps_score < 75 ? `-${(75 - unit.nps_score).toFixed(1)}` : 'Atingido'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="mt-6 flex justify-center">
+                            <Button variant="ghost" onClick={() => setIsRankingOpen(false)} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
+                                Fechar Ranking
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

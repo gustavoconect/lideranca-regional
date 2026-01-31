@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, TrendingDown, Target, Users, FileText, Database, ShieldAlert, CheckCircle } from 'lucide-react'
+import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, Target, Users, FileText, Database, ShieldAlert, CheckCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Metric {
@@ -34,14 +34,10 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true)
     const [presentationMode, setPresentationMode] = useState(false)
     const [presentationSlide, setPresentationSlide] = useState(0)
-    const [complianceRate, setComplianceRate] = useState(0)
-    const [auditPendingCount, setAuditPendingCount] = useState(0)
-    const [criticalTasks, setCriticalTasks] = useState<any[]>([])
 
     useEffect(() => {
         checkAuth()
         fetchAllMetrics()
-        fetchOperationalCompliance()
     }, [])
 
     const checkAuth = async () => {
@@ -51,34 +47,6 @@ export default function DashboardPage() {
         }
     }
 
-    const fetchOperationalCompliance = async () => {
-        try {
-            const { data: tasks, error } = await supabase
-                .from('tasks')
-                .select('status')
-
-            if (error) throw error
-
-            if (tasks && tasks.length > 0) {
-                const verified = tasks.filter(t => t.status === 'verified').length
-                const completed = tasks.filter(t => t.status === 'completed').length
-                const total = tasks.length
-                setComplianceRate((verified / total) * 100)
-                setAuditPendingCount(completed)
-
-                const { data: critical } = await supabase
-                    .from('tasks')
-                    .select('*, profiles!tasks_unit_leader_id_fkey(full_name)')
-                    .eq('status', 'pending')
-                    .eq('priority', 'critical')
-                    .limit(5)
-
-                setCriticalTasks(critical || [])
-            }
-        } catch (error) {
-            console.error('Error fetching compliance:', error)
-        }
-    }
 
     const fetchAllMetrics = useCallback(async () => {
         setLoading(true)
@@ -106,11 +74,6 @@ export default function DashboardPage() {
             if (weeks.length > 0 && !selectedWeek) {
                 setSelectedWeek(weeks[0])
             }
-
-            const currentWeekWeek = selectedWeek || weeks[0]
-            const currentWeekMetrics = metricsData.filter(m => m.week_start_date === currentWeekWeek)
-            setMetrics(currentWeekMetrics)
-
         } catch (error) {
             console.error('Error fetching metrics:', error)
         } finally {
@@ -120,18 +83,40 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (selectedWeek && allMetrics.length > 0) {
-            const currentWeekMetrics = allMetrics.filter(m => m.week_start_date === selectedWeek)
-            setMetrics(currentWeekMetrics)
+            // Lógica de Snapshot: Para cada unidade, busca o registro mais recente ATÉ a semana selecionada
+            const unitCodes = [...new Set(allMetrics.map(m => m.units.code))]
+
+            const snapshot = unitCodes.map(code => {
+                const unitAllMetrics = allMetrics
+                    .filter(m => m.units.code === code && m.week_start_date <= selectedWeek)
+                    .sort((a, b) => new Date(b.week_start_date).getTime() - new Date(a.week_start_date).getTime());
+
+                return unitAllMetrics[0];
+            }).filter(Boolean);
+
+            setMetrics(snapshot as Metric[])
         }
     }, [selectedWeek, allMetrics])
 
     const getPreviousWeekMetrics = () => {
-        const currentIndex = availableWeeks.indexOf(selectedWeek)
-        if (currentIndex < availableWeeks.length - 1) {
-            const previousWeek = availableWeeks[currentIndex + 1]
-            return allMetrics.filter(m => m.week_start_date === previousWeek)
-        }
-        return []
+        if (!selectedWeek || allMetrics.length === 0) return []
+
+        const unitCodes = [...new Set(allMetrics.map(m => m.units.code))]
+
+        const previousSnapshot = unitCodes.map(code => {
+            // Encontrar o registro atual no snapshot
+            const currentRecord = metrics.find(m => m.units.code === code)
+            if (!currentRecord) return null
+
+            // Encontrar o registro imediatamente anterior a este registro específico
+            const previousMetrics = allMetrics
+                .filter(m => m.units.code === code && m.week_start_date < currentRecord.week_start_date)
+                .sort((a, b) => new Date(b.week_start_date).getTime() - new Date(a.week_start_date).getTime());
+
+            return previousMetrics[0];
+        }).filter(Boolean)
+
+        return previousSnapshot as Metric[]
     }
 
     const handleLogout = async () => {
@@ -262,54 +247,72 @@ export default function DashboardPage() {
                             >
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                                     {[
-                                        { title: 'NPS Regional', value: (metrics.reduce((acc, curr) => acc + curr.nps_score, 0) / (metrics.length || 1)).toFixed(1), icon: Target, color: 'primary', meta: 'META SP15: 75.0', trend: 2.1 },
-                                        { title: 'Amostragem', value: metrics.reduce((acc, curr) => acc + curr.responses_count, 0), icon: Users, color: 'foreground', meta: 'Feedbacks processados', trend: 12 },
-                                        { title: 'Compliance', value: complianceRate.toFixed(1) + '%', icon: ShieldAlert, color: 'primary', meta: `${auditPendingCount} aguardando auditoria`, trend: 0 },
-                                        { title: 'Risco Operacional', value: metrics.filter(m => m.nps_score < 50).length, icon: TrendingDown, color: 'destructive', meta: 'Unidades em Risco', trend: -1 },
-                                    ].map((card, idx) => (
-                                        <motion.div
-                                            key={card.title}
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: idx * 0.1, duration: 0.5 }}
-                                        >
-                                            <Card className={`decision-card h-full border border-border shadow-xl ${presentationMode ? 'bg-card ring-1 ring-white/5 shadow-2xl' : 'bg-card shadow-xl'}`}>
-                                                <div className={`absolute top-0 right-0 p-4 opacity-10`}>
-                                                    <card.icon className="h-16 w-16" />
-                                                </div>
-                                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                                    <CardTitle className={`text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground`}>{card.title}</CardTitle>
-                                                    <div className={`p-1.5 rounded-lg bg-muted`}>
-                                                        <card.icon className={`h-3.5 w-3.5 ${card.color === 'primary' ? 'text-primary' : card.color === 'destructive' ? 'text-destructive' : 'text-foreground'}`} />
+                                        { title: 'NPS Regional', value: (metrics.reduce((acc, curr) => acc + curr.nps_score, 0) / (metrics.length || 1)).toFixed(1), icon: Target, color: 'primary', meta: 'META SP15: 75.0', trend: 0 },
+                                        { title: 'Amostragem', value: metrics.reduce((acc, curr) => acc + curr.responses_count, 0), icon: Users, color: 'foreground', meta: 'Feedbacks processados', trend: 0 },
+                                        { title: 'Promotores Totais', value: metrics.reduce((acc, curr) => acc + curr.promoters_count, 0), icon: CheckCircle, color: 'primary', meta: 'Impacto Positivo', trend: 0 },
+                                        { title: 'Detratores Totais', value: metrics.reduce((acc, curr) => acc + curr.detractors_count, 0), icon: ShieldAlert, color: 'destructive', meta: 'Pontos de Crise', trend: 0 },
+                                    ].map((card, idx) => {
+                                        // Calcular variação regional para o trend
+                                        let regionalTrend = 0;
+                                        if (card.title === 'NPS Regional' || card.title === 'Amostragem') {
+                                            const previous = getPreviousWeekMetrics();
+                                            if (previous.length > 0) {
+                                                if (card.title === 'NPS Regional') {
+                                                    const currentAvg = Number(card.value);
+                                                    const previousAvg = previous.reduce((acc, curr) => acc + curr.nps_score, 0) / previous.length;
+                                                    regionalTrend = Number((currentAvg - previousAvg).toFixed(1));
+                                                } else {
+                                                    const currentTotal = Number(card.value);
+                                                    const previousTotal = previous.reduce((acc, curr) => acc + curr.responses_count, 0);
+                                                    regionalTrend = currentTotal - previousTotal;
+                                                }
+                                            }
+                                        }
+                                        return (
+                                            <motion.div
+                                                key={card.title}
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                                            >
+                                                <Card className={`decision-card h-full border border-border shadow-xl ${presentationMode ? 'bg-card ring-1 ring-white/5 shadow-2xl' : 'bg-card shadow-xl'}`}>
+                                                    <div className={`absolute top-0 right-0 p-4 opacity-10`}>
+                                                        <card.icon className="h-16 w-16" />
                                                     </div>
-                                                </CardHeader>
-                                                <CardContent>
-                                                    <div className="flex items-baseline gap-2">
-                                                        <div className={`text-5xl font-black tracking-tighter text-foreground`}>
-                                                            {card.value}
+                                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                                        <CardTitle className={`text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground`}>{card.title}</CardTitle>
+                                                        <div className={`p-1.5 rounded-lg bg-muted`}>
+                                                            <card.icon className={`h-3.5 w-3.5 ${card.color === 'primary' ? 'text-primary' : card.color === 'destructive' ? 'text-destructive' : 'text-foreground'}`} />
                                                         </div>
-                                                        {card.trend !== 0 && (
-                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-1 ${card.trend > 0 ? 'bg-primary/20 text-primary' : 'bg-destructive/20 text-destructive'}`}>
-                                                                {card.trend > 0 ? '+' : ''}{card.trend}
+                                                    </CardHeader>
+                                                    <CardContent>
+                                                        <div className="flex items-baseline gap-2">
+                                                            <div className={`text-5xl font-black tracking-tighter text-foreground`}>
+                                                                {card.value}
                                                             </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="mt-4 flex flex-col gap-1">
-                                                        <span className={`text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>
-                                                            {card.meta}
-                                                        </span>
-                                                        <div className={`h-1 w-full rounded-full bg-muted`}>
-                                                            <motion.div
-                                                                initial={{ width: 0 }}
-                                                                animate={{ width: card.title === 'NPS Regional' ? `${Math.min(100, (Number(card.value) / 75) * 100)}%` : card.title === 'Compliance' ? `${complianceRate}%` : '100%' }}
-                                                                className={`h-full rounded-full ${card.color === 'primary' ? 'bg-primary' : card.color === 'destructive' ? 'bg-destructive' : 'bg-foreground'}`}
-                                                            />
+                                                            {regionalTrend !== 0 && (
+                                                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-1 ${regionalTrend > 0 ? 'bg-primary/20 text-primary' : 'bg-destructive/20 text-destructive'}`}>
+                                                                    {regionalTrend > 0 ? '+' : ''}{regionalTrend}
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        </motion.div>
-                                    ))}
+                                                        <div className="mt-4 flex flex-col gap-1">
+                                                            <span className={`text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>
+                                                                {card.meta}
+                                                            </span>
+                                                            <div className={`h-1 w-full rounded-full bg-muted`}>
+                                                                <motion.div
+                                                                    initial={{ width: 0 }}
+                                                                    animate={{ width: card.title === 'NPS Regional' ? `${Math.min(100, (Number(card.value) / 75) * 100)}%` : '100%' }}
+                                                                    className={`h-full rounded-full ${card.color === 'primary' ? 'bg-primary' : card.color === 'destructive' ? 'bg-destructive' : 'bg-foreground'}`}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            </motion.div>
+                                        )
+                                    })}
                                 </div>
 
                                 <div className="grid gap-8">
@@ -338,41 +341,13 @@ export default function DashboardPage() {
                                 </div>
 
                                 <div className="grid gap-6">
-                                    {criticalTasks.length > 0 ? (
-                                        criticalTasks.map((task, idx) => (
-                                            <motion.div
-                                                key={task.id}
-                                                initial={{ opacity: 0, y: 30 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: idx * 0.1 }}
-                                                className="p-10 rounded-[3rem] bg-slate-900/40 border border-white/5 ring-1 ring-white/5 flex items-center justify-between"
-                                            >
-                                                <div className="space-y-3">
-                                                    <div className="flex items-center gap-4">
-                                                        <Badge className="bg-red-500 text-white border-none text-[10px] font-black italic">CRITICAL</Badge>
-                                                        <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Responsável: {task.profiles?.full_name || 'Global'}</span>
-                                                    </div>
-                                                    <h3 className="text-3xl font-black text-white italic uppercase tracking-tight">{task.title}</h3>
-                                                    <p className="text-slate-400 text-lg max-w-xl">{task.description}</p>
-                                                </div>
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <div className="h-20 w-20 rounded-full border-4 border-slate-800 flex items-center justify-center relative overflow-hidden">
-                                                        <div className="absolute inset-0 bg-red-500/10 animate-pulse" />
-                                                        <span className="text-red-500 font-black text-xl italic">!</span>
-                                                    </div>
-                                                    <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">PENDING ATTENTION</span>
-                                                </div>
-                                            </motion.div>
-                                        ))
-                                    ) : (
-                                        <div className="p-20 rounded-[3rem] bg-slate-900/20 border border-white/5 flex flex-col items-center justify-center text-center">
-                                            <div className="h-24 w-24 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 text-emerald-500">
-                                                <CheckCircle className="h-12 w-12" />
-                                            </div>
-                                            <h3 className="text-2xl font-black text-white italic uppercase mb-2">Sem Diretrizes Críticas Pendentes</h3>
-                                            <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-xs">A rede está operando em conformidade tática</p>
+                                    <div className="p-20 rounded-[3rem] bg-slate-900/20 border border-white/5 flex flex-col items-center justify-center text-center">
+                                        <div className="h-24 w-24 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 text-emerald-500">
+                                            <CheckCircle className="h-12 w-12" />
                                         </div>
-                                    )}
+                                        <h3 className="text-2xl font-black text-white italic uppercase mb-2">Monitoramento Ativo</h3>
+                                        <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-xs">A rede está operando em conformidade tática</p>
+                                    </div>
                                 </div>
                             </motion.div>
                         )}
@@ -425,7 +400,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                         <div className="h-[400px]">
-                            <NpsEvolutionChart metrics={allMetrics} />
+                            <NpsEvolutionChart metrics={allMetrics} selectedWeek={selectedWeek} />
                         </div>
                     </motion.div>
                 </main>

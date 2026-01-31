@@ -36,22 +36,32 @@ export function WeeklyComparisonTable({ currentMetrics, previousMetrics }: Weekl
 
     const getVariation = (current: Metric) => {
         const previous = previousMap.get(current.units?.code)
-        if (!previous) return null
-        return previous.position_ranking - current.position_ranking
+        if (!previous) return { ranking: null, nps: null, responses: null }
+        return {
+            ranking: previous.position_ranking - current.position_ranking,
+            nps: Number((current.nps_score - previous.nps_score).toFixed(1)),
+            responses: current.responses_count - previous.responses_count
+        }
     }
 
     const getVariationIcon = (variation: number | null) => {
-        if (variation === null) return <Minus className="h-4 w-4 text-muted-foreground" />
-        if (variation > 0) return <ArrowUp className="h-4 w-4 text-green-600" />
-        if (variation < 0) return <ArrowDown className="h-4 w-4 text-red-600" />
-        return <Minus className="h-4 w-4 text-muted-foreground" />
+        if (variation === null || variation === 0) return <Minus className="h-3 w-3 text-muted-foreground/30" />
+        if (variation > 0) return <ArrowUp className="h-3 w-3 text-emerald-500" />
+        if (variation < 0) return <ArrowDown className="h-3 w-3 text-red-500" />
+        return <Minus className="h-3 w-3 text-muted-foreground/30" />
     }
 
-    const getVariationBadge = (variation: number | null) => {
-        if (variation === null) return <Badge variant="outline">Novo</Badge>
-        if (variation > 0) return <Badge className="bg-green-100 text-green-800">+{variation}</Badge>
-        if (variation < 0) return <Badge className="bg-red-100 text-red-800">{variation}</Badge>
-        return <Badge variant="outline">=</Badge>
+    const getVariationBadge = (variation: number | null, isPositiveGood: boolean = true) => {
+        if (variation === null) return <span className="text-[10px] font-bold text-muted-foreground/40">--</span>
+        if (variation === 0) return <span className="text-[10px] font-bold text-muted-foreground/40">=</span>
+
+        const isActuallyGood = isPositiveGood ? variation > 0 : variation < 0;
+
+        return (
+            <span className={`text-[10px] font-black ${isActuallyGood ? 'text-emerald-500' : 'text-red-500'}`}>
+                {variation > 0 ? '+' : ''}{variation}
+            </span>
+        )
     }
 
     return (
@@ -68,14 +78,14 @@ export function WeeklyComparisonTable({ currentMetrics, previousMetrics }: Weekl
             <CardContent>
                 <Table>
                     <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[60px]">Pos.</TableHead>
-                            <TableHead>Unidade</TableHead>
-                            <TableHead className="text-center">Var.</TableHead>
-                            <TableHead className="text-right">Resp.</TableHead>
-                            <TableHead className="text-right">NPS</TableHead>
-                            <TableHead className="text-right">Meta</TableHead>
-                            <TableHead className="text-right">Status</TableHead>
+                        <TableRow className="hover:bg-transparent border-none">
+                            <TableHead className="w-[60px] text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pos.</TableHead>
+                            <TableHead className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Unidade</TableHead>
+                            <TableHead className="text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">Var. Ranking</TableHead>
+                            <TableHead className="text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Amostragem</TableHead>
+                            <TableHead className="text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">NPS</TableHead>
+                            <TableHead className="text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Meta</TableHead>
+                            <TableHead className="text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -84,26 +94,40 @@ export function WeeklyComparisonTable({ currentMetrics, previousMetrics }: Weekl
 
                             return (
                                 <TableRow key={metric.id}>
-                                    <TableCell className="font-bold">
+                                    <TableCell className="font-black text-lg italic tracking-tighter">
                                         #{metric.position_ranking}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-col">
-                                            <span className="font-medium">{metric.units?.name}</span>
-                                            <span className="text-xs text-muted-foreground">{metric.units?.code}</span>
+                                            <span className="font-black text-xs uppercase tracking-tight text-foreground">{metric.units?.name}</span>
+                                            <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest">{metric.units?.code}</span>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <div className="flex items-center justify-center gap-1">
-                                            {getVariationIcon(variation)}
-                                            {getVariationBadge(variation)}
+                                        <div className="flex items-center justify-center gap-1.5 bg-muted/30 py-1.5 px-3 rounded-xl border border-border/50">
+                                            {getVariationIcon(variation.ranking)}
+                                            {getVariationBadge(variation.ranking, true)}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-right">{metric.responses_count}</TableCell>
-                                    <TableCell className="text-right font-bold text-lg">
-                                        {metric.nps_score?.toFixed(1)}
+                                    <TableCell className="text-right">
+                                        <div className="flex flex-col items-end">
+                                            <span className="font-bold text-sm tracking-tight">{metric.responses_count}</span>
+                                            <div className="flex items-center gap-1">
+                                                {getVariationIcon(variation.responses)}
+                                                {getVariationBadge(variation.responses, true)}
+                                            </div>
+                                        </div>
                                     </TableCell>
-                                    <TableCell className="text-right text-muted-foreground">
+                                    <TableCell className="text-right">
+                                        <div className="flex flex-col items-end">
+                                            <span className="font-black text-xl tracking-tighter text-foreground">{metric.nps_score?.toFixed(1)}</span>
+                                            <div className="flex items-center gap-1">
+                                                {getVariationIcon(variation.nps)}
+                                                {getVariationBadge(variation.nps, true)}
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-right text-xs font-bold text-muted-foreground">
                                         {metric.goal_2026_1?.toFixed(1)}
                                     </TableCell>
                                     <TableCell className="text-right">

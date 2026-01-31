@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Maximize2, Trash2, Plus, Sparkles } from 'lucide-react'
+import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Trash2, Sparkles, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import ReactMarkdown from 'react-markdown'
@@ -17,6 +17,12 @@ interface ActionItem {
     acao: string
     responsavel: string
     prazo: string
+}
+
+interface Unit {
+    id: string
+    name: string
+    code: string
 }
 
 interface QualitativeReport {
@@ -41,6 +47,9 @@ interface QualitativeReport {
         principal_ofensor?: string
         plano_acao?: ActionItem[]
         priority_level?: string
+        report_depth?: 'summary' | 'deep'
+        unit_code?: string
+        nps_variation?: number
         // Campos antigos para compatibilidade
         executive_summary?: string
         highlights?: string[]
@@ -65,8 +74,10 @@ export default function ReportsPage() {
     const navigate = useNavigate()
     const [reports, setReports] = useState<QualitativeReport[]>([])
     const [metrics, setMetrics] = useState<NpsMetric[]>([])
+    const [units, setUnits] = useState<Unit[]>([])
     const [loading, setLoading] = useState(true)
     const [selectedReport, setSelectedReport] = useState<QualitativeReport | null>(null)
+    const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null)
     const [filterPriority, setFilterPriority] = useState<string | null>(null)
     const [isGenerating, setIsGenerating] = useState(false)
     const [genProgress, setGenProgress] = useState('')
@@ -98,6 +109,8 @@ export default function ReportsPage() {
             .from('units')
             .select('id, name, code')
             .order('name')
+
+        if (unitsData) setUnits(unitsData)
 
         if (!unitsData) return
 
@@ -290,7 +303,8 @@ export default function ReportsPage() {
                     total_feedbacks: analysis.regional.total_feedbacks || 0,
                     overall_sentiment: analysis.regional.overall_sentiment || 'neutro',
                     key_insight: analysis.regional.key_insight || '',
-                    markdown_report: analysis.regional.markdown_report || ''
+                    markdown_report: analysis.regional.markdown_report || '',
+                    report_depth: 'deep'
                 }
             })
 
@@ -312,7 +326,8 @@ export default function ReportsPage() {
                             nps_score: unitAnalysis.nps_at_time || 0,
                             feedback_count: unitAnalysis.feedback_count || 0,
                             priority_level: unitAnalysis.priority_level || 'média',
-                            markdown_report: unitAnalysis.markdown_report || ''
+                            markdown_report: unitAnalysis.markdown_report || '',
+                            report_depth: 'deep'
                         }
                     })
                     if (unitError) console.error(`Erro ao salvar unidade ${unit.name}:`, unitError)
@@ -356,11 +371,27 @@ export default function ReportsPage() {
     }
 
     const regionalReports = reports.filter(r => r.ai_summary?.type === 'regional')
-    const unitReports = reports.filter(r => {
-        if (r.ai_summary?.type !== 'unit') return false;
-        if (!filterPriority) return true;
-        return r.ai_summary?.priority_level?.toLowerCase() === filterPriority.toLowerCase();
-    })
+
+    // Group units that have reports
+    const unitsWithReports = useMemo(() => {
+        const uniqueUnitIds = [...new Set(reports.filter(r => r.unit_id).map(r => r.unit_id))]
+        return units
+            .filter(u => uniqueUnitIds.includes(u.id))
+            .map(u => {
+                const unitReports = reports.filter(r => r.unit_id === u.id)
+                const latestReport = unitReports.sort((a, b) => new Date(b.report_date).getTime() - new Date(a.report_date).getTime())[0]
+                return {
+                    ...u,
+                    reportCount: unitReports.length,
+                    latestReport
+                }
+            })
+    }, [reports, units])
+
+    const filteredUnits = useMemo(() => {
+        if (!filterPriority) return unitsWithReports;
+        return unitsWithReports.filter(u => u.latestReport?.ai_summary?.priority_level?.toLowerCase() === filterPriority.toLowerCase());
+    }, [unitsWithReports, filterPriority]);
 
     if (loading) {
         return <div className="flex h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
@@ -548,104 +579,81 @@ export default function ReportsPage() {
                     <div className="md:col-span-2 flex flex-col gap-6">
                         <div className="flex items-end justify-between px-2">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-2xl font-black tracking-tighter text-slate-900 uppercase">Investigações por Unidade</h2>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{unitReports.length} dossiês individuais publicados</p>
+                                <h2 className="text-2xl font-black tracking-tighter text-slate-900 uppercase italic">Mapa de Investigação</h2>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{filteredUnits.length} unidades com dossiês ativos</p>
                             </div>
                             <div className="flex gap-2">
-                                <Button
-                                    onClick={() => navigate('/data-center')}
-                                    className="h-10 px-4 bg-slate-900 hover:bg-slate-800 text-white font-black uppercase text-[9px] tracking-widest rounded-xl transition-all shadow-lg"
-                                >
-                                    <Plus className="h-4 w-4 mr-2" /> Data Center
-                                </Button>
                                 <Select value={filterPriority || 'all'} onValueChange={(v) => setFilterPriority(v === 'all' ? null : v)}>
                                     <SelectTrigger className="h-10 px-4 bg-white border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-600 rounded-xl transition-all shadow-sm">
                                         <div className="flex items-center gap-2">
                                             <AlertTriangle className="h-3.5 w-3.5" />
-                                            {filterPriority ? `RISCO: ${filterPriority}` : 'FILTRAR PRIORIDADE'}
+                                            {filterPriority ? `STAT: ${filterPriority}` : 'PRIORIDADE'}
                                         </div>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">TODAS AS UNIDADES</SelectItem>
-                                        <SelectItem value="alta">RISCO CRÍTICO</SelectItem>
-                                        <SelectItem value="média">RISCO MÉDIO</SelectItem>
-                                        <SelectItem value="baixa">RISCO BAIXO</SelectItem>
+                                        <SelectItem value="all">TODAS</SelectItem>
+                                        <SelectItem value="alta">CRÍTICO</SelectItem>
+                                        <SelectItem value="média">ALERTA</SelectItem>
+                                        <SelectItem value="baixa">ESTÁVEL</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                         </div>
 
-                        {unitReports.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center py-20 bg-white border border-slate-100 rounded-[2rem] border-dashed">
-                                <FileText className="h-16 w-16 text-slate-200 mb-6" />
-                                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Aguardando Upload de Dados</p>
+                        {filteredUnits.length === 0 ? (
+                            <div className="flex-1 flex flex-col items-center justify-center py-20 bg-white border border-slate-100 rounded-[2.5rem] border-dashed shadow-inner">
+                                <FileText className="h-16 w-16 text-slate-100 mb-6" />
+                                <p className="text-slate-300 font-black uppercase tracking-widest text-[10px]">Aguardando Inteligência Tática</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {unitReports.map((report, index) => {
-                                    const unitName = report.units?.name || report.ai_summary?.unit_name;
-                                    const nps = report.ai_summary?.nps_score;
-                                    const count = report.ai_summary?.feedback_count;
-                                    const priority = report.ai_summary?.priority_level;
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredUnits.map((unit, index) => {
+                                    const priority = unit.latestReport?.ai_summary?.priority_level;
+                                    const nps = unit.latestReport?.ai_summary?.nps_score;
 
                                     return (
                                         <motion.div
-                                            key={report.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                            key={unit.id}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: index * 0.05 }}
                                         >
                                             <Card
-                                                className="group relative h-full flex flex-col border border-slate-100 shadow-xl shadow-slate-200/10 hover:shadow-2xl hover:border-emerald-200 transition-all cursor-pointer overflow-hidden rounded-3xl p-6"
-                                                onClick={() => setSelectedReport(report)}
+                                                className="group relative h-full flex flex-col border border-border/50 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all cursor-pointer overflow-hidden rounded-[2rem] p-8"
+                                                onClick={() => setSelectedUnitId(unit.id)}
                                             >
-                                                {/* Indicador Lateral de Prioridade */}
-                                                <div className={`absolute top-0 right-0 h-16 w-16 -mr-8 -mt-8 rotate-45 ${priority === 'alta' ? 'bg-red-500' :
-                                                    priority === 'média' ? 'bg-yellow-500' : 'bg-slate-200'
-                                                    } opacity-20`} />
-
-                                                <div className="flex justify-between items-start mb-6">
+                                                <div className="flex justify-between items-start mb-8">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Unidade sob Investigação</span>
-                                                        <h4 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors leading-tight">
-                                                            {unitName}
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <div className={`h-2 w-2 rounded-full ${priority === 'alta' ? 'bg-red-500 animate-pulse' : priority === 'média' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
+                                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Unidade: {unit.code}</span>
+                                                        </div>
+                                                        <h4 className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors leading-tight italic uppercase">
+                                                            {unit.name}
                                                         </h4>
                                                     </div>
-                                                    {priority === 'alta' && <div className="h-2 w-2 rounded-full bg-red-500 animate-ping" />}
                                                 </div>
 
-                                                <div className="flex-1 space-y-4">
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <div className="bg-slate-50 p-2.5 rounded-2xl flex flex-col">
-                                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">NPS</span>
-                                                            <span className={`text-lg font-black tracking-tighter ${nps && nps >= 50 ? 'text-primary' : 'text-slate-900'}`}>
+                                                <div className="flex-1 space-y-6">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status NPS</span>
+                                                            <span className={`text-3xl font-black tracking-tighter ${nps && nps >= 70 ? 'text-emerald-500' : nps && nps >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
                                                                 {nps ? nps.toFixed(1) : '--'}
                                                             </span>
                                                         </div>
-                                                        <div className="bg-slate-50 p-2.5 rounded-2xl flex flex-col">
-                                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Feedbacks</span>
-                                                            <span className="text-lg font-black tracking-tighter text-slate-900">
-                                                                {count || 0}
+                                                        <div className="flex flex-col items-end">
+                                                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">Dossiês</span>
+                                                            <span className="text-2xl font-black tracking-tighter text-slate-900">
+                                                                {unit.reportCount}
                                                             </span>
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between pt-2">
-                                                        <div className="flex items-center gap-2 text-[9px] font-black uppercase text-indigo-600 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                                                            <Maximize2 className="h-3.5 w-3.5" />
-                                                            Explorar Dossiê
+                                                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                                                        <div className="flex items-center gap-2 text-[9px] font-black uppercase text-primary group-hover:translate-x-1 transition-transform">
+                                                            Ver Histórico <ChevronRight className="h-3 w-3" />
                                                         </div>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleDeleteReport(report.id);
-                                                            }}
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
                                                     </div>
                                                 </div>
                                             </Card>
@@ -675,11 +683,11 @@ export default function ReportsPage() {
                                             Risco: {selectedReport.ai_summary.priority_level || 'Normal'}
                                         </Badge>
                                     </div>
-                                    <DialogTitle className="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">
-                                        Relatório Executivo da Unidade
+                                    <DialogTitle className="text-3xl font-black tracking-tighter text-slate-900 uppercase italic">
+                                        Análise Executiva CX
                                     </DialogTitle>
                                     <DialogDescription className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2">
-                                        Análise Qualitativa de Sentimento • {selectedReport.ai_summary.feedback_count} Pontos
+                                        Ponto de Controle: {new Date(selectedReport.report_date).toLocaleDateString('pt-BR')} • {selectedReport.ai_summary.feedback_count} Feedbacks Adicionados
                                     </DialogDescription>
                                 </DialogHeader>
 
@@ -706,6 +714,77 @@ export default function ReportsPage() {
                                 </div>
 
                                 <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                            </>
+                        )}
+                    </DialogContent>
+                </Dialog>
+                {/* Modal de Histórico da Unidade */}
+                <Dialog open={!!selectedUnitId} onOpenChange={(open) => !open && setSelectedUnitId(null)}>
+                    <DialogContent className="sm:max-w-[600px] border-none shadow-2xl p-0 flex flex-col bg-white rounded-[2rem]">
+                        {selectedUnitId && (
+                            <>
+                                <DialogHeader className="p-10 bg-slate-50/50 border-b shrink-0 text-left">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <Badge className="bg-slate-900 text-white border-none text-[8px] px-3 py-1 font-black uppercase tracking-widest">
+                                            Histórico de Dossiês
+                                        </Badge>
+                                    </div>
+                                    <DialogTitle className="text-3xl font-black tracking-tighter text-slate-900 uppercase italic">
+                                        {units.find(u => u.id === selectedUnitId)?.name}
+                                    </DialogTitle>
+                                </DialogHeader>
+
+                                <div className="p-8 space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                                    {reports
+                                        .filter(r => r.unit_id === selectedUnitId)
+                                        .sort((a, b) => new Date(b.report_date).getTime() - new Date(a.report_date).getTime())
+                                        .map((report) => (
+                                            <div
+                                                key={report.id}
+                                                className="group flex items-center justify-between p-6 bg-white border border-slate-100 rounded-3xl hover:border-primary/30 hover:shadow-lg transition-all cursor-pointer"
+                                                onClick={() => {
+                                                    setSelectedReport(report)
+                                                    setSelectedUnitId(null)
+                                                }}
+                                            >
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-xs font-black text-slate-900">
+                                                            {new Date(report.report_date).toLocaleDateString('pt-BR')}
+                                                        </span>
+                                                        <Badge variant="outline" className={`text-[8px] font-black uppercase tracking-widest px-2 py-0 border-none ${report.ai_summary?.report_depth === 'deep'
+                                                            ? 'bg-indigo-100 text-indigo-700'
+                                                            : 'bg-emerald-100 text-emerald-700'
+                                                            }`}>
+                                                            {report.ai_summary?.report_depth === 'deep' ? 'Análise Profunda' : 'Resumo Executivo'}
+                                                        </Badge>
+                                                    </div>
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                                                        NPS: {report.ai_summary.nps_score?.toFixed(1) || '--'} • {report.ai_summary.feedback_count || 0} Feedbacks
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-10 w-10 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteReport(report.id);
+                                                        }}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                    <ChevronRight className="h-5 w-5 text-slate-300 group-hover:text-primary transition-colors" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                                <div className="p-6 bg-slate-50/50 rounded-b-[2rem] border-t">
+                                    <p className="text-[9px] font-bold text-slate-400 uppercase text-center tracking-widest italic">
+                                        Clique em um dossiê para abrir o detalhamento completo
+                                    </p>
+                                </div>
                             </>
                         )}
                     </DialogContent>

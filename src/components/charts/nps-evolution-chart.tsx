@@ -16,6 +16,7 @@ interface Metric {
 
 interface NpsEvolutionChartProps {
     metrics: Metric[]
+    selectedWeek?: string
 }
 
 // Color palette for units
@@ -24,21 +25,26 @@ const COLORS = [
     '#0891b2', '#c026d3', '#ea580c', '#4f46e5', '#059669'
 ]
 
-export function NpsEvolutionChart({ metrics }: NpsEvolutionChartProps) {
+export function NpsEvolutionChart({ metrics, selectedWeek }: NpsEvolutionChartProps) {
     // Group metrics by week and unit
     const weeklyData: Record<string, any> = {}
     const unitNames = new Set<string>()
 
     metrics.forEach(m => {
+        // Se selectedWeek estiver definido, ignorar dados posteriores
+        if (selectedWeek && m.week_start_date > selectedWeek) return;
+
         const week = m.week_start_date
         const unitName = m.units?.name || 'Unknown'
 
         unitNames.add(unitName)
 
         if (!weeklyData[week]) {
-            weeklyData[week] = { week }
+            weeklyData[week] = { week, totalNps: 0, count: 0 }
         }
         weeklyData[week][unitName] = m.nps_score
+        weeklyData[week].totalNps += m.nps_score
+        weeklyData[week].count += 1
     })
 
     // Convert to array and sort by date
@@ -46,6 +52,7 @@ export function NpsEvolutionChart({ metrics }: NpsEvolutionChartProps) {
         .sort((a: any, b: any) => new Date(a.week).getTime() - new Date(b.week).getTime())
         .map((item: any) => ({
             ...item,
+            'Média Rede': Number((item.totalNps / item.count).toFixed(1)),
             week: new Date(item.week).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
         }))
 
@@ -105,6 +112,15 @@ export function NpsEvolutionChart({ metrics }: NpsEvolutionChartProps) {
                             }}
                         />
                         <Legend />
+                        <Line
+                            type="monotone"
+                            dataKey="Média Rede"
+                            stroke="#fbbf24"
+                            strokeWidth={4}
+                            dot={{ r: 6 }}
+                            activeDot={{ r: 8 }}
+                            name="MÉDIA REDE"
+                        />
                         {unitNameArray.map((unitName, index) => (
                             <Line
                                 key={unitName}
@@ -112,8 +128,9 @@ export function NpsEvolutionChart({ metrics }: NpsEvolutionChartProps) {
                                 dataKey={unitName}
                                 stroke={COLORS[index % COLORS.length]}
                                 strokeWidth={2}
-                                dot={{ r: 4 }}
-                                activeDot={{ r: 6 }}
+                                dot={{ r: 3 }}
+                                activeDot={{ r: 5 }}
+                                opacity={0.6}
                             />
                         ))}
                     </LineChart>

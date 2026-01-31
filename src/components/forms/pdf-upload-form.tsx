@@ -408,6 +408,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                                 nps_score: unit.currentNps,
                                 nps_variation: unit.npsVariation,
                                 markdown_report: analysis,
+                                report_depth: 'summary',
                                 priority_level: unit.currentNps === null ? 'média' :
                                     unit.currentNps < 50 ? 'alta' :
                                         unit.currentNps < 70 ? 'média' : 'baixa'
@@ -436,6 +437,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                     overall_sentiment: avgNps >= 70 ? 'positivo' : avgNps >= 50 ? 'neutro' : 'negativo',
                     avg_nps: avgNps,
                     markdown_report: regionalAnalysis,
+                    report_depth: 'summary',
                     key_insight: 'Relatório Macro Regional Gerado'
                 }
             })

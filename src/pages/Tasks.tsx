@@ -21,7 +21,8 @@ import {
     Upload,
     ShieldAlert,
     Loader2,
-    Database
+    Database,
+    Trash2
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -248,6 +249,25 @@ export default function TasksPage() {
         }
     }
 
+    const handleDeleteTask = async (taskId: string) => {
+        if (!userId || userRole !== 'regional_leader') return
+
+        if (!confirm('ATENÇÃO: Tem certeza que deseja excluir esta diretriz? Esta ação não pode ser desfeita.')) return
+
+        try {
+            const { error } = await supabase
+                .from('tasks')
+                .delete()
+                .eq('id', taskId)
+
+            if (error) throw error
+            toast.success('Diretriz removida do sistema.')
+            fetchTasks()
+        } catch (error: any) {
+            toast.error('Erro ao excluir: ' + error.message)
+        }
+    }
+
     const resetForm = () => {
         setTitle('')
         setDescription('')
@@ -398,9 +418,39 @@ export default function TasksPage() {
                                                 )}
 
                                                 {userRole === 'regional_leader' && task.status === 'verified' && (
-                                                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                                                        <ShieldAlert className="h-6 w-6" />
+                                                    <div className="flex items-center gap-2">
+                                                        <Button
+                                                            size="icon"
+                                                            variant="ghost"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                handleDeleteTask(task.id)
+                                                            }}
+                                                            className="h-12 w-12 rounded-2xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                                                            title="Excluir Diretriz"
+                                                        >
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </Button>
+                                                        <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                                            <ShieldAlert className="h-6 w-6" />
+                                                        </div>
                                                     </div>
+                                                )}
+
+                                                {/* Excluir para tarefas pendentes/completed também (apenas Regional) */}
+                                                {userRole === 'regional_leader' && task.status !== 'verified' && (
+                                                    <Button
+                                                        size="icon"
+                                                        variant="ghost"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            handleDeleteTask(task.id)
+                                                        }}
+                                                        className="h-12 w-12 rounded-2xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                                                        title="Excluir Diretriz"
+                                                    >
+                                                        <Trash2 className="h-5 w-5" />
+                                                    </Button>
                                                 )}
                                             </div>
                                         </div>

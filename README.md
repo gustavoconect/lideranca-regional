@@ -102,3 +102,7 @@ git push -u origin main
 4. Clique em **Deploy**.
 
 O arquivo `vercel.json` já está configurado para lidar com as rotas do React Router.
+
+## 🔒 Segurança
+
+As políticas de segurança (RLS) foram auditadas e reforçadas. Certifique-se de que o usuário no banco de dados possua a role correta ('regional_leader' ou 'unit_leader') para acessar os dados.

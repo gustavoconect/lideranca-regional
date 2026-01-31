@@ -123,3 +123,4 @@ dist
 .gemini
 _backup_nextjs
 .vercel
+.env*.local

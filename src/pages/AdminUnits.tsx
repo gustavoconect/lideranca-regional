@@ -140,68 +140,96 @@ export default function AdminUnits() {
     )
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-background text-foreground">
-            <header className="sticky top-0 z-30 flex h-20 items-center justify-between px-6 md:px-12 bg-background/80 border-b border-border backdrop-blur-2xl">
+        <div className="flex min-h-screen w-full flex-col bg-black text-white font-sans selection:bg-primary selection:text-black">
+            {/* Header Elite */}
+            <header className="sticky top-0 z-50 flex h-20 items-center justify-between px-6 md:px-12 bg-black/60 border-b border-white/10 backdrop-blur-xl">
                 <div className="flex items-center gap-6">
-                    <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')} className="rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
-                        <ArrowLeft className="h-5 w-5" />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigate('/dashboard')}
+                        className="rounded-full hover:bg-white/10 text-white/50 hover:text-primary transition-all scale-110"
+                    >
+                        <ArrowLeft className="h-6 w-6" />
                     </Button>
                     <div className="flex flex-col">
-                        <h1 className="text-xl font-black tracking-tighter text-foreground uppercase italic">Gestão de Ecossistema</h1>
-                        <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Unidades, Líderes e Siglas</p>
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-2xl font-black tracking-tight uppercase italic skew-x-[-10deg]">
+                                Gestão de <span className="text-primary">Ecossistema</span>
+                            </h1>
+                            <Badge className="bg-primary text-black border-none px-2 py-0 text-[10px] font-black uppercase tracking-tighter rounded-sm">
+                                V2.1 ELITE
+                            </Badge>
+                        </div>
+                        <p className="text-[9px] font-bold text-white/40 uppercase tracking-[0.4em] mt-1 pulse-slow">Governança e Configuração de Unidades</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
-                    <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
-                        ACESSO ADMINISTRATIVO
-                    </Badge>
+
+                <div className="hidden lg:flex items-center gap-6">
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">Protocolo Seguro</span>
+                        <div className="flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            <span className="text-[11px] font-bold text-white/60 uppercase">Domínio Ativo</span>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <main className="flex-1 max-w-7xl mx-auto w-full p-6 md:p-12 gap-8 grid lg:grid-cols-12">
-                {/* Formulário de Cadastro */}
-                <div className="lg:col-span-4 space-y-6">
-                    <Card className="bg-slate-900 border-slate-800 rounded-[2rem] overflow-hidden sticky top-28">
-                        <CardHeader className="p-8 pb-4">
-                            <CardTitle className="text-lg font-black uppercase tracking-tight text-white flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-primary/20 text-primary">
-                                    <Plus className="h-5 w-5" />
+            <main className="flex-1 w-full max-w-[1600px] mx-auto p-6 md:p-10 grid lg:grid-cols-12 gap-10">
+                {/* Formulário de Cadastro - Coluna Esquerda */}
+                <div className="lg:col-span-4 space-y-8">
+                    <Card className="bg-black/40 border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-sm sticky top-28 shadow-2xl shadow-black/60">
+                        <CardHeader className="p-10 pb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3.5 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(240,185,11,0.1)]">
+                                    <Plus className="h-7 w-7" />
                                 </div>
-                                Nova Unidade
-                            </CardTitle>
-                            <CardDescription className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Registre o núcleo da sua operação</CardDescription>
+                                <div>
+                                    <CardTitle className="text-xl font-black uppercase tracking-tight text-white italic skew-x-[-10deg]">
+                                        Nova <span className="text-primary">Unidade</span>
+                                    </CardTitle>
+                                    <CardDescription className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] mt-1">Expansão do núcleo operacional</CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-8 pt-0">
-                            <form onSubmit={handleCreateUnit} className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Nome da Unidade</Label>
+                        <CardContent className="p-10 pt-6">
+                            <form onSubmit={handleCreateUnit} className="space-y-6">
+                                <div className="space-y-3">
+                                    <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2 mb-2">
+                                        <Building2 className="h-3.5 w-3.5" /> Nome da Unidade
+                                    </Label>
                                     <Input
-                                        placeholder="Ex: SÃO PAULO - CENTRO"
+                                        placeholder="EX: SÃO PAULO - CENTRO"
                                         value={newName}
                                         onChange={e => setNewName(e.target.value)}
-                                        className="bg-slate-950 border-slate-800 rounded-xl h-12 text-sm font-bold uppercase placeholder:text-slate-700"
+                                        className="bg-black/60 border-white/10 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:border-primary/50 focus:ring-0 text-white shadow-2xl placeholder:text-white/10"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Sigla / ID Único</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2 mb-2">
+                                        <Hash className="h-3.5 w-3.5" /> Sigla / Code Unique
+                                    </Label>
                                     <Input
-                                        placeholder="Ex: SBRSPCBNF01"
+                                        placeholder="EX: SBRSPCENTRO01"
                                         value={newCode}
                                         onChange={e => setNewCode(e.target.value)}
-                                        className="bg-slate-950 border-slate-800 rounded-xl h-12 text-sm font-bold uppercase placeholder:text-slate-700"
+                                        className="bg-black/60 border-white/10 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:border-primary/50 focus:ring-0 text-white shadow-2xl placeholder:text-white/10"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Líder Responsável</Label>
+                                <div className="space-y-3">
+                                    <Label className="text-[11px] font-black uppercase tracking-widest text-primary flex items-center gap-2 mb-2">
+                                        <UserCircle2 className="h-3.5 w-3.5" /> Líder Designado
+                                    </Label>
                                     <Select value={newLeaderId} onValueChange={setNewLeaderId}>
-                                        <SelectTrigger className="bg-slate-950 border-slate-800 rounded-xl h-12 text-sm font-bold uppercase">
-                                            <SelectValue placeholder="Selecione um líder" />
+                                        <SelectTrigger className="bg-black/60 border-white/10 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:border-primary/50 focus:ring-0 text-white shadow-2xl">
+                                            <SelectValue placeholder="Selecione o líder estratégico" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                                        <SelectContent className="bg-slate-900 border-white/10 text-white">
                                             {profiles.map(p => (
-                                                <SelectItem key={p.id} value={p.id} className="focus:bg-primary focus:text-black">
+                                                <SelectItem key={p.id} value={p.id} className="font-bold uppercase text-[11px] tracking-widest focus:bg-primary focus:text-black">
                                                     {p.full_name}
                                                 </SelectItem>
                                             ))}
@@ -210,96 +238,98 @@ export default function AdminUnits() {
                                 </div>
 
                                 <Button
-                                    className="w-full h-14 bg-primary hover:bg-primary/90 text-black font-black uppercase text-[10px] tracking-[0.2em] rounded-xl shadow-lg shadow-primary/10 transition-all mt-6"
+                                    className="w-full h-16 bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-[0.2em] italic text-sm rounded-xl border-none shadow-[0_10px_40px_rgba(240,185,11,0.2)] transition-all active:scale-[0.98] mt-6"
                                     disabled={isSubmitting}
                                 >
-                                    {isSubmitting ? 'Processando...' : 'Confirmar Registro'}
+                                    {isSubmitting ? 'SINCRONIZANDO...' : 'Confirmar Registro'}
                                 </Button>
                             </form>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Listagem de Unidades */}
-                <div className="lg:col-span-8 space-y-6">
-                    <div className="flex items-center justify-between px-2">
-                        <div className="flex flex-col">
-                            <h2 className="text-xl font-black tracking-tighter text-foreground uppercase italic">Frota de Unidades</h2>
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">{units.length} bases operacionais ativas</p>
+                {/* Listagem de Unidades - Coluna Direita */}
+                <div className="lg:col-span-8 space-y-8">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-4">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3.5 rounded-2xl bg-primary/10 text-primary">
+                                <Building2 className="h-7 w-7" />
+                            </div>
+                            <div className="flex flex-col">
+                                <h2 className="text-xl font-black tracking-tight text-white uppercase italic skew-x-[-10deg]">Níveis de <span className="text-primary">Operação</span></h2>
+                                <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em]">{units.length} bases monitoradas</p>
+                            </div>
                         </div>
-                        <div className="relative w-64">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                        <div className="relative w-full sm:w-80 group">
+                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary group-focus-within:text-white transition-colors" />
                             <Input
-                                placeholder="BUSCAR UNIDADE/SIGLA..."
+                                placeholder="LOCALIZAR UNIDADE..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="pl-12 bg-muted border-border rounded-xl h-11 text-[10px] font-black tracking-widest placeholder:text-muted-foreground focus:ring-primary"
+                                className="pl-14 bg-white/5 border-white/5 rounded-2xl h-14 text-[10px] font-black tracking-[0.2em] placeholder:text-white/20 focus:border-primary/50 transition-all uppercase"
                             />
                         </div>
                     </div>
 
-                    <ScrollArea className="h-[700px] rounded-[2.5rem]">
-                        <div className="grid md:grid-cols-2 gap-4">
+                    <ScrollArea className="h-[calc(100vh-320px)] rounded-[3rem] px-4">
+                        <div className="grid md:grid-cols-2 gap-6 pb-12">
                             <AnimatePresence mode='popLayout'>
                                 {filteredUnits.map((unit) => (
                                     <motion.div
                                         key={unit.id}
                                         layout
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
+                                        className="group"
                                     >
-                                        <Card className="bg-slate-900 border-slate-800 hover:border-emerald-500/30 transition-all group rounded-[2rem] overflow-hidden relative shadow-2xl shadow-black/40">
-                                            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-all" />
-                                            <CardContent className="p-6">
-                                                <div className="flex justify-between items-start mb-6">
-                                                    <div className="p-3 rounded-2xl bg-slate-950 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all duration-300">
-                                                        <Building2 className="h-5 w-5" />
+                                        <Card className="bg-white/5 border-white/5 group-hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] overflow-hidden relative shadow-2xl backdrop-blur-sm">
+                                            <div className="absolute top-0 right-0 p-8 opacity-[0.03] transform translate-x-1/4 -translate-y-1/4 group-hover:scale-110 group-hover:opacity-[0.07] transition-all">
+                                                <Building2 className="h-40 w-40 text-white" />
+                                            </div>
+
+                                            <CardContent className="p-8">
+                                                <div className="flex justify-between items-start mb-8">
+                                                    <div className="flex flex-col">
+                                                        <Badge variant="outline" className="w-fit mb-3 border-primary/20 text-primary text-[10px] font-black tracking-widest bg-primary/5">
+                                                            ID: {unit.code}
+                                                        </Badge>
+                                                        <h3 className="text-lg font-black text-white uppercase tracking-tight italic group-hover:text-primary transition-colors">{unit.name}</h3>
                                                     </div>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
                                                         onClick={() => handleDeleteUnit(unit.id, unit.name)}
-                                                        className="text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-xl"
+                                                        className="h-10 w-10 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
                                                     >
-                                                        <Trash2 className="h-4 w-4" />
+                                                        <Trash2 className="h-5 w-5" />
                                                     </Button>
                                                 </div>
 
-                                                <div className="space-y-4">
-                                                    <div>
-                                                        <h3 className="text-sm font-black text-white uppercase tracking-tight leading-none mb-1">{unit.name}</h3>
-                                                        <div className="flex items-center gap-2">
-                                                            <Hash className="h-3 w-3 text-primary" />
-                                                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{unit.code}</span>
-                                                        </div>
+                                                <div className="pt-6 border-t border-white/5 flex items-center gap-4">
+                                                    <div className="h-12 w-12 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-center text-primary shadow-inner">
+                                                        <UserCircle2 className="h-6 w-6" />
                                                     </div>
-
-                                                    <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
-                                                        <div className="h-8 w-8 rounded-full bg-slate-950 flex items-center justify-center text-slate-500">
-                                                            <UserCircle2 className="h-4 w-4" />
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block mb-1">Liderança</span>
-                                                            <Select
-                                                                defaultValue={unit.leader_id || 'none'}
-                                                                onValueChange={(value) => handleUpdateLeader(unit.id, value)}
-                                                            >
-                                                                <SelectTrigger className="h-7 bg-slate-950 border-slate-800 rounded-lg text-[10px] font-bold uppercase p-2">
-                                                                    <SelectValue placeholder="Selecionar líder" />
-                                                                </SelectTrigger>
-                                                                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
-                                                                    <SelectItem value="none" className="focus:bg-primary focus:text-black">
-                                                                        Nenhum Líder
+                                                    <div className="flex-1">
+                                                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] block mb-2">Comando Unitário</span>
+                                                        <Select
+                                                            defaultValue={unit.leader_id || 'none'}
+                                                            onValueChange={(value) => handleUpdateLeader(unit.id, value)}
+                                                        >
+                                                            <SelectTrigger className="h-11 bg-black/40 border-white/10 rounded-xl text-[10px] font-black uppercase transition-all hover:border-primary/50 text-white/80">
+                                                                <SelectValue placeholder="DESIGNAR LÍDER" />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="bg-slate-900 border-white/10 text-white">
+                                                                <SelectItem value="none" className="font-bold uppercase text-[10px] tracking-widest focus:bg-primary focus:text-black">
+                                                                    COMANDO VACANTE
+                                                                </SelectItem>
+                                                                {profiles.map(p => (
+                                                                    <SelectItem key={p.id} value={p.id} className="font-bold uppercase text-[10px] tracking-widest focus:bg-primary focus:text-black">
+                                                                        {p.full_name}
                                                                     </SelectItem>
-                                                                    {profiles.map(p => (
-                                                                        <SelectItem key={p.id} value={p.id} className="focus:bg-primary focus:text-black">
-                                                                            {p.full_name}
-                                                                        </SelectItem>
-                                                                    ))}
-                                                                </SelectContent>
-                                                            </Select>
-                                                        </div>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
                                                 </div>
                                             </CardContent>
@@ -312,13 +342,17 @@ export default function AdminUnits() {
                 </div>
             </main>
 
-            <div className="p-8 max-w-7xl mx-auto w-full">
-                <div className="p-6 bg-muted/30 rounded-[2.5rem] border border-border flex items-start gap-4">
-                    <ShieldCheck className="h-6 w-6 text-primary shrink-0 mt-1" />
-                    <div>
-                        <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1 italic">Diretrizes de Governança</p>
-                        <p className="text-[9px] font-bold text-slate-500 uppercase leading-relaxed tracking-widest italic">
-                            As siglas (ID Único) são utilizadas pelo motor de IA para cruzar os feedbacks dos usuários com os dados da unidade. Certifique-se de que a sigla cadastrada aqui seja idêntica à sigla que aparece nos relatórios PDF.
+            {/* Footer de Governança */}
+            <div className="p-10 max-w-[1600px] mx-auto w-full">
+                <div className="relative overflow-hidden group p-10 rounded-[2.5rem] bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 flex items-center gap-8 shadow-2xl">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(240,185,11,0.1),transparent)]" />
+                    <div className="p-5 rounded-2xl bg-primary/20 text-primary border border-primary/20">
+                        <ShieldCheck className="h-10 w-10" />
+                    </div>
+                    <div className="relative z-10">
+                        <h3 className="text-base font-black text-white uppercase tracking-widest italic mb-2">Integridade de Identificação Unificada</h3>
+                        <p className="text-[11px] font-bold text-white/50 leading-relaxed uppercase tracking-wider max-w-[1000px]">
+                            As siglas (ID Único) são os pontos de ancoragem do motor de IA para correlacionar feedbacks qualitativos (PDF) com dados transacionais. Inconsistency nestes códigos pode comprometer a precisão dos relatórios executivos.
                         </p>
                     </div>
                 </div>

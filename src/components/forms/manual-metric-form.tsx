@@ -111,14 +111,14 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
                     {/* Configuracoes Basicas */}
                     <div className="space-y-6 md:col-span-2 lg:col-span-3 pb-6 border-b border-slate-800 grid md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                                <Building2 className="h-3 w-3 text-indigo-500" /> Unidade Operacional
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                                <Building2 className="h-3 w-3 text-indigo-400" /> Unidade Operacional
                             </Label>
                             <Select value={selectedUnitId} onValueChange={setSelectedUnitId}>
-                                <SelectTrigger className="bg-slate-950 border-slate-800 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:ring-2 focus:ring-indigo-500/50">
+                                <SelectTrigger className="bg-slate-950 border-slate-700 rounded-xl h-14 text-sm font-bold uppercase transition-all focus:ring-2 focus:ring-indigo-500/50 shadow-inner">
                                     <SelectValue placeholder="Escolha a unidade..." />
                                 </SelectTrigger>
-                                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                                <SelectContent className="bg-slate-900 border-slate-700 text-slate-100">
                                     {units.map(u => (
                                         <SelectItem key={u.id} value={u.id}>
                                             {u.name} ({u.code})
@@ -128,14 +128,14 @@ export function ManualMetricForm({ onSave }: ManualMetricFormProps) {
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                                <Calendar className="h-3 w-3 text-indigo-500" /> Data de Referência
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
+                                <Calendar className="h-3 w-3 text-indigo-400" /> Data de Referência
                             </Label>
                             <Input
                                 type="date"
                                 value={weekDate}
                                 onChange={e => setWeekDate(e.target.value)}
-                                className="bg-slate-950/50 border-slate-800 rounded-xl h-14 text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500/50 text-white"
+                                className="bg-slate-950 border-slate-700 rounded-xl h-14 text-sm font-bold uppercase focus:ring-2 focus:ring-indigo-500/50 text-white shadow-inner"
                             />
                         </div>
                     </div>

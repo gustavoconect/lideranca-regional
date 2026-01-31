@@ -139,21 +139,21 @@ export default function DataCenter() {
 
             <main className="flex-1 max-w-7xl mx-auto w-full p-6 md:p-12">
                 <Tabs defaultValue="metrics" className="space-y-8">
-                    <div className="flex items-center justify-between">
-                        <TabsList className="bg-muted border-border p-1 rounded-2xl h-14">
-                            <TabsTrigger value="metrics" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <TabsList className="bg-slate-200 dark:bg-slate-800 p-1 rounded-2xl h-14 w-full md:w-auto shadow-sm">
+                            <TabsTrigger value="metrics" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2 transition-all">
                                 <FileSpreadsheet className="h-4 w-4" />
                                 Métricas (CSV)
                             </TabsTrigger>
-                            <TabsTrigger value="pdf" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2">
+                            <TabsTrigger value="pdf" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2 transition-all">
                                 <FileText className="h-4 w-4" />
                                 Conhecimento (PDF)
                             </TabsTrigger>
                         </TabsList>
 
-                        <div className="hidden md:flex items-center gap-2 px-6 py-3 bg-muted border border-border rounded-2xl">
+                        <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                             <Database className="h-4 w-4 text-primary" />
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <span className="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest">
                                 Total de Fontes: {sources.length}
                             </span>
                         </div>

@@ -466,18 +466,18 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
             <CardContent className="p-8 pt-4 space-y-6">
                 <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="reportDate" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Data de Referência</Label>
+                        <Label htmlFor="reportDate" className="text-[10px] font-black uppercase tracking-widest text-slate-300 ml-1">Data de Referência</Label>
                         <Input
                             id="reportDate"
                             type="date"
                             value={reportDate}
                             onChange={(e) => setReportDate(e.target.value)}
-                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20"
+                            className="h-14 bg-slate-950 border-slate-700 text-white rounded-2xl focus:ring-indigo-500/30 shadow-inner"
                             disabled={loading}
                         />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="pdf" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Arquivo PDF de Feedbacks</Label>
+                        <Label htmlFor="pdf" className="text-[10px] font-black uppercase tracking-widest text-slate-300 ml-1">Arquivo PDF de Feedbacks</Label>
                         <Input
                             id="pdf"
                             name="pdf"
@@ -485,10 +485,10 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                             accept=".pdf"
                             disabled={loading}
                             required
-                            className="h-14 bg-slate-950/50 border-slate-800 text-white rounded-2xl focus:ring-indigo-500/20 file:bg-indigo-500 file:text-slate-950 file:font-black file:uppercase file:text-[10px] file:px-4 file:h-14 file:border-none file:mr-4 hover:file:bg-indigo-400 transition-all"
+                            className="h-14 bg-slate-950 border-slate-700 text-white rounded-2xl focus:ring-indigo-500/30 file:bg-primary file:text-black file:font-black file:uppercase file:text-[10px] file:px-4 file:h-14 file:border-none file:mr-4 hover:file:bg-primary/90 transition-all shadow-inner"
                         />
                     </div>
-                    <Button type="submit" disabled={loading} className="h-14 md:col-span-2 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-black uppercase tracking-widest rounded-2xl border-none shadow-2xl shadow-indigo-500/10 transition-all">
+                    <Button type="submit" disabled={loading} className="h-14 md:col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest rounded-2xl border-none shadow-2xl shadow-indigo-600/20 transition-all">
                         {loading ? (
                             <>
                                 <Loader2 className="mr-3 h-5 w-5 animate-spin" />

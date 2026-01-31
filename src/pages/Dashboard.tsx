@@ -4,7 +4,6 @@ import { supabase } from '@/lib/supabase'
 import { WeeklyComparisonTable } from '@/components/charts/weekly-comparison-table'
 import { NpsEvolutionChart } from '@/components/charts/nps-evolution-chart'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -313,72 +312,14 @@ export default function DashboardPage() {
                                     ))}
                                 </div>
 
-                                <div className="grid gap-8 lg:grid-cols-3">
-                                    <div className="lg:col-span-2 rounded-[2rem] overflow-hidden shadow-2xl ring-1 bg-white/5 bg-slate-900/40 ring-white/5 p-1">
+                                <div className="grid gap-8">
+                                    <div className="rounded-[2rem] overflow-hidden shadow-2xl ring-1 bg-white dark:bg-slate-900 ring-slate-200 dark:ring-white/5 p-1">
                                         <div className="p-2">
                                             <WeeklyComparisonTable
                                                 currentMetrics={metrics}
                                                 previousMetrics={getPreviousWeekMetrics()}
                                             />
                                         </div>
-                                    </div>
-
-                                    <div className="flex flex-col gap-8">
-                                        {!presentationMode ? (
-                                            <div className="space-y-6">
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center justify-between px-2">
-                                                        <div className="flex flex-col">
-                                                            <h3 className="text-sm font-black text-foreground uppercase tracking-widest italic">Ranking de Performance</h3>
-                                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Top Unidades da Semana</p>
-                                                        </div>
-                                                        <Badge className="bg-primary text-black border-none rounded-lg text-[10px] font-black italic">TOP 1: {metrics[0]?.units?.name}</Badge>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        {metrics.slice(0, 5).map((metric, idx) => (
-                                                            <div key={metric.id} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between hover:shadow-md transition-all">
-                                                                <div className="flex items-center gap-4">
-                                                                    <span className="text-lg font-black text-muted italic">#0{idx + 1}</span>
-                                                                    <div className="flex flex-col">
-                                                                        <span className="text-[10px] font-black text-foreground uppercase">{metric.units?.name}</span>
-                                                                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{metric.units?.code}</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex flex-col items-end">
-                                                                    <span className={`text-sm font-black ${metric.nps_score >= (metric.goal_2026_1 || 75) ? 'text-primary' : 'text-destructive'}`}>
-                                                                        {metric.nps_score.toFixed(1)}
-                                                                    </span>
-                                                                    <Progress value={Math.min(100, (metric.nps_score / 100) * 100)} className="h-1 w-16 bg-muted" />
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="rounded-[2rem] p-10 bg-card border border-border flex flex-col justify-center relative overflow-hidden h-full shadow-xl">
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px]" />
-                                                <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 blur-[60px]" />
-
-                                                <div className="space-y-6 relative z-10">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="h-1 w-12 bg-primary rounded-full" />
-                                                        <h3 className="text-sm font-black text-foreground uppercase tracking-[0.3em]">
-                                                            Insights Estratégicos
-                                                        </h3>
-                                                    </div>
-                                                    <div className="space-y-4">
-                                                        <p className="text-2xl font-bold text-foreground leading-tight tracking-tight">
-                                                            Aumento de <span className="text-primary">+{metrics.reduce((acc, curr) => acc + curr.responses_count, 0)}</span> feedbacks críticos nesta rodada.
-                                                        </p>
-                                                        <p className="text-muted-foreground text-sm leading-relaxed">
-                                                            A unidade <span className="text-foreground font-bold">{metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.units?.name}</span> lidera a rede, superando a meta em <span className="text-primary font-bold">{(Number(metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.nps_score || 0) - (metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.goal_2026_1 || 0)).toFixed(1)}%</span>.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </motion.div>

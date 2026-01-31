@@ -118,6 +118,22 @@ export default function AdminUnits() {
         }
     }
 
+    const handleUpdateLeader = async (unitId: string, leaderId: string) => {
+        try {
+            const { error } = await supabase
+                .from('units')
+                .update({ leader_id: leaderId === 'none' ? null : leaderId })
+                .eq('id', unitId)
+
+            if (error) throw error
+
+            toast.success('Liderança atualizada com sucesso!')
+            fetchData()
+        } catch (error: any) {
+            toast.error('Erro ao atualizar liderança: ' + error.message)
+        }
+    }
+
     const filteredUnits = units.filter(u =>
         u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         u.code.toLowerCase().includes(searchTerm.toLowerCase())
@@ -263,11 +279,26 @@ export default function AdminUnits() {
                                                         <div className="h-8 w-8 rounded-full bg-slate-950 flex items-center justify-center text-slate-500">
                                                             <UserCircle2 className="h-4 w-4" />
                                                         </div>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Liderança</span>
-                                                            <span className="text-[10px] font-bold text-slate-300 uppercase truncate max-w-[150px]">
-                                                                {unit.profiles?.full_name || 'PENDENTE'}
-                                                            </span>
+                                                        <div className="flex-1">
+                                                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block mb-1">Liderança</span>
+                                                            <Select
+                                                                defaultValue={unit.leader_id || 'none'}
+                                                                onValueChange={(value) => handleUpdateLeader(unit.id, value)}
+                                                            >
+                                                                <SelectTrigger className="h-7 bg-slate-950 border-slate-800 rounded-lg text-[10px] font-bold uppercase p-2">
+                                                                    <SelectValue placeholder="Selecionar líder" />
+                                                                </SelectTrigger>
+                                                                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                                                                    <SelectItem value="none" className="focus:bg-primary focus:text-black">
+                                                                        Nenhum Líder
+                                                                    </SelectItem>
+                                                                    {profiles.map(p => (
+                                                                        <SelectItem key={p.id} value={p.id} className="focus:bg-primary focus:text-black">
+                                                                            {p.full_name}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
                                                         </div>
                                                     </div>
                                                 </div>

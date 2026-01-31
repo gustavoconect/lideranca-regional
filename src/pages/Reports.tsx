@@ -374,7 +374,7 @@ export default function ReportsPage() {
                 </Button>
                 <div className="flex flex-col">
                     <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase italic">Intelligence & Reports</h1>
-                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.3em]">Executive Dossier System</p>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Executive Dossier System</p>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
                     <Button
@@ -406,19 +406,19 @@ export default function ReportsPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Card className="border-none shadow-2xl shadow-emerald-900/5 rounded-[2.5rem] overflow-hidden bg-white ring-1 ring-emerald-500/10">
-                            <div className="h-2 bg-gradient-to-r from-emerald-400 to-emerald-600 w-full" />
+                        <Card className="border-none shadow-2xl shadow-primary/5 rounded-[2.5rem] overflow-hidden bg-white ring-1 ring-border">
+                            <div className="h-2 bg-primary w-full" />
                             <CardHeader className="bg-white px-8 md:px-12 pt-10">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                     <div className="space-y-1">
                                         <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 uppercase">
-                                            Dossiê Estratégico <span className="text-emerald-500">Regional</span>
+                                            Dossiê Estratégico <span className="text-primary">Regional</span>
                                         </CardTitle>
                                         <CardDescription className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
                                             Analysis of {regionalReports[0]?.ai_summary.total_feedbacks} high-value feedback points
                                         </CardDescription>
                                     </div>
-                                    <Badge className="bg-emerald-50 text-emerald-700 border-none px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest h-fit">
+                                    <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest h-fit">
                                         Status: {regionalReports[0]?.ai_summary.overall_sentiment}
                                     </Badge>
                                 </div>
@@ -458,13 +458,13 @@ export default function ReportsPage() {
                                                 {report.ai_summary.regional_strengths && report.ai_summary.regional_strengths.length > 0 && (
                                                     <div className="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/20">
                                                         <h4 className="font-black text-slate-900 flex items-center gap-2 mb-6 text-xs uppercase tracking-[0.2em]">
-                                                            <div className="h-6 w-1 bg-emerald-500 rounded-full" />
+                                                            <div className="h-6 w-1 bg-primary rounded-full" />
                                                             Regional Strengths
                                                         </h4>
                                                         <ul className="space-y-4">
                                                             {report.ai_summary.regional_strengths.map((s: string, i: number) => (
                                                                 <li key={i} className="flex gap-4 text-sm font-medium text-slate-600 leading-relaxed">
-                                                                    <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                                                                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                                                                     {s}
                                                                 </li>
                                                             ))}
@@ -607,7 +607,7 @@ export default function ReportsPage() {
                                                 <div className="flex justify-between items-start mb-6">
                                                     <div className="flex flex-col">
                                                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Investigation Unit</span>
-                                                        <h4 className="text-sm font-black text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">
+                                                        <h4 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors leading-tight">
                                                             {unitName}
                                                         </h4>
                                                     </div>
@@ -618,7 +618,7 @@ export default function ReportsPage() {
                                                     <div className="grid grid-cols-2 gap-2">
                                                         <div className="bg-slate-50 p-2.5 rounded-2xl flex flex-col">
                                                             <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">NPS</span>
-                                                            <span className={`text-lg font-black tracking-tighter ${nps && nps >= 50 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                                                            <span className={`text-lg font-black tracking-tighter ${nps && nps >= 50 ? 'text-primary' : 'text-slate-900'}`}>
                                                                 {nps ? nps.toFixed(1) : '--'}
                                                             </span>
                                                         </div>

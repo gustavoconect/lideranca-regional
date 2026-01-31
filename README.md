@@ -1,4 +1,4 @@
-# Regional App - Guia de Configuração
+# SP15 App - Leadership Intelligence System
 
 ## ✅ Status Atual
 

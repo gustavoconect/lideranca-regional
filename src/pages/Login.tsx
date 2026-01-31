@@ -11,8 +11,8 @@ export default function LoginPage() {
     return (
         <div className="relative flex min-h-screen w-full items-center justify-center bg-[#0F172A] overflow-hidden p-4">
             {/* Background Mesh/Gradient Decorativo */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/10 rounded-full blur-[120px]" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-500/10 rounded-full blur-[120px]" />
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -21,11 +21,11 @@ export default function LoginPage() {
                 className="w-full max-w-sm z-10"
             >
                 <div className="flex flex-col items-center mb-8">
-                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-500/20 mb-4">
+                    <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center text-black shadow-xl shadow-primary/20 mb-4">
                         <BarChart3 className="h-7 w-7" />
                     </div>
                     <h1 className="text-3xl font-black tracking-tight text-white uppercase italic text-center">
-                        SP15<span className="text-emerald-400"> App</span>
+                        SmartFit <span className="text-primary border-none">SP15</span>
                     </h1>
                     <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mt-1 text-center">
                         High-Performance Leadership
@@ -54,7 +54,7 @@ export default function LoginPage() {
                                 <div className="mt-6 text-center">
                                     <button
                                         onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                                        className="text-[10px] uppercase tracking-widest font-black text-emerald-400 hover:text-emerald-300 transition-colors"
+                                        className="text-[10px] uppercase tracking-widest font-black text-primary hover:text-primary/80 transition-colors"
                                     >
                                         {mode === 'login' ? 'Não tem conta? Cadastre-se →' : 'Já possui conta? Clique aqui'}
                                     </button>
@@ -64,8 +64,8 @@ export default function LoginPage() {
                     </motion.div>
                 </AnimatePresence>
 
-                <p className="mt-8 text-center text-[10px] text-slate-500 uppercase tracking-widest font-medium">
-                    © 2026 SP15 Intelligence System • V.2.1 Elite
+                <p className="mt-8 text-center text-[9px] text-slate-500 uppercase tracking-widest font-medium">
+                    © 2026 SmartFit SP15 Intelligence System • V.2.1 Elite
                 </p>
             </motion.div>
         </div>

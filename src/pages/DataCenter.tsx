@@ -111,15 +111,15 @@ export default function DataCenter() {
     }
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-[#0F172A] text-slate-200">
-            <header className="sticky top-0 z-30 flex h-20 items-center justify-between px-6 md:px-12 glass-dark border-b border-slate-800/50 backdrop-blur-2xl">
+        <div className="flex min-h-screen w-full flex-col bg-background text-foreground">
+            <header className="sticky top-0 z-30 flex h-20 items-center justify-between px-6 md:px-12 bg-background/80 border-b border-border backdrop-blur-2xl">
                 <div className="flex items-center gap-6">
-                    <Button variant="ghost" size="icon" onClick={() => navigate('/reports')} className="rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-all">
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/reports')} className="rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div className="flex flex-col">
-                        <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">Central de Dados Estratégicos</h1>
-                        <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.3em]">Gerenciamento de Fontes de Conhecimento</p>
+                        <h1 className="text-xl font-black tracking-tighter text-foreground uppercase italic">Central de Dados Estratégicos</h1>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Gerenciamento de Fontes de Conhecimento</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -131,7 +131,7 @@ export default function DataCenter() {
                     >
                         <Settings className="h-4 w-4" /> Gestão de Unidades
                     </Button>
-                    <Badge className="bg-emerald-500/10 text-emerald-500 border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+                    <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
                         DB SECURE: AES-256
                     </Badge>
                 </div>
@@ -140,19 +140,19 @@ export default function DataCenter() {
             <main className="flex-1 max-w-7xl mx-auto w-full p-6 md:p-12">
                 <Tabs defaultValue="metrics" className="space-y-8">
                     <div className="flex items-center justify-between">
-                        <TabsList className="bg-slate-900 border-slate-800 p-1 rounded-2xl h-14">
-                            <TabsTrigger value="metrics" className="rounded-xl px-8 h-12 data-[state=active]:bg-emerald-500 data-[state=active]:text-slate-950 font-black uppercase text-[10px] tracking-widest gap-2">
+                        <TabsList className="bg-muted border-border p-1 rounded-2xl h-14">
+                            <TabsTrigger value="metrics" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2">
                                 <FileSpreadsheet className="h-4 w-4" />
                                 Métricas (CSV)
                             </TabsTrigger>
-                            <TabsTrigger value="pdf" className="rounded-xl px-8 h-12 data-[state=active]:bg-emerald-500 data-[state=active]:text-slate-950 font-black uppercase text-[10px] tracking-widest gap-2">
+                            <TabsTrigger value="pdf" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-black font-black uppercase text-[10px] tracking-widest gap-2">
                                 <FileText className="h-4 w-4" />
                                 Conhecimento (PDF)
                             </TabsTrigger>
                         </TabsList>
 
-                        <div className="hidden md:flex items-center gap-2 px-6 py-3 bg-slate-900/50 border border-slate-800 rounded-2xl">
-                            <Database className="h-4 w-4 text-emerald-500" />
+                        <div className="hidden md:flex items-center gap-2 px-6 py-3 bg-muted border border-border rounded-2xl">
+                            <Database className="h-4 w-4 text-primary" />
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                 Total de Fontes: {sources.length}
                             </span>
@@ -311,8 +311,8 @@ export default function DataCenter() {
                     </TabsContent>
                 </Tabs>
 
-                <div className="mt-12 p-8 bg-slate-950/30 rounded-[2.5rem] border border-slate-800/50 flex items-start gap-4">
-                    <ShieldCheck className="h-6 w-6 text-emerald-500 shrink-0 mt-1" />
+                <div className="mt-12 p-8 bg-muted/30 rounded-[2.5rem] border border-border flex items-start gap-4">
+                    <ShieldCheck className="h-6 w-6 text-primary shrink-0 mt-1" />
                     <div>
                         <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1 italic">Governança de Dados</p>
                         <p className="text-[9px] font-bold text-slate-500 uppercase leading-relaxed tracking-widest italic">

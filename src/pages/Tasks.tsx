@@ -259,39 +259,39 @@ export default function TasksPage() {
 
     const getPriorityColor = (p: string) => {
         switch (p) {
-            case 'critical': return 'bg-red-500 text-white shadow-lg shadow-red-500/20'
-            case 'high': return 'bg-amber-500 text-white'
-            case 'medium': return 'bg-indigo-500 text-white'
-            default: return 'bg-slate-500 text-white'
+            case 'critical': return 'bg-destructive text-destructive-foreground shadow-lg shadow-destructive/20'
+            case 'high': return 'bg-primary text-black'
+            case 'medium': return 'bg-muted text-foreground'
+            default: return 'bg-muted text-muted-foreground'
         }
     }
 
     const getStatusBadge = (t: Task) => {
-        if (t.status === 'verified') return <Badge className="bg-emerald-500 text-slate-950 font-black px-3 rounded-full uppercase text-[9px]">Verified</Badge>
-        if (t.status === 'completed') return <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 px-3 rounded-full uppercase text-[9px]">Awaiting Audit</Badge>
+        if (t.status === 'verified') return <Badge className="bg-primary text-black font-black px-3 rounded-full uppercase text-[9px]">Verified</Badge>
+        if (t.status === 'completed') return <Badge className="bg-primary/20 text-primary border-primary/20 px-3 rounded-full uppercase text-[9px]">Awaiting Audit</Badge>
         if (new Date(t.due_date) < new Date() && t.status === 'pending') return <Badge className="bg-red-500 text-white px-3 rounded-full uppercase text-[9px]">Overdue</Badge>
-        return <Badge className="bg-slate-800 text-slate-400 px-3 rounded-full uppercase text-[9px]">In Progress</Badge>
+        return <Badge className="bg-muted text-muted-foreground px-3 rounded-full uppercase text-[9px]">In Progress</Badge>
     }
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-slate-950 text-slate-200">
+        <div className="flex min-h-screen w-full flex-col bg-background text-foreground">
             {/* Header com Matrix UI */}
-            <header className="sticky top-0 z-40 flex h-20 items-center gap-4 border-b border-slate-800/60 bg-slate-950/80 px-6 backdrop-blur-xl md:px-12 shadow-2xl">
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-2xl hover:bg-slate-800 transition-all border border-slate-800">
-                    <ArrowLeft className="h-5 w-5 text-slate-400" />
+            <header className="sticky top-0 z-40 flex h-20 items-center gap-4 border-b border-border bg-background/80 px-6 backdrop-blur-xl md:px-12 shadow-2xl">
+                <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-2xl hover:bg-muted transition-all border border-border">
+                    <ArrowLeft className="h-5 w-5 text-muted-foreground" />
                 </Button>
                 <div className="flex flex-col">
-                    <h1 className="text-xl font-black tracking-tighter text-white uppercase italic flex items-center gap-2">
-                        Operational Directives
-                        <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                    <h1 className="text-xl font-black tracking-tighter text-foreground uppercase italic flex items-center gap-2">
+                        SmartFit <span className="text-primary">SP15</span>
+                        <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                     </h1>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em]">Tactical Oversight Console</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.4em]">Tactical Oversight Console</p>
                 </div>
 
                 {userRole === 'regional_leader' && (
                     <Button
                         onClick={() => setIsCreateModalOpen(true)}
-                        className="ml-auto gap-3 h-12 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase text-[10px] tracking-widest shadow-xl shadow-indigo-600/20 transition-all border-none"
+                        className="ml-auto gap-3 h-12 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 transition-all border-none"
                     >
                         <Plus className="h-4 w-4" /> Nova Diretriz
                     </Button>
@@ -301,19 +301,19 @@ export default function TasksPage() {
             <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full">
                 <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="space-y-2">
-                        <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em]">Mission Control</span>
-                        <h2 className="text-4xl font-black tracking-tighter text-white uppercase italic">Atividades Pendentes</h2>
+                        <span className="text-[9px] font-black text-primary uppercase tracking-[0.3em]">Mission Control</span>
+                        <h2 className="text-4xl font-black tracking-tighter text-foreground uppercase italic">Atividades Pendentes</h2>
                     </div>
-                    <div className="flex bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800/50">
-                        <Button variant="ghost" className="rounded-xl px-6 text-[10px] font-black uppercase tracking-widest bg-slate-800 text-white shadow-lg shadow-black/20">All Active</Button>
-                        <Button variant="ghost" className="rounded-xl px-6 text-[10px] font-black uppercase tracking-widest text-slate-500">Critical Only</Button>
+                    <div className="flex bg-muted p-1.5 rounded-2xl border border-border">
+                        <Button variant="ghost" className="rounded-xl px-6 text-[10px] font-black uppercase tracking-widest bg-primary text-black shadow-lg shadow-primary/20">All Active</Button>
+                        <Button variant="ghost" className="rounded-xl px-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Critical Only</Button>
                     </div>
                 </div>
 
                 {loading ? (
                     <div className="grid gap-6 md:grid-cols-2">
                         {[1, 2, 3, 4].map(i => (
-                            <div key={i} className="h-48 rounded-[2.5rem] bg-slate-900/50 animate-pulse border border-slate-800/50" />
+                            <div key={i} className="h-48 rounded-[2.5rem] bg-muted/50 animate-pulse border border-border" />
                         ))}
                     </div>
                 ) : (
@@ -328,7 +328,7 @@ export default function TasksPage() {
                                 >
                                     <div
                                         onClick={() => userRole === 'unit_leader' && task.status === 'pending' && setCompletingTask(task)}
-                                        className={`group relative bg-slate-900/40 border border-slate-800/50 rounded-[2.5rem] p-8 transition-all hover:bg-slate-900/60 hover:border-slate-700 hover:shadow-2xl overflow-hidden ${userRole === 'unit_leader' && task.status === 'pending' ? 'cursor-pointer' : ''}`}
+                                        className={`group relative bg-card border border-border rounded-[2.5rem] p-8 transition-all hover:bg-muted/30 hover:shadow-2xl overflow-hidden ${userRole === 'unit_leader' && task.status === 'pending' ? 'cursor-pointer' : ''}`}
                                     >
                                         <div className={`absolute top-0 left-0 w-1.5 h-full ${getPriorityColor(task.priority)} opacity-80`} />
 
@@ -347,33 +347,33 @@ export default function TasksPage() {
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-2xl font-black text-white uppercase tracking-tight group-hover:text-emerald-400 transition-colors mb-2 italic">
+                                                    <h3 className="text-2xl font-black text-foreground uppercase tracking-tight group-hover:text-primary transition-colors mb-2 italic">
                                                         {task.title}
                                                     </h3>
-                                                    <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-2xl">
+                                                    <p className="text-muted-foreground text-sm font-medium leading-relaxed max-w-2xl">
                                                         {task.description}
                                                     </p>
                                                 </div>
 
                                                 <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-950/50 rounded-xl border border-slate-800/50">
-                                                        <Clock className="h-3.5 w-3.5 text-indigo-400" />
-                                                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                                                    <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-xl border border-border">
+                                                        <Clock className="h-3.5 w-3.5 text-primary" />
+                                                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                                                             Time remaining: {Math.max(0, Math.ceil((new Date(task.due_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} days
                                                         </span>
                                                     </div>
                                                     {task.validation_type === 'photo' && (
-                                                        <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/5 rounded-xl border border-amber-500/20">
-                                                            <Target className="h-3.5 w-3.5 text-amber-500" />
-                                                            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500">Evidence Required</span>
+                                                        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20">
+                                                            <Target className="h-3.5 w-3.5 text-primary" />
+                                                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Evidence Required</span>
                                                         </div>
                                                     )}
                                                 </div>
                                             </div>
 
-                                            <div className="mt-8 md:mt-0 flex items-center justify-between md:justify-end gap-6 border-t md:border-none border-slate-800/50 pt-6 md:pt-0">
+                                            <div className="mt-8 md:mt-0 flex items-center justify-between md:justify-end gap-6 border-t md:border-none border-border pt-6 md:pt-0">
                                                 <div className="flex flex-col items-end gap-1">
-                                                    <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Directive Status</span>
+                                                    <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Directive Status</span>
                                                     {getStatusBadge(task)}
                                                 </div>
 
@@ -391,14 +391,14 @@ export default function TasksPage() {
                                                             e.stopPropagation()
                                                             setViewingProof(task)
                                                         }}
-                                                        className="h-12 px-6 rounded-2xl bg-emerald-500 text-slate-950 font-black uppercase text-[10px] tracking-widest hover:bg-emerald-400 border-none transition-all shadow-lg shadow-emerald-500/10"
+                                                        className="h-12 px-6 rounded-2xl bg-primary text-black font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 border-none transition-all shadow-lg shadow-primary/10"
                                                     >
                                                         Auditar Prova
                                                     </Button>
                                                 )}
 
                                                 {userRole === 'regional_leader' && task.status === 'verified' && (
-                                                    <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                                                         <ShieldAlert className="h-6 w-6" />
                                                     </div>
                                                 )}
@@ -414,40 +414,40 @@ export default function TasksPage() {
 
             {/* Modal de Criação (Regional Only) */}
             <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-                <DialogContent className="bg-slate-900 border-slate-800 text-slate-200 rounded-[2.5rem] sm:max-w-[500px] overflow-hidden p-0 ring-1 ring-white/10 shadow-2xl">
-                    <div className="h-2 bg-indigo-600 w-full" />
+                <DialogContent className="bg-card border-border text-foreground rounded-[2.5rem] sm:max-w-[500px] overflow-hidden p-0 shadow-2xl">
+                    <div className="h-2 bg-primary w-full" />
                     <form onSubmit={handleCreateTask} className="p-8">
                         <DialogHeader className="mb-8">
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-400">
+                                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
                                     <Plus className="h-6 w-6" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-white">Nova Diretriz</DialogTitle>
-                                    <DialogDescription className="text-slate-500 text-[10px] font-bold uppercase tracking-widest text-left">Set tactical priorities for the units</DialogDescription>
+                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-foreground">Nova Diretriz</DialogTitle>
+                                    <DialogDescription className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest text-left">Set tactical priorities for the units</DialogDescription>
                                 </div>
                             </div>
                         </DialogHeader>
 
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Objective Title</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Objective Title</Label>
                                 <Input
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Ex: Auditoria de Fachada e Limpeza"
-                                    className="h-14 bg-slate-950 border-slate-800 rounded-2xl focus:ring-indigo-500/50 focus:border-indigo-500 text-sm font-bold placeholder:text-slate-700"
+                                    className="h-14 bg-muted border-border rounded-2xl focus:ring-primary/50 focus:border-primary text-sm font-bold placeholder:text-muted-foreground"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Priority</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Priority</Label>
                                     <Select value={priority} onValueChange={(v: any) => setPriority(v)}>
-                                        <SelectTrigger className="h-14 bg-slate-950 border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest">
+                                        <SelectTrigger className="h-14 bg-muted border-border rounded-2xl text-[10px] font-black uppercase tracking-widest">
                                             <SelectValue />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-slate-900 border-slate-800">
+                                        <SelectContent className="bg-card border-border">
                                             <SelectItem value="low">Low</SelectItem>
                                             <SelectItem value="medium">Medium</SelectItem>
                                             <SelectItem value="high">High</SelectItem>
@@ -456,23 +456,23 @@ export default function TasksPage() {
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Deadline</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Deadline</Label>
                                     <Input
                                         type="date"
                                         value={dueDate}
                                         onChange={(e) => setDueDate(e.target.value)}
-                                        className="h-14 bg-slate-950 border-slate-800 rounded-2xl text-xs font-bold"
+                                        className="h-14 bg-muted border-border rounded-2xl text-xs font-bold"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Target Unit</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Target Unit</Label>
                                 <Select value={targetUnit} onValueChange={setTargetUnit}>
-                                    <SelectTrigger className="h-14 bg-slate-950 border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest">
+                                    <SelectTrigger className="h-14 bg-muted border-border rounded-2xl text-[10px] font-black uppercase tracking-widest">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-slate-900 border-slate-800">
+                                    <SelectContent className="bg-card border-border">
                                         <SelectItem value="all">Todas as Unidades</SelectItem>
                                         {units.map(u => (
                                             <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
@@ -481,20 +481,20 @@ export default function TasksPage() {
                                 </Select>
                             </div>
 
-                            <div className="flex items-center gap-3 p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50">
+                            <div className="flex items-center gap-3 p-4 bg-muted rounded-2xl border border-border">
                                 <Checkbox
                                     id="evidence"
                                     checked={requiresEvidence}
                                     onCheckedChange={(checked) => setRequiresEvidence(!!checked)}
-                                    className="h-5 w-5 rounded-lg border-slate-700 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+                                    className="h-5 w-5 rounded-lg border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                 />
-                                <Label htmlFor="evidence" className="text-xs font-black uppercase tracking-widest text-slate-400 cursor-pointer">Requer Evidência Fotográfica</Label>
+                                <Label htmlFor="evidence" className="text-xs font-black uppercase tracking-widest text-muted-foreground cursor-pointer">Requer Evidência Fotográfica</Label>
                             </div>
                         </div>
 
                         <DialogFooter className="mt-10 flex gap-3">
-                            <Button variant="ghost" type="button" onClick={() => setIsCreateModalOpen(false)} className="h-14 flex-1 text-slate-500 hover:text-white font-black uppercase tracking-widest text-xs rounded-2xl">Cancelar</Button>
-                            <Button type="submit" className="h-14 flex-[2] bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-indigo-600/20 transition-all border-none">Disparar Diretriz</Button>
+                            <Button variant="ghost" type="button" onClick={() => setIsCreateModalOpen(false)} className="h-14 flex-1 text-muted-foreground hover:text-foreground font-black uppercase tracking-widest text-xs rounded-2xl">Cancelar</Button>
+                            <Button type="submit" className="h-14 flex-[2] bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 transition-all border-none">Disparar Diretriz</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
@@ -502,36 +502,36 @@ export default function TasksPage() {
 
             {/* Modal de Conclusão (Unit Leader Only) */}
             <Dialog open={!!completingTask} onOpenChange={(open) => !open && setCompletingTask(null)}>
-                <DialogContent className="bg-slate-900 border-slate-800 text-slate-200 rounded-[2.5rem] sm:max-w-[450px] overflow-hidden p-0 ring-1 ring-white/10 shadow-2xl">
-                    <div className="h-2 bg-emerald-500 w-full" />
+                <DialogContent className="bg-card border-border text-foreground rounded-[2.5rem] sm:max-w-[450px] overflow-hidden p-0 shadow-2xl">
+                    <div className="h-2 bg-primary w-full" />
                     <div className="p-8 text-center sm:text-left">
                         <DialogHeader className="mb-6">
                             <div className="flex items-center justify-center sm:justify-start gap-4 mb-4">
-                                <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500">
+                                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
                                     <CheckCircle className="h-6 w-6" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-white">Finalizar Missão</DialogTitle>
-                                    <DialogDescription className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Confirme a execução da diretriz</DialogDescription>
+                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-foreground">Finalizar Missão</DialogTitle>
+                                    <DialogDescription className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Confirme a execução da diretriz</DialogDescription>
                                 </div>
                             </div>
                         </DialogHeader>
 
                         <div className="space-y-6">
-                            <div className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50 text-left">
-                                <span className="text-[8px] font-black text-slate-600 uppercase tracking-[0.2em] block mb-1">Objetivo Selecionado</span>
-                                <p className="text-sm font-bold text-white border-none leading-relaxed">{completingTask?.title}</p>
+                            <div className="p-4 bg-muted rounded-2xl border border-border text-left">
+                                <span className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.2em] block mb-1">Objetivo Selecionado</span>
+                                <p className="text-sm font-bold text-foreground border-none leading-relaxed">{completingTask?.title}</p>
                             </div>
 
                             {completingTask?.validation_type === 'photo' && (
                                 <div className="space-y-3">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 flex items-center justify-between">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center justify-between">
                                         Evidência Visual Obrigatória
                                     </Label>
 
                                     <div
                                         onClick={() => fileInputRef.current?.click()}
-                                        className={`relative group cursor-pointer border-2 border-dashed rounded-3xl p-8 transition-all flex flex-col items-center gap-3 ${filePreview ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/20'}`}
+                                        className={`relative group cursor-pointer border-2 border-dashed rounded-3xl p-8 transition-all flex flex-col items-center gap-3 ${filePreview ? 'border-primary/30 bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'}`}
                                     >
                                         {filePreview ? (
                                             <div className="relative w-full aspect-video rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-lg">
@@ -550,12 +550,12 @@ export default function TasksPage() {
                                             </div>
                                         ) : (
                                             <>
-                                                <div className="p-4 rounded-full bg-slate-800 text-slate-500 group-hover:text-amber-500 group-hover:scale-110 transition-all">
+                                                <div className="p-4 rounded-full bg-muted text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all">
                                                     <Upload className="h-6 w-6" />
                                                 </div>
                                                 <div className="flex flex-col items-center">
-                                                    <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Upload Photo</span>
-                                                    <span className="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-1">JPG, PNG (MAX 5MB)</span>
+                                                    <span className="text-xs font-black uppercase text-muted-foreground tracking-widest">Upload Photo</span>
+                                                    <span className="text-[9px] text-muted-foreground/60 font-bold uppercase tracking-widest mt-1">JPG, PNG (MAX 5MB)</span>
                                                 </div>
                                             </>
                                         )}
@@ -570,9 +570,9 @@ export default function TasksPage() {
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-3 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
-                                <AlertCircle className="h-4 w-4 text-emerald-500" />
-                                <p className="text-[9px] font-black uppercase tracking-widest text-left text-emerald-500 leading-relaxed">O Regional será notificado desta conclusão após o envio para auditoria tática.</p>
+                            <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                                <AlertCircle className="h-4 w-4 text-primary" />
+                                <p className="text-[9px] font-black uppercase tracking-widest text-left text-primary leading-relaxed">O Regional será notificado desta conclusão após o envio para auditoria tática.</p>
                             </div>
                         </div>
 
@@ -580,14 +580,14 @@ export default function TasksPage() {
                             <Button
                                 variant="ghost"
                                 onClick={() => setCompletingTask(null)}
-                                className="h-14 flex-1 text-slate-500 hover:text-white font-black uppercase tracking-widest text-xs rounded-2xl border-none"
+                                className="h-14 flex-1 text-muted-foreground hover:text-foreground font-black uppercase tracking-widest text-xs rounded-2xl border-none"
                             >
                                 Cancelar
                             </Button>
                             <Button
                                 onClick={handleCompleteTask}
                                 disabled={uploading || (completingTask?.validation_type === 'photo' && !selectedFile)}
-                                className="h-14 flex-[2] bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-emerald-500/10 transition-all border-none"
+                                className="h-14 flex-[2] bg-primary hover:bg-primary/40 text-black font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/10 transition-all border-none"
                             >
                                 {uploading ? <Loader2 className="h-5 w-5 animate-spin mr-3" /> : <CheckCircle className="h-5 w-5 mr-3" />}
                                 Finalizar Missão
@@ -599,8 +599,8 @@ export default function TasksPage() {
 
             {/* Modal de Auditoria do Regional - Elite Version */}
             <Dialog open={!!viewingProof} onOpenChange={(open) => !open && setViewingProof(null)}>
-                <DialogContent className="bg-[#020617] border-white/5 text-slate-200 rounded-[3rem] sm:max-w-[750px] overflow-hidden p-0 ring-1 ring-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                    <div className="h-1.5 bg-gradient-to-r from-emerald-500 via-indigo-500 to-emerald-500 w-full" />
+                <DialogContent className="bg-background border-border text-foreground rounded-[3rem] sm:max-w-[750px] overflow-hidden p-0 shadow-[0_0_50px_rgba(0,0,0,0.1)]">
+                    <div className="h-1.5 bg-gradient-to-r from-primary via-primary/50 to-primary w-full" />
                     <div className="p-0">
                         {viewingProof?.proof_url ? (
                             <div className="relative aspect-[16/10] w-full bg-slate-950 flex items-center justify-center overflow-hidden group">
@@ -611,18 +611,18 @@ export default function TasksPage() {
                                     className="object-contain w-full h-full transition-transform duration-700 group-hover:scale-105"
                                     alt="Task Proof"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
                                 <div className="absolute bottom-10 left-12 right-12 z-10">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <Badge className="bg-emerald-500 text-slate-950 font-black italic border-none text-[8px] px-2">EVIDÊNCIA VISUAL</Badge>
-                                        <span className="text-white/40 text-[8px] font-black uppercase tracking-[0.3em]">Captured via SP15 Mobile</span>
+                                        <Badge className="bg-primary text-black font-black italic border-none text-[8px] px-2">EVIDÊNCIA VISUAL</Badge>
+                                        <span className="text-muted-foreground text-[8px] font-black uppercase tracking-[0.3em]">Captured via SP15 Mobile</span>
                                     </div>
-                                    <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter leading-none">{viewingProof.title}</h3>
+                                    <h3 className="text-4xl font-black text-foreground italic uppercase tracking-tighter leading-none">{viewingProof.title}</h3>
                                 </div>
                             </div>
                         ) : (
-                            <div className="h-80 flex flex-col items-center justify-center bg-slate-950/50 text-slate-600 gap-4">
-                                <div className="p-5 rounded-full bg-slate-900 border border-slate-800">
+                            <div className="h-80 flex flex-col items-center justify-center bg-muted text-muted-foreground gap-4">
+                                <div className="p-5 rounded-full bg-background border border-border">
                                     <AlertCircle className="h-10 w-10 opacity-20" />
                                 </div>
                                 <span className="text-[10px] font-black uppercase tracking-[0.4em]">No Visual Assets Detected</span>
@@ -632,29 +632,29 @@ export default function TasksPage() {
                         <div className="p-12 space-y-10">
                             <div className="grid grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-1">Detalhes da Execução</span>
-                                    <div className="p-6 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-sm">
-                                        <p className="text-sm font-bold text-slate-300 leading-relaxed italic">"{viewingProof?.description}"</p>
+                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest pl-1">Detalhes da Execução</span>
+                                    <div className="p-6 bg-muted rounded-3xl border border-border backdrop-blur-sm">
+                                        <p className="text-sm font-bold text-foreground leading-relaxed italic">"{viewingProof?.description}"</p>
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <div className="p-6 bg-white/5 rounded-3xl border border-white/5 flex flex-col gap-1">
-                                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Metadata de Auditoria</span>
+                                    <div className="p-6 bg-muted rounded-3xl border border-border flex flex-col gap-1">
+                                        <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Metadata de Auditoria</span>
                                         <div className="flex items-center gap-2 mt-2">
-                                            <div className="h-8 w-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                                 <Database className="h-4 w-4" />
                                             </div>
-                                            <span className="text-xs font-black text-white italic">{viewingProof?.completed_at ? new Date(viewingProof.completed_at).toLocaleString('pt-BR') : 'Sem registro'}</span>
+                                            <span className="text-xs font-black text-foreground italic">{viewingProof?.completed_at ? new Date(viewingProof.completed_at).toLocaleString('pt-BR') : 'Sem registro'}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                            <div className="flex items-center gap-4 pt-4 border-t border-border">
                                 <Button
                                     onClick={() => viewingProof && handleVerifyTask(viewingProof.id)}
                                     disabled={verifying}
-                                    className="h-20 flex-[3] bg-emerald-500 hover:bg-emerald-400 text-[#020617] font-black uppercase text-sm tracking-[0.1em] rounded-3xl shadow-[0_10px_30px_rgba(16,185,129,0.2)] border-none transition-all active:scale-[0.98]"
+                                    className="h-20 flex-[3] bg-primary hover:bg-primary/90 text-black font-black uppercase text-sm tracking-[0.1em] rounded-3xl shadow-[0_10px_30px_rgba(251,186,0,0.2)] border-none transition-all active:scale-[0.98]"
                                 >
                                     {verifying ? <Loader2 className="h-6 w-6 animate-spin mr-3" /> : <CheckCircle className="h-6 w-6 mr-3" />}
                                     Aprovar Conformidade Operacional
@@ -662,7 +662,7 @@ export default function TasksPage() {
                                 <Button
                                     variant="ghost"
                                     onClick={() => setViewingProof(null)}
-                                    className="h-20 flex-1 text-slate-500 hover:text-white font-black uppercase text-[10px] tracking-widest rounded-3xl border border-white/10 hover:bg-white/5 transition-all"
+                                    className="h-20 flex-1 text-muted-foreground hover:text-foreground font-black uppercase text-[10px] tracking-widest rounded-3xl border border-border hover:bg-muted transition-all"
                                 >
                                     Pular / Fechar
                                 </Button>
@@ -672,8 +672,8 @@ export default function TasksPage() {
                 </DialogContent>
             </Dialog>
 
-            <footer className="mt-auto h-20 border-t border-slate-800/50 flex items-center px-12 text-[9px] font-black text-slate-600 uppercase tracking-[0.4em]">
-                Matrix View V.2.0 • Tactical Operations Console
+            <footer className="mt-auto h-20 border-t border-border flex items-center px-12 text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+                SmartFit SP15 • Tactical Operations Console
             </footer>
         </div>
     )

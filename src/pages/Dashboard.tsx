@@ -162,41 +162,41 @@ export default function DashboardPage() {
                             <motion.div
                                 initial={{ rotate: -10, scale: 0.9 }}
                                 animate={{ rotate: 0, scale: 1 }}
-                                className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-xl shadow-slate-200"
+                                className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-black shadow-xl shadow-primary/20"
                             >
-                                <BarChart3 className="h-6 w-6 text-emerald-400" />
+                                <BarChart3 className="h-6 w-6" />
                             </motion.div>
                             <div className="flex flex-col">
-                                <span className="text-lg font-black tracking-tighter text-slate-900 border-none leading-none">SP15<span className="text-emerald-500"> App</span></span>
-                                <span className="text-[10px] font-bold text-slate-400 tracking-[0.2em] mt-1 uppercase">Executive Hub</span>
+                                <span className="text-lg font-black tracking-tighter text-foreground border-none leading-none">SmartFit <span className="text-primary italic">SP15</span></span>
+                                <span className="text-[10px] font-bold text-muted-foreground tracking-[0.2em] mt-1 uppercase italic">Regional SP15 Hub</span>
                             </div>
                         </div>
 
                         <nav className="flex-1 space-y-1">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Monitoramento</p>
-                            <Button variant="secondary" className="w-full justify-start gap-3 bg-slate-900 text-white hover:bg-slate-800 border-none shadow-md shadow-slate-200">
-                                <BarChart3 className="h-4 w-4 text-emerald-400" /> Visão Geral
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Monitoramento</p>
+                            <Button variant="secondary" className="w-full justify-start gap-3 bg-primary text-black hover:bg-primary/90 border-none shadow-md shadow-primary/10">
+                                <BarChart3 className="h-4 w-4" /> Visão Geral
                             </Button>
-                            <Button variant="ghost" className="w-full justify-start gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-50 border-none transition-all" onClick={() => navigate('/tasks')}>
+                            <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all" onClick={() => navigate('/tasks')}>
                                 <ClipboardList className="h-4 w-4" /> Gestão de Tarefas
                             </Button>
-                            <Button variant="ghost" className="w-full justify-start gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-50 border-none transition-all" onClick={() => navigate('/reports')}>
+                            <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all" onClick={() => navigate('/reports')}>
                                 <FileText className="h-4 w-4" /> Relatórios / Insights
                             </Button>
-                            <Button variant="ghost" className="w-full justify-start gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-50 border-none transition-all" onClick={() => navigate('/data-center')}>
+                            <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all" onClick={() => navigate('/data-center')}>
                                 <Database className="h-4 w-4" /> Centro de Dados
                             </Button>
                         </nav>
 
-                        <div className="mt-auto border-t border-slate-100 pt-4">
-                            <div className="px-3 py-4 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status do Sistema</p>
+                        <div className="mt-auto border-t border-border pt-4">
+                            <div className="px-3 py-4 mb-4 bg-muted/50 rounded-2xl border border-border">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Status do Sistema</p>
                                 <div className="flex items-center gap-2">
-                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-xs font-bold text-slate-600">Sync Ativo via Cloud</span>
+                                    <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                                    <span className="text-xs font-bold text-muted-foreground">Sync Ativo via Cloud</span>
                                 </div>
                             </div>
-                            <Button variant="ghost" className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 border-none" onClick={handleLogout}>
+                            <Button variant="ghost" className="w-full justify-start gap-3 text-destructive hover:text-destructive/80 hover:bg-destructive/10 border-none" onClick={handleLogout}>
                                 <LogOut className="h-4 w-4" /> Finalizar Sessão
                             </Button>
                         </div>
@@ -205,23 +205,23 @@ export default function DashboardPage() {
             )}
 
             <div className={`flex flex-col w-full min-h-screen transition-all duration-700 ${!presentationMode ? 'lg:pl-64' : ''}`}>
-                <header className={`sticky top-0 z-30 flex h-20 items-center gap-4 px-4 md:px-8 border-b transition-all duration-700 ${presentationMode ? 'bg-slate-950/80 border-slate-800 text-white backdrop-blur-xl' : 'bg-white/80 border-slate-100 backdrop-blur-md'}`}>
+                <header className={`sticky top-0 z-30 flex h-20 items-center gap-4 px-4 md:px-8 border-b transition-all duration-700 ${presentationMode ? 'bg-background/80 border-border text-foreground backdrop-blur-xl' : 'bg-background/80 border-border backdrop-blur-md'}`}>
                     <div className="flex flex-col">
                         <h1 className="text-xl font-black tracking-tight md:text-2xl uppercase italic">
-                            {presentationMode ? 'SP15 STRATEGIC HUB' : 'SP15 • Dashboard Executivo'}
+                            {presentationMode ? 'SMARTFIT SP15 STRATEGIC HUB' : 'SmartFit SP15 • Dashboard Executivo'}
                         </h1>
-                        <p className={`text-[10px] font-bold uppercase tracking-[0.3em] ${presentationMode ? 'text-emerald-400' : 'text-slate-400'}`}>
-                            {presentationMode ? 'NPS ANALYTICS ENGINE V.2' : 'Resumo Semanal de Unidades'}
+                        <p className={`text-[10px] font-black uppercase tracking-[0.3em] ${presentationMode ? 'text-primary' : 'text-muted-foreground'}`}>
+                            {presentationMode ? 'NPS ANALYTICS ENGINE V.3' : 'Resumo Semanal de Unidades'}
                         </p>
                     </div>
 
                     <div className="ml-auto flex items-center gap-3">
                         {availableWeeks.length > 0 && (
                             <Select value={selectedWeek} onValueChange={setSelectedWeek}>
-                                <SelectTrigger className={`w-[200px] h-11 border-none font-bold rounded-xl transition-all ${presentationMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-100 text-slate-900'}`}>
+                                <SelectTrigger className={`w-[200px] h-11 border border-border font-bold rounded-xl transition-all ${presentationMode ? 'bg-card text-foreground' : 'bg-muted text-foreground'}`}>
                                     <SelectValue placeholder="Selecione a Semana" />
                                 </SelectTrigger>
-                                <SelectContent className={presentationMode ? 'bg-slate-900 border-slate-800 text-white' : ''}>
+                                <SelectContent className={presentationMode ? 'bg-card border-border text-foreground' : ''}>
                                     {availableWeeks.map(week => (
                                         <SelectItem key={week} value={week} className="font-medium">
                                             {formatWeekDate(week)}
@@ -231,20 +231,20 @@ export default function DashboardPage() {
                             </Select>
                         )}
 
-                        <div className="h-8 w-[1px] bg-slate-200 mx-2 hidden md:block" />
+                        <div className="h-8 w-[1px] bg-border mx-2 hidden md:block" />
 
                         <Button
                             variant={presentationMode ? "outline" : "ghost"}
                             size="sm"
-                            className={`gap-2 h-11 px-5 rounded-xl transition-all duration-500 font-bold uppercase text-[10px] tracking-widest ${presentationMode ? 'border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+                            className={`gap-2 h-11 px-5 rounded-xl transition-all duration-500 font-bold uppercase text-[10px] tracking-widest ${presentationMode ? 'border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                             onClick={() => setPresentationMode(!presentationMode)}
                         >
                             {presentationMode ? <Minimize2 className="h-4 w-4" /> : <MonitorPlay className="h-4 w-4" />}
-                            <span className="hidden sm:inline">{presentationMode ? 'Dash Normal' : 'Modo Reunião'}</span>
+                            <span className="hidden sm:inline">{presentationMode ? 'Dash Normal' : 'Modo SP15 Hub'}</span>
                         </Button>
 
                         {!presentationMode && (
-                            <Button variant="ghost" size="icon" onClick={fetchAllMetrics} className="h-11 w-11 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 border-none transition-all">
+                            <Button variant="ghost" size="icon" onClick={fetchAllMetrics} className="h-11 w-11 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all">
                                 <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                             </Button>
                         )}
@@ -263,10 +263,10 @@ export default function DashboardPage() {
                             >
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                                     {[
-                                        { title: 'NPS Regional', value: (metrics.reduce((acc, curr) => acc + curr.nps_score, 0) / (metrics.length || 1)).toFixed(1), icon: Target, color: 'emerald', meta: 'META 2026: 75.0', trend: 2.1 },
-                                        { title: 'Amostragem', value: metrics.reduce((acc, curr) => acc + curr.responses_count, 0), icon: Users, color: 'navy', meta: 'Feedbacks processados', trend: 12 },
-                                        { title: 'Compliance', value: complianceRate.toFixed(1) + '%', icon: ShieldAlert, color: 'emerald', meta: `${auditPendingCount} aguardando auditoria`, trend: 0 },
-                                        { title: 'Risco Operacional', value: metrics.filter(m => m.nps_score < 50).length, icon: TrendingDown, color: 'amber', meta: 'Unidades em Risco', trend: -1 },
+                                        { title: 'NPS Regional', value: (metrics.reduce((acc, curr) => acc + curr.nps_score, 0) / (metrics.length || 1)).toFixed(1), icon: Target, color: 'primary', meta: 'META SP15: 75.0', trend: 2.1 },
+                                        { title: 'Amostragem', value: metrics.reduce((acc, curr) => acc + curr.responses_count, 0), icon: Users, color: 'foreground', meta: 'Feedbacks processados', trend: 12 },
+                                        { title: 'Compliance', value: complianceRate.toFixed(1) + '%', icon: ShieldAlert, color: 'primary', meta: `${auditPendingCount} aguardando auditoria`, trend: 0 },
+                                        { title: 'Risco Operacional', value: metrics.filter(m => m.nps_score < 50).length, icon: TrendingDown, color: 'destructive', meta: 'Unidades em Risco', trend: -1 },
                                     ].map((card, idx) => (
                                         <motion.div
                                             key={card.title}
@@ -274,36 +274,36 @@ export default function DashboardPage() {
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: idx * 0.1, duration: 0.5 }}
                                         >
-                                            <Card className={`decision-card h-full ring-1 ${presentationMode ? 'bg-slate-900/30 ring-white/5 shadow-2xl' : 'bg-white ring-slate-200/60 shadow-xl'}`}>
+                                            <Card className={`decision-card h-full border border-border shadow-xl ${presentationMode ? 'bg-card ring-1 ring-white/5 shadow-2xl' : 'bg-card shadow-xl'}`}>
                                                 <div className={`absolute top-0 right-0 p-4 opacity-10`}>
                                                     <card.icon className="h-16 w-16" />
                                                 </div>
                                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                                    <CardTitle className={`text-[10px] font-black uppercase tracking-[0.2em] ${presentationMode ? 'text-slate-500' : 'text-slate-400'}`}>{card.title}</CardTitle>
-                                                    <div className={`p-1.5 rounded-lg ${presentationMode ? 'bg-slate-800' : 'bg-slate-50'}`}>
-                                                        <card.icon className={`h-3.5 w-3.5 ${card.color === 'emerald' ? 'text-emerald-500' : card.color === 'amber' ? 'text-amber-500' : 'text-slate-600'}`} />
+                                                    <CardTitle className={`text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground`}>{card.title}</CardTitle>
+                                                    <div className={`p-1.5 rounded-lg bg-muted`}>
+                                                        <card.icon className={`h-3.5 w-3.5 ${card.color === 'primary' ? 'text-primary' : card.color === 'destructive' ? 'text-destructive' : 'text-foreground'}`} />
                                                     </div>
                                                 </CardHeader>
                                                 <CardContent>
                                                     <div className="flex items-baseline gap-2">
-                                                        <div className={`text-5xl font-black tracking-tighter ${presentationMode ? 'text-white' : 'text-slate-900'}`}>
+                                                        <div className={`text-5xl font-black tracking-tighter text-foreground`}>
                                                             {card.value}
                                                         </div>
                                                         {card.trend !== 0 && (
-                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-1 ${card.trend > 0 ? (presentationMode ? 'bg-emerald-500/10 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (presentationMode ? 'bg-amber-500/10 text-amber-400' : 'bg-amber-50 text-amber-600')}`}>
+                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-1 ${card.trend > 0 ? 'bg-primary/20 text-primary' : 'bg-destructive/20 text-destructive'}`}>
                                                                 {card.trend > 0 ? '+' : ''}{card.trend}
                                                             </div>
                                                         )}
                                                     </div>
                                                     <div className="mt-4 flex flex-col gap-1">
-                                                        <span className={`text-[10px] font-bold uppercase tracking-wider ${presentationMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                                                        <span className={`text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>
                                                             {card.meta}
                                                         </span>
-                                                        <div className={`h-1 w-full rounded-full ${presentationMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                                        <div className={`h-1 w-full rounded-full bg-muted`}>
                                                             <motion.div
                                                                 initial={{ width: 0 }}
                                                                 animate={{ width: card.title === 'NPS Regional' ? `${Math.min(100, (Number(card.value) / 75) * 100)}%` : card.title === 'Compliance' ? `${complianceRate}%` : '100%' }}
-                                                                className={`h-full rounded-full ${card.color === 'emerald' ? 'bg-emerald-500' : card.color === 'amber' ? 'text-amber-500' : 'bg-slate-600'}`}
+                                                                className={`h-full rounded-full ${card.color === 'primary' ? 'bg-primary' : card.color === 'destructive' ? 'bg-destructive' : 'bg-foreground'}`}
                                                             />
                                                         </div>
                                                     </div>
@@ -329,27 +329,27 @@ export default function DashboardPage() {
                                                 <div className="space-y-4">
                                                     <div className="flex items-center justify-between px-2">
                                                         <div className="flex flex-col">
-                                                            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Ranking de Performance</h3>
-                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Top Unidades da Semana</p>
+                                                            <h3 className="text-sm font-black text-foreground uppercase tracking-widest italic">Ranking de Performance</h3>
+                                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Top Unidades da Semana</p>
                                                         </div>
-                                                        <Badge className="bg-emerald-500 text-white border-none rounded-lg text-[10px] font-black italic">TOP 1: {metrics[0]?.units?.name}</Badge>
+                                                        <Badge className="bg-primary text-black border-none rounded-lg text-[10px] font-black italic">TOP 1: {metrics[0]?.units?.name}</Badge>
                                                     </div>
 
                                                     <div className="space-y-3">
                                                         {metrics.slice(0, 5).map((metric, idx) => (
-                                                            <div key={metric.id} className="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between hover:shadow-md transition-all">
+                                                            <div key={metric.id} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between hover:shadow-md transition-all">
                                                                 <div className="flex items-center gap-4">
-                                                                    <span className="text-lg font-black text-slate-300 italic">#0{idx + 1}</span>
+                                                                    <span className="text-lg font-black text-muted italic">#0{idx + 1}</span>
                                                                     <div className="flex flex-col">
-                                                                        <span className="text-[10px] font-black text-slate-900 uppercase">{metric.units?.name}</span>
-                                                                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{metric.units?.code}</span>
+                                                                        <span className="text-[10px] font-black text-foreground uppercase">{metric.units?.name}</span>
+                                                                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{metric.units?.code}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex flex-col items-end">
-                                                                    <span className={`text-sm font-black ${metric.nps_score >= (metric.goal_2026_1 || 75) ? 'text-emerald-500' : 'text-amber-500'}`}>
+                                                                    <span className={`text-sm font-black ${metric.nps_score >= (metric.goal_2026_1 || 75) ? 'text-primary' : 'text-destructive'}`}>
                                                                         {metric.nps_score.toFixed(1)}
                                                                     </span>
-                                                                    <Progress value={Math.min(100, (metric.nps_score / 100) * 100)} className="h-1 w-16 bg-slate-100" />
+                                                                    <Progress value={Math.min(100, (metric.nps_score / 100) * 100)} className="h-1 w-16 bg-muted" />
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -357,23 +357,23 @@ export default function DashboardPage() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="rounded-[2rem] p-10 bg-slate-900/40 ring-1 ring-white/10 flex flex-col justify-center relative overflow-hidden h-full">
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[60px]" />
-                                                <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/10 blur-[60px]" />
+                                            <div className="rounded-[2rem] p-10 bg-card border border-border flex flex-col justify-center relative overflow-hidden h-full shadow-xl">
+                                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px]" />
+                                                <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 blur-[60px]" />
 
                                                 <div className="space-y-6 relative z-10">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="h-1 w-12 bg-emerald-500 rounded-full" />
-                                                        <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">
+                                                        <div className="h-1 w-12 bg-primary rounded-full" />
+                                                        <h3 className="text-sm font-black text-foreground uppercase tracking-[0.3em]">
                                                             Strategic Insights
                                                         </h3>
                                                     </div>
                                                     <div className="space-y-4">
-                                                        <p className="text-2xl font-bold text-slate-100 leading-tight tracking-tight">
-                                                            Aumento de <span className="text-emerald-400">+{metrics.reduce((acc, curr) => acc + curr.responses_count, 0)}</span> feedbacks críticos nesta rodada.
+                                                        <p className="text-2xl font-bold text-foreground leading-tight tracking-tight">
+                                                            Aumento de <span className="text-primary">+{metrics.reduce((acc, curr) => acc + curr.responses_count, 0)}</span> feedbacks críticos nesta rodada.
                                                         </p>
-                                                        <p className="text-slate-400 text-sm leading-relaxed">
-                                                            A unidade <span className="text-white font-bold">{metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.units?.name}</span> lidera a rede, superando a meta em <span className="text-emerald-400 font-bold">{(Number(metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.nps_score || 0) - (metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.goal_2026_1 || 0)).toFixed(1)}%</span>.
+                                                        <p className="text-muted-foreground text-sm leading-relaxed">
+                                                            A unidade <span className="text-foreground font-bold">{metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.units?.name}</span> lidera a rede, superando a meta em <span className="text-primary font-bold">{(Number(metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.nps_score || 0) - (metrics.sort((a, b) => b.nps_score - a.nps_score)[0]?.goal_2026_1 || 0)).toFixed(1)}%</span>.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -391,9 +391,9 @@ export default function DashboardPage() {
                                 className="space-y-12 max-w-5xl mx-auto py-12"
                             >
                                 <div className="space-y-2">
-                                    <Badge className="bg-emerald-500 text-slate-950 font-black px-4 py-1.5 rounded-full text-xs uppercase italic tracking-tighter">Strategic Execution Slide</Badge>
-                                    <h2 className="text-6xl font-black text-white italic uppercase tracking-tighter leading-none">Diretrizes Críticas <br /><span className="text-emerald-500">da Semana</span></h2>
-                                    <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-sm">Monitoramento de execução tática • Ponto de atenção na reunião</p>
+                                    <Badge className="bg-primary text-black font-black px-4 py-1.5 rounded-full text-xs uppercase italic tracking-tighter">Strategic Execution Slide</Badge>
+                                    <h2 className="text-6xl font-black text-foreground italic uppercase tracking-tighter leading-none">Diretrizes Críticas <br /><span className="text-primary">da Semana</span></h2>
+                                    <p className="text-muted-foreground font-bold uppercase tracking-[0.3em] text-sm">Monitoramento de execução tática • Ponto de atenção na reunião</p>
                                 </div>
 
                                 <div className="grid gap-6">
@@ -477,8 +477,8 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
-                                    <span className={`text-[10px] font-bold uppercase ${presentationMode ? 'text-slate-400' : 'text-slate-500'}`}>Média Rede</span>
+                                    <div className="h-3 w-3 rounded-full bg-primary" />
+                                    <span className={`text-[10px] font-bold uppercase ${presentationMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Média Rede</span>
                                 </div>
                                 <Badge variant="outline" className={`rounded-lg px-3 py-1 font-bold ${presentationMode ? 'border-slate-800 text-slate-500' : 'border-slate-100'}`}>Live Update</Badge>
                             </div>
@@ -489,8 +489,8 @@ export default function DashboardPage() {
                     </motion.div>
                 </main>
 
-                <footer className={`h-16 flex items-center px-10 text-[9px] font-bold uppercase tracking-[0.3em] transition-colors duration-700 ${presentationMode ? 'bg-slate-950 text-slate-600' : 'bg-white text-slate-400 border-t'}`}>
-                    <span>Executive Dashboard • build v2.1.0-elite</span>
+                <footer className={`h-16 flex items-center px-10 text-[9px] font-bold uppercase tracking-[0.3em] transition-colors duration-700 ${presentationMode ? 'bg-background text-muted-foreground' : 'bg-background text-muted-foreground border-t'}`}>
+                    <span>SmartFit SP15 Executive Dashboard • build v2.1.0-elite</span>
                     <span className="ml-auto opacity-50">Authorized Use Only</span>
                 </footer>
             </div>

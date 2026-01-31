@@ -124,19 +124,19 @@ export default function AdminUnits() {
     )
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-[#0F172A] text-slate-200">
-            <header className="sticky top-0 z-30 flex h-20 items-center justify-between px-6 md:px-12 glass-dark border-b border-slate-800/50 backdrop-blur-2xl">
+        <div className="flex min-h-screen w-full flex-col bg-background text-foreground">
+            <header className="sticky top-0 z-30 flex h-20 items-center justify-between px-6 md:px-12 bg-background/80 border-b border-border backdrop-blur-2xl">
                 <div className="flex items-center gap-6">
-                    <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')} className="rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-all">
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')} className="rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div className="flex flex-col">
-                        <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">Gestão de Ecossistema</h1>
-                        <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.3em]">Unidades, Líderes e Siglas</p>
+                        <h1 className="text-xl font-black tracking-tighter text-foreground uppercase italic">Gestão de Ecossistema</h1>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Unidades, Líderes e Siglas</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
-                    <Badge className="bg-emerald-500/10 text-emerald-500 border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+                    <Badge className="bg-primary/10 text-primary border-none px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
                         ADMIN ACCESS
                     </Badge>
                 </div>
@@ -148,7 +148,7 @@ export default function AdminUnits() {
                     <Card className="bg-slate-900 border-slate-800 rounded-[2rem] overflow-hidden sticky top-28">
                         <CardHeader className="p-8 pb-4">
                             <CardTitle className="text-lg font-black uppercase tracking-tight text-white flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-500">
+                                <div className="p-2 rounded-xl bg-primary/20 text-primary">
                                     <Plus className="h-5 w-5" />
                                 </div>
                                 Nova Unidade
@@ -185,7 +185,7 @@ export default function AdminUnits() {
                                         </SelectTrigger>
                                         <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
                                             {profiles.map(p => (
-                                                <SelectItem key={p.id} value={p.id} className="focus:bg-emerald-500 focus:text-slate-950">
+                                                <SelectItem key={p.id} value={p.id} className="focus:bg-primary focus:text-black">
                                                     {p.full_name}
                                                 </SelectItem>
                                             ))}
@@ -194,7 +194,7 @@ export default function AdminUnits() {
                                 </div>
 
                                 <Button
-                                    className="w-full h-14 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase text-[10px] tracking-[0.2em] rounded-xl shadow-lg shadow-emerald-500/10 transition-all mt-6"
+                                    className="w-full h-14 bg-primary hover:bg-primary/90 text-black font-black uppercase text-[10px] tracking-[0.2em] rounded-xl shadow-lg shadow-primary/10 transition-all mt-6"
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? 'Processando...' : 'Confirmar Registro'}
@@ -208,7 +208,7 @@ export default function AdminUnits() {
                 <div className="lg:col-span-8 space-y-6">
                     <div className="flex items-center justify-between px-2">
                         <div className="flex flex-col">
-                            <h2 className="text-xl font-black tracking-tighter text-white uppercase italic">Frota de Unidades</h2>
+                            <h2 className="text-xl font-black tracking-tighter text-foreground uppercase italic">Frota de Unidades</h2>
                             <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">{units.length} bases operacionais ativas</p>
                         </div>
                         <div className="relative w-64">
@@ -217,7 +217,7 @@ export default function AdminUnits() {
                                 placeholder="BUSCAR UNIDADE/SIGLA..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="pl-12 bg-slate-900 border-slate-800 rounded-xl h-11 text-[10px] font-black tracking-widest placeholder:text-slate-700 focus:ring-emerald-500"
+                                className="pl-12 bg-muted border-border rounded-xl h-11 text-[10px] font-black tracking-widest placeholder:text-muted-foreground focus:ring-primary"
                             />
                         </div>
                     </div>
@@ -254,8 +254,8 @@ export default function AdminUnits() {
                                                     <div>
                                                         <h3 className="text-sm font-black text-white uppercase tracking-tight leading-none mb-1">{unit.name}</h3>
                                                         <div className="flex items-center gap-2">
-                                                            <Hash className="h-3 w-3 text-emerald-500" />
-                                                            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{unit.code}</span>
+                                                            <Hash className="h-3 w-3 text-primary" />
+                                                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{unit.code}</span>
                                                         </div>
                                                     </div>
 
@@ -282,8 +282,8 @@ export default function AdminUnits() {
             </main>
 
             <div className="p-8 max-w-7xl mx-auto w-full">
-                <div className="p-6 bg-slate-950/30 rounded-[2.5rem] border border-slate-800/50 flex items-start gap-4">
-                    <ShieldCheck className="h-6 w-6 text-emerald-500 shrink-0 mt-1" />
+                <div className="p-6 bg-muted/30 rounded-[2.5rem] border border-border flex items-start gap-4">
+                    <ShieldCheck className="h-6 w-6 text-primary shrink-0 mt-1" />
                     <div>
                         <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1 italic">Diretrizes de Governança</p>
                         <p className="text-[9px] font-bold text-slate-500 uppercase leading-relaxed tracking-widest italic">

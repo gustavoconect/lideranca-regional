@@ -379,9 +379,8 @@ export default function DataCenter() {
                 </div>
             </main>
 
-            {/* Modal de Inspeção */}
             <Dialog open={isInspectOpen} onOpenChange={setIsInspectOpen}>
-                <DialogContent className="max-w-4xl bg-black border border-white/10 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-2xl">
+                <DialogContent className="max-w-[90vw] bg-black border border-white/10 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-2xl">
                     <div className="h-2 bg-primary w-full" />
                     <div className="p-8">
                         <DialogHeader className="mb-8">
@@ -421,8 +420,8 @@ export default function DataCenter() {
                                             <div className="italic text-white/60 line-clamp-2" title={survey.comment}>{survey.comment || '-'}</div>
                                             <div className="flex justify-center">
                                                 <Badge className={`h-fit text-[9px] font-black border-none ${survey.npsScore >= 9 ? 'bg-emerald-500/20 text-emerald-500' :
-                                                        survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
-                                                            'bg-red-500/20 text-red-500'
+                                                    survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
+                                                        'bg-red-500/20 text-red-500'
                                                     }`}>
                                                     {survey.npsScore}
                                                 </Badge>

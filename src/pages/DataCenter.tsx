@@ -417,7 +417,7 @@ export default function DataCenter() {
                                     {inspectedData.map((survey: any, i: number) => (
                                         <div key={i} className="grid grid-cols-[80px_1fr_100px_1fr] gap-4 px-4 py-3 bg-black/40 hover:bg-white/5 transition-colors rounded-xl border border-white/5 text-xs text-white/80">
                                             <div className="font-bold text-primary">{survey.unitCode}</div>
-                                            <div className="italic text-white/60 line-clamp-2" title={survey.comment}>{survey.comment || '-'}</div>
+                                            <div className="italic text-white/60" title={survey.comment}>{survey.comment || '-'}</div>
                                             <div className="flex justify-center">
                                                 <Badge className={`h-fit text-[9px] font-black border-none ${survey.npsScore >= 9 ? 'bg-emerald-500/20 text-emerald-500' :
                                                     survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
@@ -426,7 +426,7 @@ export default function DataCenter() {
                                                     {survey.npsScore}
                                                 </Badge>
                                             </div>
-                                            <div className="text-[10px] text-white/40 line-clamp-2" title={survey.leaderFeedback}>
+                                            <div className="text-[10px] text-white/40" title={survey.leaderFeedback}>
                                                 {survey.leaderFeedback ? (
                                                     <span className="flex items-center gap-1.5 text-emerald-400">
                                                         <CheckCircle2 className="h-3 w-3" /> {survey.leaderFeedback}

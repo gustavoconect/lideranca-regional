@@ -389,8 +389,8 @@ export default function DataCenter() {
                                     <Eye className="h-6 w-6" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-white">Inspeção de Extração</DialogTitle>
-                                    <DialogDescription className="text-[10px] font-bold uppercase tracking-widest text-white/50">
+                                    <DialogTitle className="text-3xl font-black uppercase italic tracking-tighter text-white">Inspeção de Extração</DialogTitle>
+                                    <DialogDescription className="text-[11px] font-bold uppercase tracking-widest text-white/50">
                                         Visualizando dados extraídos de: <span className="text-primary">{inspectingSource?.filename}</span>
                                     </DialogDescription>
                                 </div>
@@ -400,7 +400,7 @@ export default function DataCenter() {
 
                     <div className="flex-1 overflow-hidden px-8 pb-8 flex flex-col">
                         {inspectedData.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center col-span-full py-10 bg-white/5 rounded-2xl border border-white/5 border-dashed">
+                            <div className="flex flex-col items-center justify-center h-full bg-white/5 rounded-2xl border border-white/5 border-dashed">
                                 <AlertCircle className="h-10 w-10 text-amber-500 mb-3" />
                                 <p className="text-[11px] font-bold text-white/50 uppercase tracking-widest">Nenhuma pesquisa identificada</p>
                                 <p className="text-[9px] text-white/30 max-w-sm text-center mt-2">
@@ -408,49 +408,45 @@ export default function DataCenter() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="grid gap-4">
-                                <div className="grid grid-cols-[80px_1fr_100px_1fr] gap-4 px-4 py-2 bg-white/5 rounded-xl border border-white/5 text-[9px] font-black uppercase text-white/40 tracking-widest">
+                            <div className="flex flex-col h-full">
+                                <div className="grid grid-cols-[100px_1fr_100px_1fr] gap-6 px-6 py-4 bg-white/5 rounded-t-xl border border-white/5 text-[10px] font-black uppercase text-white/40 tracking-widest shrink-0">
                                     <span>Unidade</span>
                                     <span>Comentário</span>
                                     <span className="text-center">NPS</span>
                                     <span>Feedback Líder</span>
                                 </div>
-                                {inspectedData.map((survey: any, i: number) => (
-                                    <div key={i} className="grid grid-cols-[80px_1fr_100px_1fr] gap-4 px-4 py-3 bg-black/40 hover:bg-white/5 transition-colors rounded-xl border border-white/5 text-xs text-white/80">
-                                        <div className="font-bold text-primary">{survey.unitCode}</div>
-                                        <div className="italic text-white/60" title={survey.comment}>{survey.comment || '-'}</div>
-                                        <div className="flex justify-center">
-                                            <Badge className={`h-fit text-[9px] font-black border-none ${survey.npsScore >= 9 ? 'bg-emerald-500/20 text-emerald-500' :
-                                                survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
-                                                    'bg-red-500/20 text-red-500'
-                                                }`}>
-                                                {survey.npsScore}
-                                            </Badge>
-                                        </div>
-                                        <div className="text-[10px] text-white/40" title={survey.leaderFeedback}>
-                                            {survey.leaderFeedback ? (
-                                                <span className="flex items-center gap-1.5 text-emerald-400">
-                                                    <CheckCircle2 className="h-3 w-3" /> {survey.leaderFeedback}
-                                                </span>
-                                            ) : <span className="text-white/20">Pendente</span>}
-                                        </div>
+                                <div className="overflow-y-auto custom-scrollbar flex-1 border-x border-b border-white/5 rounded-b-xl bg-black/40">
+                                    <div className="grid gap-2 p-2">
+                                        {inspectedData.map((survey: any, i: number) => (
+                                            <div key={i} className="grid grid-cols-[100px_1fr_100px_1fr] gap-6 px-6 py-4 bg-black/40 hover:bg-white/5 transition-colors rounded-lg border border-white/5 text-xs text-white/80 items-start">
+                                                <div className="font-bold text-primary py-1">{survey.unitCode}</div>
+                                                <div className="italic text-white/60 leading-relaxed py-1 text-sm border-l border-white/5 pl-4" title={survey.comment}>
+                                                    "{survey.comment || '-'}"
+                                                </div>
+                                                <div className="flex justify-center py-1">
+                                                    <Badge className={`h-fit text-[10px] font-black border-none px-3 py-1 ${survey.npsScore >= 9 ? 'bg-emerald-500/20 text-emerald-500' :
+                                                        survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
+                                                            'bg-red-500/20 text-red-500'
+                                                        }`}>
+                                                        NPS {survey.npsScore}
+                                                    </Badge>
+                                                </div>
+                                                <div className="text-[11px] text-white/40 leading-relaxed py-1 border-l border-white/5 pl-4" title={survey.leaderFeedback}>
+                                                    {survey.leaderFeedback ? (
+                                                        <span className="flex items-center gap-1.5 text-emerald-400">
+                                                            <CheckCircle2 className="h-3 w-3" /> {survey.leaderFeedback}
+                                                        </span>
+                                                    ) : <span className="text-white/20">Pendente</span>}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         )}
                     </div>
-
-                    <div className="mt-8 flex justify-end">
-                        <Button
-                            onClick={() => setIsInspectOpen(false)}
-                            className="bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest text-[10px] h-10 px-8 rounded-xl"
-                        >
-                            Fechar
-                        </Button>
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
-        </div >
+                </DialogContent>
+            </Dialog>
+        </div>
     )
 }

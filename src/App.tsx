@@ -7,6 +7,7 @@ import ReportsPage from '@/pages/Reports'
 import DataCenterPage from '@/pages/DataCenter'
 import AdminUnitsPage from '@/pages/AdminUnits'
 import UnitDashboardPage from '@/pages/UnitDashboard'
+import AiConfigPage from '@/pages/AiConfig'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -49,6 +50,11 @@ function App() {
                 <Route path="/units" element={
                     <ProtectedRoute allowedRoles={['regional_leader']}>
                         <AdminUnitsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/settings/ai" element={
+                    <ProtectedRoute allowedRoles={['regional_leader']}>
+                        <AiConfigPage />
                     </ProtectedRoute>
                 } />
 

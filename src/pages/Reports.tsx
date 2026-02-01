@@ -203,32 +203,31 @@ export default function ReportsPage() {
 
             const pdfTexts = sources.map(s => `Arquivo: ${s.filename}\nTexto: ${s.extracted_text}`).join('\n\n')
 
-            const prompt = `
+            setGenProgress('Carregando diretrizes de IA...')
+
+            const { data: promptData } = await supabase
+                .from('ai_prompts')
+                .select('prompt_text')
+                .eq('slug', 'report_generation')
+                .single()
+
+            const basePrompt = promptData?.prompt_text || `
             VOCÊ É UM CIÊNTISTA DE DADOS E CONSULTOR ESTRATÉGICO DE CX (CUSTOMER EXPERIENCE). 
             Sua missão é gerar um DOSSIÊ EXECUTIVO DE ALTA PRECISÃO. Você deve cruzar métricas numéricas com evidências textuais de forma EXAUSTIVA.
 
             DADOS DISPONÍVEIS:
             ---
             UNIDADES (ID, NOME, SIGLA):
-            ${JSON.stringify(units.map(u => ({ id: u.id, nome: u.name, sigla: u.code })))}
+            {{units}}
 
             MÉTRICAS NPS RECENTES E METAS (QUANTITATIVO):
-            ${JSON.stringify(metricsData?.map(m => ({
-                unit_id: m.unit_id,
-                nps: m.nps_score,
-                meta: m.goal_2026_1,
-                respostas: m.responses_count
-            })))}
+            {{metrics}}
 
             FEEDBACKS BRUTOS EXTRAÍDOS DE PDFS (QUALITATIVO):
-            ${pdfTexts}
+            {{pdfTexts}}
 
             COMPLIANCE OPERACIONAL (TAREFAS CONCLUÍDAS):
-            ${JSON.stringify(tasksData?.map(t => ({
-                status: t.status,
-                titulo: t.title,
-                lider_id: t.unit_leader_id
-            })))}
+            {{tasks}}
             ---
 
             TAREFA 1: RELATÓRIO REGIONAL CONSOLIDADO
@@ -271,7 +270,22 @@ export default function ReportsPage() {
             }
             `
 
-            const result = await model.generateContent(prompt)
+            const finalPrompt = basePrompt
+                .replace('{{units}}', JSON.stringify(units.map(u => ({ id: u.id, nome: u.name, sigla: u.code }))))
+                .replace('{{metrics}}', JSON.stringify(metricsData?.map(m => ({
+                    unit_id: m.unit_id,
+                    nps: m.nps_score,
+                    meta: m.goal_2026_1,
+                    respostas: m.responses_count
+                }))))
+                .replace('{{pdfTexts}}', pdfTexts)
+                .replace('{{tasks}}', JSON.stringify(tasksData?.map(t => ({
+                    status: t.status,
+                    titulo: t.title,
+                    lider_id: t.unit_leader_id
+                }))))
+
+            const result = await model.generateContent(finalPrompt)
             const response = await result.response
             const text = response.text()
 

@@ -206,6 +206,13 @@ async function enrichWithCsvData(unitTexts: Map<string, string>): Promise<UnitDa
 async function analyzeWithGemini(unit: UnitData, retryCount = 0): Promise<string> {
     const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' })
 
+    // Buscar prompt customizado do banco
+    const { data: promptData } = await supabase
+        .from('ai_prompts')
+        .select('prompt_text')
+        .eq('slug', 'unit_analysis')
+        .single()
+
     // Construir contexto numérico
     let npsContext = ''
     if (unit.currentNps !== null) {
@@ -224,22 +231,21 @@ async function analyzeWithGemini(unit: UnitData, retryCount = 0): Promise<string
         npsContext = 'NPS: Dados não disponíveis'
     }
 
-    // Montar dossiê
-    const dossiê = `# ANÁLISE CX - ${unit.name} (${unit.code})
+    const basePrompt = promptData?.prompt_text || `# ANÁLISE CX - {{name}} ({{code}})
 
 ## CONTEXTO NUMÉRICO (SINTOMA)
-${npsContext}
-Total de feedbacks no período: ${unit.feedbackCount}
-Comentários extraídos do PDF: ${unit.comments.length}
+{{npsContext}}
+Total de feedbacks no período: {{feedbackCount}}
+Comentários extraídos do PDF: {{commentsLength}}
 
 ## EVIDÊNCIAS (COMENTÁRIOS DOS ALUNOS)
-${unit.comments.length > 0 ? unit.comments.map((c, i) => `${i + 1}. "${c}"`).join('\n') : 'Nenhum comentário extraído.'}
+{{comments}}
 
 ## SUA TAREFA
 Você é um Especialista Sênior em Customer Experience para a rede de unidades Regionais.
 Baseado na variação do NPS (extraído do CSV) E nos comentários (extraídos do PDF):
 
-1. **Cruzamento de Dados**: Valide se os comentários realmente pertencem à unidade em questão buscando referências à sigla "${unit.code}" ou ao nome "${unit.name}" no contexto.
+1. **Cruzamento de Dados**: Valide se os comentários realmente pertencem à unidade em questão buscando referências à sigla "{{code}}" ou ao nome "{{name}}" no contexto.
 2. **Diagnóstico Estratégico**: O que explica a variação (ou estabilidade) da nota? Conecte o sintoma numérico com a evidência textual.
 3. **Problema Raiz**: Qual é o principal ofensor identificado nos comentários dos alunos?
 4. **Ação Recomendada**: Prescreva uma ação prática e imediata para o gerente da unidade.
@@ -252,8 +258,15 @@ REGRAS CRÍTICAS:
 - Máximo 150 palavras.
 - Use **negrito** para destacar pontos críticos.`
 
+    const finalPrompt = basePrompt
+        .replace(/{{name}}/g, unit.name)
+        .replace(/{{code}}/g, unit.code)
+        .replace('{{npsContext}}', npsContext)
+        .replace('{{feedbackCount}}', unit.feedbackCount.toString())
+        .replace('{{commentsLength}}', unit.comments.length.toString())
+        .replace('{{comments}}', unit.comments.length > 0 ? unit.comments.map((c, i) => `${i + 1}. "${c}"`).join('\n') : 'Nenhum comentário extraído.')
     try {
-        const result = await model.generateContent(dossiê)
+        const result = await model.generateContent(finalPrompt)
         return result.response.text()
     } catch (error: any) {
         // Retry automático em caso de rate limit (429)
@@ -273,6 +286,13 @@ REGRAS CRÍTICAS:
 async function analyzeRegionalMacro(allUnits: UnitData[], retryCount = 0): Promise<string> {
     const model = genAI.getGenerativeModel({ model: 'gemini-3-flash' })
 
+    // Buscar prompt customizado do banco
+    const { data: promptData } = await supabase
+        .from('ai_prompts')
+        .select('prompt_text')
+        .eq('slug', 'regional_macro')
+        .single()
+
     const totalFeedbacks = allUnits.reduce((acc, u) => acc + u.feedbackCount, 0)
     const avgNps = allUnits.reduce((acc, u) => acc + (u.currentNps || 0), 0) / (allUnits.filter(u => u.currentNps !== null).length || 1)
 
@@ -282,15 +302,15 @@ async function analyzeRegionalMacro(allUnits: UnitData[], retryCount = 0): Promi
         .map(u => `UNIDADE ${u.name}:\n${u.comments.slice(0, 2).map(c => `- "${c}"`).join('\n')}`)
         .join('\n\n')
 
-    const prompt = `Atue como Gerente Regional de CX. Analise o desempenho GERAL da regional nesta semana.
+    const basePrompt = promptData?.prompt_text || `Atue como Gerente Regional de CX. Analise o desempenho GERAL da regional nesta semana.
 
 DADOS CONSOLIDADOS:
-- Total de Feedbacks: ${totalFeedbacks}
-- NPS Médio Regional: ${avgNps.toFixed(1)}
-- Unidades Analisadas: ${allUnits.length}
+- Total de Feedbacks: {{totalFeedbacks}}
+- NPS Médio Regional: {{avgNps}}
+- Unidades Analisadas: {{unitsLength}}
 
 EVIDÊNCIAS POR UNIDADE:
-${regionalEvidences}
+{{regionalEvidences}}
 
 TAREFA:
 Gere um relatório Executivo Macro (Markdown) com:
@@ -304,8 +324,14 @@ REGRAS:
 - Máximo 250 palavras.
 - Use **negrito** para pontos de atenção.`
 
+    const finalPrompt = basePrompt
+        .replace('{{totalFeedbacks}}', totalFeedbacks.toString())
+        .replace('{{avgNps}}', avgNps.toFixed(1))
+        .replace('{{unitsLength}}', allUnits.length.toString())
+        .replace('{{regionalEvidences}}', regionalEvidences)
+
     try {
-        const result = await model.generateContent(prompt)
+        const result = await model.generateContent(finalPrompt)
         return result.response.text()
     } catch (error: any) {
         if (error?.message?.includes('429') && retryCount < 3) {

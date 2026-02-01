@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, Target, Users, FileText, Database, ShieldAlert, CheckCircle } from 'lucide-react'
+import { LogOut, RefreshCw, ClipboardList, BarChart3, MonitorPlay, Minimize2, Target, Users, FileText, Database, ShieldAlert, CheckCircle, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Metric {
@@ -169,6 +169,9 @@ export default function DashboardPage() {
                             </Button>
                             <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all" onClick={() => navigate('/data-center')}>
                                 <Database className="h-4 w-4" /> Centro de Dados
+                            </Button>
+                            <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted border-none transition-all" onClick={() => navigate('/settings/ai')}>
+                                <Sparkles className="h-4 w-4" /> Configuração IA
                             </Button>
                         </nav>
 

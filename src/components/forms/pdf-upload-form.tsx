@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { Loader2, CheckCircle, Sparkles, Calendar, FileText, Info } from 'lucide-react'
+import { Loader2, CheckCircle, Sparkles, Calendar, FileText, Info, Database } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import * as pdfjsLib from 'pdfjs-dist'
@@ -118,13 +118,13 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
             <CardHeader className="p-10 pb-4">
                 <div className="flex items-center gap-4">
                     <div className="p-3.5 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(240,185,11,0.1)]">
-                        <Sparkles className="h-7 w-7" />
+                        <Database className="h-7 w-7" />
                     </div>
                     <div>
                         <CardTitle className="text-2xl font-black uppercase tracking-tight text-white italic skew-x-[-10deg]">
-                            Intelligence <span className="text-primary">Knowledge</span>
+                            Ingestão de <span className="text-primary">Dados Brutos</span>
                         </CardTitle>
-                        <CardDescription className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] mt-1">Análise qualitativa profunda via Gemini 3 Flash</CardDescription>
+                        <CardDescription className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] mt-1">Extração e Estruturação de PDFs para Análise</CardDescription>
                     </div>
                 </div>
             </CardHeader>
@@ -186,13 +186,13 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                             <div className="flex items-center gap-3">
                                 <Loader2 className="h-5 w-5 animate-spin" />
                                 <span>
-                                    {step === 'extracting' ? 'Extraindo Conteúdo Bruto...' : 'Finalizando...'}
+                                    {step === 'extracting' ? 'Processando Arquivo...' : 'Finalizando...'}
                                 </span>
                             </div>
                         ) : (
                             <div className="flex items-center gap-3">
                                 <Sparkles className="h-5 w-5" />
-                                <span>Extrair Dados & Salvar</span>
+                                <span>Processar Arquivo & Salvar</span>
                             </div>
                         )}
                     </Button>
@@ -209,9 +209,9 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                                 <CheckCircle className="h-8 w-8" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase text-emerald-500 tracking-widest mb-1">Extração Concluída</span>
+                                <span className="text-[10px] font-black uppercase text-emerald-500 tracking-widest mb-1">Upload Concluído</span>
                                 <p className="text-sm font-bold text-white uppercase tracking-tight">
-                                    {results.saved} pesquisas identificadas no arquivo. Dados prontos para análise.
+                                    {results.saved} pesquisas extraídas. Vá para "Relatórios" para iniciar a análise com IA.
                                 </p>
                             </div>
                         </motion.div>
@@ -226,15 +226,15 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
                                 <Info className="h-3 w-3" /> Tip: Formato Ideal
                             </div>
                             <p className="text-[10px] font-medium text-white/20 uppercase tracking-wide leading-relaxed">
-                                Certifique-se de que o PDF contém os códigos SBRSP para garantir a precisão do mapeamento por unidade.
+                                Certifique-se de que o PDF contém os códigos SBRSP para facilitar o agrupamento automático.
                             </p>
                         </div>
                         <div className="flex-1 space-y-2">
                             <div className="flex items-center gap-2 text-[10px] font-black text-white/40 uppercase tracking-widest">
-                                <Info className="h-3 w-3" /> Tip: IA Analítica
+                                <Info className="h-3 w-3" /> Tip: Próximo Passo
                             </div>
                             <p className="text-[10px] font-medium text-white/20 uppercase tracking-wide leading-relaxed">
-                                O processamento leva em média 3-5 segundos por unidade para garantir insights de alta qualidade.
+                                Após o upload, seus dados ficarão disponíveis para cruzamento na área de Relatórios.
                             </p>
                         </div>
                     </div>

@@ -1,0 +1,63 @@
+﻿Lendo arquivo: C:\Users\Gustavo\Desktop\Projeto Regional\_backup_nextjs\data\feedbacks.pdf
+Extraindo texto do PDF...
+Texto extra├¡do. Total caracteres: 29964
+Separando por unidade...
+Total de unidades encontradas: 10
+
+--- RESULTADOS POR UNIDADE ---
+
+[DEBUG RAW TEXT SBRSPCBNF01] ---------------------
+SBRSPCBNF01   Andre   (/people/15194549)   E-mail   30/12/25 06:15   30/12/25 09:40   0   Sem contato  Coment├írio   Os aparelhos quebram e levam semanas pra serem reparados, deixando treinos mais longos ou for├ºando alunos a mudar seu plano de treino porque o aparelho que deveria estar funcional n├úo est├í. Neste momento (29/12/2025), unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de trans
+---------------------------------------------------
+
+
+UNIDADE: SBRSPCBNF01
+Coment├írios extra├¡dos: 1
+Exemplos:
+  1. ", unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de transport, quase TODOS est├úo com as carenagens pl├ísticas onde voc├¬ coloca o p├® QUEBRADOS/RACHADOS - se n├úo me engano tem um ├║nico aparelho que n├úo est├í assim. Aparelho de abdominal com couro sint├®tico rasgados, banco articulado sem pino, e por a├¡ vai. A a sensa├º├úo ├® que esta unidade, para a Bioritmo, n├úo vale investir em um ├║nico centavo. E que ├® melhor deixar largada, apodrecendo, at├® os aparelhos virarem ferro velho e depois passar o ponto pra frente quando deixar de ser rent├ível. Talvez em 2026 seja hora de mudar pra outra academia, se a unidade continuar largada desse jeito. Pra n├úo dizer que nada melhorou, pelo menos o ar condicionado agora funciona. Vivia quebrado ou desligado."
+
+UNIDADE: SBRSPCRPS02
+Coment├írios extra├¡dos: 0
+  (Nenhum coment├írio v├ílido encontrado)
+
+UNIDADE: SBRSPCBUT01
+Coment├írios extra├¡dos: 2
+Exemplos:
+  1. "----- SP15 - Alex Ribeiro"
+  2. "Papel higi├¬nico fraco de baixa qualidade, teve uma vez q o banheiro estava super nojento bem sujo e com o vaso entupido e o secador de m├úos do lado esquerdo ├® super fraco e ruim de usar. Mesmo com as m├úos bem perto do aparelho ele mal liga e j├í logo desliga. E tbm colocar panos de limpeza e ├ílcool onde ficam os colchonetes. ├ë ruim ter q atravessar a academia inteira pra poder pegar esses panos de limpeza para higienizar o colchonete ap├│s o uso."
+
+UNIDADE: SBRSPCBUT03
+Coment├írios extra├¡dos: 2
+Exemplos:
+  1. "Obtive contato"
+  2. "Os gerentes n├úo toman posi├º├úo em favor do cliente quando o cliente reclama"
+
+UNIDADE: SBRSPCRPS01
+Coment├írios extra├¡dos: 1
+Exemplos:
+  1. "Houve um problema no sistema da catraca no qual poderia ter prejudicado o trabalho da minha m├úe. Gra├ºas a Deus pelo fato dela ser uma excelente funcion├íria ela apenas levou uma bronca . Mas meu namorado ganhou uma advert├¬ncia e at├® isso se resolver gerou um transtorno muito grande ."
+
+UNIDADE: SBRSPCBUT06
+Coment├írios extra├¡dos: 2
+Exemplos:
+  1. "Obtive contato"
+  2. "Academia muito cheia"
+
+UNIDADE: SBRSPCJAG02
+Coment├írios extra├¡dos: 2
+Exemplos:
+  1. "Obtive contato"
+  2. "Pela impontualidade do professor e pelo descaso da Smartfit com o cliente. Frequento a academia no primeiro hor├írio, a partir da abertua. Entre novembro e dezembro houveram 5 atrasos do professor e, devido ├á minha agenda, caso eu n├úo consiga iniciar meu treino pontualmente as  eu n├úo terei como concluir meu treino. Mas, independente da minha situa├º├úo em espec├¡fico, se a empresa se prop?e a abrir em um determinado hor├írio, ela tem a responsabilidade de cumprir. O pior de tudo ├® o descaso do sac smartfit que aparentemente n├úo funciona e que, ao relatar tais episodios, sempre informam que s├úo eventos pontuais. Infelizmente a unidade Assai Jaguar├® ├® a mais pr├│xima mas j├í estamos estudando outras op├º├Áes de academia na regi├úo."
+
+UNIDADE: SBRSPIGRA01
+Coment├írios extra├¡dos: 0
+  (Nenhum coment├írio v├ílido encontrado)
+
+UNIDADE: SBRSPCBUT04
+Coment├írios extra├¡dos: 1
+Exemplos:
+  1. "Bom dia! Estamos sem aula de dan├ºa a 2 meses porque a smart est├í sem caixa de som e isso ├® um absurdo como pode uma rede de academia t├úo grande e nem tem suporte pra comprar uma caixa de som ,e as vezes temos porque os pr├│prios alunos levam pra termos aulas, antes n├úo estava tendo aulas porque n├úo tinha professor agora temos e nada de caixa de som e um descaso com a professora e n├│s alunos, j├í foram feitas v├írias reclama├º├Áes e nada por favor . E est├í um dif├¡cil fazer bike porque est├úo todas quebradas e nada de trocar pelo amor Deus e tudo um absurdo ."
+
+UNIDADE: SBRSPCBUT05
+Coment├írios extra├¡dos: 0
+  (Nenhum coment├írio v├ílido encontrado)

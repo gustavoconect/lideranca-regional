@@ -5,12 +5,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ArrowLeft, FileText, Database, ShieldCheck, Trash2, Calendar, FileSpreadsheet, Building2, LayoutGrid, ListFilter } from 'lucide-react'
+import { ArrowLeft, FileText, Database, ShieldCheck, Trash2, Calendar, FileSpreadsheet, Building2, LayoutGrid, ListFilter, Eye, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { ManualMetricForm } from '@/components/forms/manual-metric-form'
 import { PdfUploadForm } from '@/components/forms/pdf-upload-form'
+import { extractSurveys } from '@/utils/pdf-processing'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 
 interface DataSource {
     id: string
@@ -18,6 +20,7 @@ interface DataSource {
     file_type: 'csv' | 'pdf'
     extraction_date: string
     created_at: string
+    extracted_text?: string
 }
 
 interface NpsMetric {
@@ -41,6 +44,11 @@ export default function DataCenter() {
     const [metrics, setMetrics] = useState<NpsMetric[]>([])
     const [sources, setSources] = useState<DataSource[]>([])
     const [activeTab, setActiveTab] = useState('metrics')
+
+    // Inspection State
+    const [inspectingSource, setInspectingSource] = useState<DataSource | null>(null)
+    const [inspectedData, setInspectedData] = useState<any[]>([])
+    const [isInspectOpen, setIsInspectOpen] = useState(false)
 
     const fetchSources = async () => {
         const { data, error } = await supabase
@@ -68,6 +76,19 @@ export default function DataCenter() {
         fetchSources()
         fetchManualMetrics()
     }, [])
+
+    const handleInspect = (source: DataSource) => {
+        if (source.file_type !== 'pdf' || !source.extracted_text) return
+
+        try {
+            const surveys = extractSurveys(source.extracted_text)
+            setInspectedData(surveys)
+            setInspectingSource(source)
+            setIsInspectOpen(true)
+        } catch (e) {
+            toast.error('Erro ao ler conteúdo do arquivo.')
+        }
+    }
 
     const deleteManualMetric = async (id: string) => {
         if (!confirm('Deseja realmente excluir este registro semanal?')) return
@@ -155,7 +176,6 @@ export default function DataCenter() {
             </header>
 
             <main className="flex-1 w-full max-w-[1600px] mx-auto p-6 md:p-10 grid lg:grid-cols-[1fr,380px] gap-10">
-
                 {/* Coluna Esquerda: Ação Principal */}
                 <div className="space-y-10">
                     <Tabs defaultValue="metrics" className="w-full" onValueChange={setActiveTab}>
@@ -309,14 +329,25 @@ export default function DataCenter() {
                                                                 </span>
                                                                 <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">Processado via IA</span>
                                                             </div>
-                                                            <Button
-                                                                size="icon"
-                                                                variant="ghost"
-                                                                onClick={() => deleteSource(source.id, source.filename)}
-                                                                className="h-8 w-8 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
+                                                            <div className="flex items-center gap-1">
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="ghost"
+                                                                    onClick={() => handleInspect(source)}
+                                                                    title="Inspecionar extração"
+                                                                    className="h-8 w-8 text-white/20 hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                                                                >
+                                                                    <Eye className="h-4 w-4" />
+                                                                </Button>
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="ghost"
+                                                                    onClick={() => deleteSource(source.id, source.filename)}
+                                                                    className="h-8 w-8 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </div>
                                                         </div>
                                                         <div className="flex items-center justify-between mt-4 text-[9px] font-black uppercase text-white/40 tracking-widest border-t border-white/5 pt-3">
                                                             <div className="flex items-center gap-1.5">
@@ -342,11 +373,84 @@ export default function DataCenter() {
                             <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Dica Elite</span>
                         </div>
                         <p className="text-[10px] font-bold text-white/40 uppercase leading-relaxed tracking-wider">
-                            Para melhores análises qualitativas, tente fazer o upload de PDFs que contenham pelo menos 10 feedbacks detalhados por unidade.
+                            Para melhores análises qualitativas, tente fazer o upload de PDFs que contenham pelo menos 10 feedbacks detalhados por unidade. Use o ícone de olho para validar a extração.
                         </p>
                     </div>
                 </div>
             </main>
+
+            {/* Modal de Inspeção */}
+            <Dialog open={isInspectOpen} onOpenChange={setIsInspectOpen}>
+                <DialogContent className="max-w-4xl bg-black border border-white/10 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-2xl">
+                    <div className="h-2 bg-primary w-full" />
+                    <div className="p-8">
+                        <DialogHeader className="mb-8">
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
+                                    <Eye className="h-6 w-6" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter text-white">Inspeção de Extração</DialogTitle>
+                                    <DialogDescription className="text-[10px] font-bold uppercase tracking-widest text-white/50">
+                                        Visualizando dados extraídos de: <span className="text-primary">{inspectingSource?.filename}</span>
+                                    </DialogDescription>
+                                </div>
+                            </div>
+                        </DialogHeader>
+
+                        <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                            {inspectedData.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center col-span-full py-10 bg-white/5 rounded-2xl border border-white/5 border-dashed">
+                                    <AlertCircle className="h-10 w-10 text-amber-500 mb-3" />
+                                    <p className="text-[11px] font-bold text-white/50 uppercase tracking-widest">Nenhuma pesquisa identificada</p>
+                                    <p className="text-[9px] text-white/30 max-w-sm text-center mt-2">
+                                        Verifique se o PDF segue o padrão "Unidade: SBRSP..." e contém as seções de Feedback do Líder.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="grid gap-4">
+                                    <div className="grid grid-cols-[80px_1fr_100px_1fr] gap-4 px-4 py-2 bg-white/5 rounded-xl border border-white/5 text-[9px] font-black uppercase text-white/40 tracking-widest">
+                                        <span>Unidade</span>
+                                        <span>Comentário</span>
+                                        <span className="text-center">NPS</span>
+                                        <span>Feedback Líder</span>
+                                    </div>
+                                    {inspectedData.map((survey: any, i: number) => (
+                                        <div key={i} className="grid grid-cols-[80px_1fr_100px_1fr] gap-4 px-4 py-3 bg-black/40 hover:bg-white/5 transition-colors rounded-xl border border-white/5 text-xs text-white/80">
+                                            <div className="font-bold text-primary">{survey.unitCode}</div>
+                                            <div className="italic text-white/60 line-clamp-2" title={survey.comment}>{survey.comment || '-'}</div>
+                                            <div className="flex justify-center">
+                                                <Badge className={`h-fit text-[9px] font-black border-none ${survey.npsScore >= 9 ? 'bg-emerald-500/20 text-emerald-500' :
+                                                        survey.npsScore >= 7 ? 'bg-amber-500/20 text-amber-500' :
+                                                            'bg-red-500/20 text-red-500'
+                                                    }`}>
+                                                    {survey.npsScore}
+                                                </Badge>
+                                            </div>
+                                            <div className="text-[10px] text-white/40 line-clamp-2" title={survey.leaderFeedback}>
+                                                {survey.leaderFeedback ? (
+                                                    <span className="flex items-center gap-1.5 text-emerald-400">
+                                                        <CheckCircle2 className="h-3 w-3" /> {survey.leaderFeedback}
+                                                    </span>
+                                                ) : <span className="text-white/20">Pendente</span>}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="mt-8 flex justify-end">
+                            <Button
+                                onClick={() => setIsInspectOpen(false)}
+                                className="bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest text-[10px] h-10 px-8 rounded-xl"
+                            >
+                                Fechar
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

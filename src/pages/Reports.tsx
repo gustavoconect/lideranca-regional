@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { ArrowLeft, FileText, AlertTriangle, CheckCircle, Loader2, Calculator, TrendingUp, Building2, Target, MonitorPlay, Trash2, Sparkles, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { extractSurveys } from '@/utils/pdf-processing'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -169,12 +170,17 @@ export default function ReportsPage() {
                 .select('*')
                 .order('created_at', { ascending: false })
 
-            // 2. Buscar PDFs processados
-            const { data: sources } = await supabase
+            // 2. Buscar PDFs processados (apenas os que tem texto extraído e não foram deletados)
+            const { data: sources, error: idsError } = await supabase
                 .from('data_sources')
                 .select('*')
                 .eq('file_type', 'pdf')
+                .not('extracted_text', 'is', null) // Garante que tem texto
                 .order('created_at', { ascending: false })
+                // Opcional: Limitar aos últimos 30 dias ou X arquivos para não estourar contexto
+                .limit(20)
+
+            if (idsError) throw idsError
 
             // 3. Buscar tarefas (Tasks) para análise de Compliance
             const { data: tasksData } = await supabase
@@ -182,26 +188,60 @@ export default function ReportsPage() {
                 .select('unit_leader_id, status, title, validation_type')
 
             if (!sources || sources.length === 0) {
-                toast.error('Nenhum PDF encontrado na Central de Dados para análise.')
+                toast.error('Nenhum dado de PDF válido encontrado na Central de Dados.')
                 setIsGenerating(false)
                 return
             }
 
-            // Para simplificar, pegaremos o relatório qualitativo "bruto" (texto) que seria extraído dos PDFs
-            // Nota: No projeto original, o texto do PDF era processado no momento do upload.
-            // Para manter a promessa de "cruzar dados", precisaremos que o texto do PDF esteja acessível.
-            // Vou assumir que o sistema extrai o texto no momento do clique se necessário, ou que os dados qualitativos
-            // estão vindo dos DataSources. 
+            setGenProgress('Decodificando Knowledge Base...')
 
-            // ATENÇÃO: O usuário quer que ao clicar ele analise TODOS os PDFs e Dados.
-            // Vou simular o processo de "conhecimento acumulado".
+            // Processar e estruturar os textos dos PDFs
+            const groupedSurveys: Record<string, {
+                UnitCode: string
+                UnitName: string
+                Surveys: { Comment: string, Score: number | null, LeaderFeedback: string }[]
+            }> = {}
 
-            setGenProgress('Analisando correlações com Gemini...')
+            sources.forEach(source => {
+                if (!source.extracted_text) return
 
-            const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY)
-            const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' })
+                const surveys = extractSurveys(source.extracted_text)
 
-            const pdfTexts = sources.map(s => `Arquivo: ${s.filename}\nTexto: ${s.extracted_text}`).join('\n\n')
+                surveys.forEach(survey => {
+                    // Normaliza Unit Code para evitar duplicatas (SBRSP01 == sbrsp01)
+                    const unitKey = survey.unitCode.toUpperCase()
+
+                    if (!groupedSurveys[unitKey]) {
+                        const unitName = units.find(u => u.code.toUpperCase() === unitKey)?.name || survey.unitCode
+                        groupedSurveys[unitKey] = {
+                            UnitCode: unitKey,
+                            UnitName: unitName,
+                            Surveys: []
+                        }
+                    }
+
+                    // Evita comentários duplicados exatos (mesmo texto, mesma nota)
+                    const isDuplicate = groupedSurveys[unitKey].Surveys.some(s =>
+                        s.Comment === (survey.comment || "[Sem Comentário]") && s.Score === survey.npsScore
+                    )
+
+                    if (!isDuplicate) {
+                        groupedSurveys[unitKey].Surveys.push({
+                            Comment: survey.comment || "[Sem Comentário]",
+                            Score: survey.npsScore,
+                            LeaderFeedback: survey.leaderFeedback
+                        })
+                    }
+                })
+            })
+
+            // Formatar para o Prompt como JSON Estruturado
+            // Filtra unidades que não têm surveys para não poluir o prompt com dados vazios
+            const validUnitsPayload = Object.values(groupedSurveys).filter(u => u.Surveys.length > 0)
+
+            const pdfTexts = validUnitsPayload.length > 0
+                ? JSON.stringify(validUnitsPayload, null, 2)
+                : 'Nenhum dado extraído dos PDFs.'
 
             setGenProgress('Carregando diretrizes de IA...')
 

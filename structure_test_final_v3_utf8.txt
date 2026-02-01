@@ -1,0 +1,124 @@
+﻿Lendo arquivo: C:\Users\Gustavo\Desktop\Projeto Regional\_backup_nextjs\data\feedbacks.pdf
+Extraindo texto do PDF...
+Texto extra├¡do. Total caracteres: 29964
+Extraindo pesquisas estruturadas...
+Debug: Encontrados 30 blocos de pesquisa correspondentes ao padr├úo.
+
+--- RESULTADO DA EXTRA├ç├âO ESTRUTURADA (30 pesquisas) ---
+
+UNIDADE: SBRSPCBNF01
+Quantidade de Comentarios: 4
+  Coment├írio 1: Os aparelhos quebram e levam semanas pra serem reparados, deixando treinos mais longos ou for├ºando alunos a mudar seu plano de treino porque o aparelho que deveria estar funcional n├úo est├í. Neste momento (29/12/2025), unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de transport, quase TODOS est├úo com as carenagens pl├ísticas onde voc├¬ coloca o p├® QUEBRADOS/RACHADOS - se n├úo me engano tem um ├║nico aparelho que n├úo est├í assim. Aparelho de abdominal com couro sint├®tico rasgados, banco articulado sem pino, e por a├¡ vai. A a sensa├º├úo ├® que esta unidade, para a Bioritmo, n├úo vale investir em um ├║nico centavo. E que ├® melhor deixar largada, apodrecendo, at├® os aparelhos virarem ferro velho e depois passar o ponto pra frente quando deixar de ser rent├ível. Talvez em 2026 seja hora de mudar pra outra academia, se a unidade continuar largada desse jeito. Pra n├úo dizer que nada melhorou, pelo menos o ar condicionado agora funciona. Vivia quebrado ou desligado.
+   Nota: 0
+   Feedback L├¡der: Em tr├¬s tentativas n├úo obtive sucesso, irei conversar com o mesmo pessoalmente....
+  Coment├írio 2: Esteiras muito antigas, precisa renovar os equipamentos. Existem outras Smarts que est├úo com equipamentos muito melhores.
+   Nota: 5
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 3: treino sempre ├ás 5h da manh├ú, e ontem cheguei na academia e a porta de a├ºo estava toda aberta e a de vidro s├│ encostada. Ent├úo, entrei na academia, quando o funcion├írio Jamil me abordou e falou pra eu sair pq a academia ainda n├úo estava aberta, usando um modo grosseiro ao me mandar sair. Na sequ├¬ncia ele abaixou a porta de a├ºo e eu fiquei esperando do lado de fora. Ao entrar na academia eu perguntei o nome dele, pois n├úo sabia, e ao final do meu treino ele me abordou para se desculpar pelo ocorrido. Espero que n├úo aconte├ºa mais esse tipo de coisa desagrad├ível. Outra experi├¬ncia ruim que tive foi com a funcion├íria Thalia, que sempre se intromete, fazendo coment├írios desagrad├íveis e falando muito. Obrigada
+   Nota: 5
+   Feedback L├¡der: Em tr├¬s tentativas de contato n├úo obtive sucesso, irei conversar com a mesma pessoalmente,...
+  Coment├írio 4: Corrim├úo solto, esteiras que d├úo choque, aparelhos sem manuten├º├úo e alguns j├í obsoletos. Precisa de uma boa renova├º├úo e de um bom coordenador. N├úo vejo as outras smarts t├úo ca├¡das como essa. ├ë uma pena.... estou vedo muitos alunos largarem o plano....
+   Nota: 5
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+
+UNIDADE: SBRSPCRPS02
+Quantidade de Comentarios: 4
+  Coment├írio 1: [Sem Coment├írio V├ílido]
+   Nota: 4
+   Feedback L├¡der: Tentativa de contato sem sucesso...
+  Coment├írio 2: [Sem Coment├írio V├ílido]
+   Nota: 5
+   Feedback L├¡der: Tentativa de contato sem sucesso...
+  Coment├írio 3: [Sem Coment├írio V├ílido]
+   Nota: 6
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 4: Os atendentes s├úo irrespons├íveis e fazem piadas de mal gosto, s├úo desrespeitosos. Quando chamamos os instrutores eles n├úo instruem direito e n├úo nos dar a devida aten├º├úo, principalmente para quem est├úo iniciando, o que deveriam ter uma aten├º├úo maior! Nem parecem que foram treinados corretamente para atender os clientes com cordialidade, respeito e aten├º├úo devida. N├úo gostei mesmo dessa unidade.
+   Nota: 2
+   Feedback L├¡der: Tentativa de contato sem sucesso...
+
+UNIDADE: SBRSPCBUT01
+Quantidade de Comentarios: 1
+  Coment├írio 1: Papel higi├¬nico fraco de baixa qualidade, teve uma vez q o banheiro estava super nojento bem sujo e com o vaso entupido e o secador de m├úos do lado esquerdo ├® super fraco e ruim de usar. Mesmo com as m├úos bem perto do aparelho ele mal liga e j├í logo desliga. E tbm colocar panos de limpeza e ├ílcool onde ficam os colchonetes. ├ë ruim ter q atravessar a academia inteira pra poder pegar esses panos de limpeza para higienizar o colchonete ap├│s o uso.
+   Nota: 6
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+
+UNIDADE: SBRSPCBUT03
+Quantidade de Comentarios: 6
+  Coment├írio 1: Houve um problema no sistema da catraca no qual poderia ter prejudicado o trabalho da minha m├úe. Gra├ºas a Deus pelo fato dela ser uma excelente funcion├íria ela apenas levou uma bronca . Mas meu namorado ganhou uma advert├¬ncia e at├® isso se resolver gerou um transtorno muito grande .
+   Nota: 0
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 2: Os banheiros devem ser limpos (principalmente a ├írea de duchas) falta refrigera├º├úo e/ou ventila├º├úo. Algumas unidades tem luminosidade muito alta e outras mant├®m luz do sol direta, deixando o ambiente ainda mais quente
+   Nota: 6
+   Feedback L├¡der: cliente nao autorizou o contato...
+  Coment├írio 3: [Sem Coment├írio V├ílido]
+   Nota: 5
+   Feedback L├¡der: cliente nao autorizou contato...
+  Coment├írio 4: Banheiro feminino ruim, n├úo funciona o ar que seca as m├úos, portas encrencadas. Tamb├®m faltam mais pesinhos no andar de cima, nunca tem o de 6k, 7k quando preciso usar. No andar de baixo tem poucos tamb├®m; precisa comprar mais. O peso de 10k de eleva├º├úo p├®lvica furou ├® vazou areia e nunca foi reposto. As bicicletas ergom├®tricas n├úo s├úo do modelo recomendado para quem tem h├®rnia; em outras unidades da smart fit t├¬m bicicletas excelentes. Precisa adquirir bikes com esse prop├│sito. H├í poucos simuladores de escada e s├úo endurecidos, al├®m de n├úo funcionar o bot├úo de frequ├¬ncia card├¡aca. Precisa arrumar. As cadeiras de massagem s├úo muito inferiores ├ás de outras unidades, s├úo fracas e mal massageiam.
+   Nota: 4
+   Feedback L├¡der: numero programado para nao receber liga├º├Áes...
+  Coment├írio 5: Melhorias precisam ser realizadas nessa unidade, como a inclus├úo de mais equipamentos e mais modernos, at├® o treinamento dos instrutores para uma atua├º├úo mais ativa e participativa no treino dos alunos.
+   Nota: 5
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 6: A manuten├º├úo dos equipamentos deixa muito a desejar.
+   Nota: 3
+   Feedback L├¡der: Tentativa de contato sem sucesso...
+
+UNIDADE: SBRSPCRPS01
+Quantidade de Comentarios: 4
+  Coment├írio 1: Academia muito lotada, e n├úo pega o 3g do celular
+   Nota: 6
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 2: [Sem Coment├írio V├ílido]
+   Nota: 1
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 3: [Sem Coment├írio V├ílido]
+   Nota: 5
+   Feedback L├¡der: Cliente n├úo autoriza contato...
+  Coment├írio 4: Infelizmente hoje n├úo ├® somente a muscula├º├úo que conta em uma academia, a unidade da granja viana, n├úo tem aulas como ritmo, funcional e etc, hoje as pessoas querem fazer mais coisas em um lugar s├│, o que fica dif├¡cil quando a unidade disponibiliza s├│ uma atividade (muscula├º├úo)
+   Nota: 5
+   Feedback L├¡der: tentei contato com a aluna, porem n├úo obtive sucesso....
+
+UNIDADE: SBRSPIGRA01
+Quantidade de Comentarios: 3
+  Coment├írio 1: [Sem Coment├írio V├ílido]
+   Nota: 5
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+  Coment├írio 2: [Sem Coment├írio V├ílido]
+   Nota: 5
+   Feedback L├¡der: Cliente nao autorizou contato...
+  Coment├írio 3: Aparelhos s├úo ok, frequento a academia h├í anos e houve pouca mudan├ºa - ainda faltam equipamentos como hack, supino declinado e aparelhos para abdominais. O atendimento da recep├º├úo ├® ruim e os professores quase inexistentes (uma ou outra exce├º├úo).
+   Nota: 4
+   Feedback L├¡der: Caixa postal, irei tentar falar com o aluno pessoalmente....
+
+UNIDADE: SBRSPCBUT04
+Quantidade de Comentarios: 2
+  Coment├írio 1: [Sem Coment├írio V├ílido]
+   Nota: 6
+   Feedback L├¡der: Cliente nao autorizou contato...
+  Coment├írio 2: A academia est├í abandonada!! N├úo temos porta no banheiro feminino e n├úo temos luz. Al├®m disso, os professores s├│ servem para ficar andando pela academia e conversando com alunos que nem est├úo fazendo exerc├¡cio, eles n├úo prestam aten├º├úo em quem precisa de ajuda, e tamb├®m n├úo costumam checar se os alunos est├úo fazendo o exerc├¡cio de forma correta, fora a demora que ocorre quando apertamos para pedir ajuda. Uma grande falta de profissionalismo!!
+   Nota: 3
+   Feedback L├¡der: Cliente n├úo autorizou contato...
+
+UNIDADE: SBRSPCJAG02
+Quantidade de Comentarios: 4
+  Coment├írio 1: Ha dias eu n├óo tinha tempo para ir, ontem dia 10/01 estava finalizando meu treino 10:56 e fomos surpreendidos, alguem apagou completamente as luzes! Um completo absurdo e falta de educao , entendo o cansa├ºo dos funcionarios , mais nao precisam agir dessa forma.
+   Nota: 3
+   Feedback L├¡der: Primeiro contato sem sucesso  Feedback 2:   Segundo contato sem sucesso  Feedback 3:   Obs: Tivemos ...
+  Coment├írio 2: Aparelhagem completamente obsoleta e fora do padr├úo de todas as outras SmartFit que eu j├í frequentei. Al├®m disso, academia muito cheia.
+   Nota: 0
+   Feedback L├¡der: N├úo consegui contato com aluno, tentei ligar diversas vezes...
+  Coment├írio 3: Embora raramente necessite de suporte administrativo para minhas atividades na unidade, recentemente, ao solicitar informa├º├Áes ao colaborador J├║nior/J├║lio (recep├º├úo - per├¡odo vespertino), fui atendida de maneira desdenhosa e pouco resolutiva. Ao questionar sobre a possibilidade de reportar o ocorrido a um respons├ível presente, fui informada pelo pr├│prio funcion├írio que n├úo havia ningu├®m dispon├¡vel para o atendimento e que eu deveria formalizar minha insatisfa├º├úo via SAC. Diante do exposto, registro esta avalia├º├úo para que o colaborador seja devidamente orientado acerca dos fluxos operacionais e do padr├úo de atendimento esperado, uma vez que demonstrou desconhecimento t├®cnico ao responder 'n├úo sei' a todos os meus questionamentos.
+   Nota: 1
+   Feedback L├¡der: Irei conversar com o mesmo hoje para entender o que ocorreu . Pois estou sempre na unidade em todos ...
+  Coment├írio 4: Uma das bicicletas egoc├¬ntricas da qual a academia s├│ tem duas esta quebrada ha meses sem o reparo ou substitui├º├úo.
+   Nota: 1
+   Feedback L├¡der: Em tr├¬s tentativas n├úo obtive sucesso, irei conversar com o mesmo pessoalmente.  1  2   (/reports/fe...
+
+UNIDADE: SBRSPCBUT06
+Quantidade de Comentarios: 2
+  Coment├írio 1: Ela ├® um pouco pequena demais para o tanto de gente que a utiliza
+   Nota: 4
+   Feedback L├¡der: cliente nao autorizou contato...
+  Coment├írio 2: A academia ├® bacana, os profissionais s├úo legais, o que falta ├® maior agilidade nas manuten├º├Áes de equipamentos, por exemplo, vi uma das bicicletas do tipo das de spinning ficar em manuten├º├úo mais de 30 dias e agora uma das cadeiras de massagem est├úo em manuten├º├úo desde o ano passado, sei que ├® um per├¡odo complicado, mas dado o tamanho da rede, precisa pra ser mais ├ígil.
+   Nota: 6
+   Feedback L├¡der: cliente nao autorizou o contato...

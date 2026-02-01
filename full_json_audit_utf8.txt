@@ -1,0 +1,316 @@
+﻿Lendo arquivo: C:\Users\Gustavo\Desktop\Projeto Regional\_backup_nextjs\data\feedbacks.pdf
+Texto extra├¡do. Total caracteres: 29964
+
+--- JSON FINAL PARA O LLM (SEM TRUNCAMENTOS) ---
+[
+  {
+    "UnitCode": "SBRSPCBNF01",
+    "UnitName": "SBRSPCBNF01",
+    "Surveys": [
+      {
+        "Comment": "Os aparelhos quebram e levam semanas pra serem reparados, deixando treinos mais longos ou for├ºando alunos a mudar seu plano de treino porque o aparelho que deveria estar funcional n├úo est├í. Neste momento (29/12/2025), unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de transport, quase TODOS est├úo com as carenagens pl├ísticas onde voc├¬ coloca o p├® QUEBRADOS/RACHADOS - se n├úo me engano tem um ├║nico aparelho que n├úo est├í assim. Aparelho de abdominal com couro sint├®tico rasgados, banco articulado sem pino, e por a├¡ vai. A a sensa├º├úo ├® que esta unidade, para a Bioritmo, n├úo vale investir em um ├║nico centavo. E que ├® melhor deixar largada, apodrecendo, at├® os aparelhos virarem ferro velho e depois passar o ponto pra frente quando deixar de ser rent├ível. Talvez em 2026 seja hora de mudar pra outra academia, se a unidade continuar largada desse jeito. Pra n├úo dizer que nada melhorou, pelo menos o ar condicionado agora funciona. Vivia quebrado ou desligado.",
+        "Score": 0,
+        "LeaderFeedback": "Em tr├¬s tentativas n├úo obtive sucesso, irei conversar com o mesmo pessoalmente."
+      },
+      {
+        "Comment": "Esteiras muito antigas, precisa renovar os equipamentos. Existem outras Smarts que est├úo com equipamentos muito melhores.",
+        "Score": 5,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "treino sempre ├ás 5h da manh├ú, e ontem cheguei na academia e a porta de a├ºo estava toda aberta e a de vidro s├│ encostada. Ent├úo, entrei na academia, quando o funcion├írio Jamil me abordou e falou pra eu sair pq a academia ainda n├úo estava aberta, usando um modo grosseiro ao me mandar sair. Na sequ├¬ncia ele abaixou a porta de a├ºo e eu fiquei esperando do lado de fora. Ao entrar na academia eu perguntei o nome dele, pois n├úo sabia, e ao final do meu treino ele me abordou para se desculpar pelo ocorrido. Espero que n├úo aconte├ºa mais esse tipo de coisa desagrad├ível. Outra experi├¬ncia ruim que tive foi com a funcion├íria Thalia, que sempre se intromete, fazendo coment├írios desagrad├íveis e falando muito. Obrigada",
+        "Score": 5,
+        "LeaderFeedback": "Em tr├¬s tentativas de contato n├úo obtive sucesso, irei conversar com a mesma pessoalmente,"
+      },
+      {
+        "Comment": "Corrim├úo solto, esteiras que d├úo choque, aparelhos sem manuten├º├úo e alguns j├í obsoletos. Precisa de uma boa renova├º├úo e de um bom coordenador. N├úo vejo as outras smarts t├úo ca├¡das como essa. ├ë uma pena.... estou vedo muitos alunos largarem o plano....",
+        "Score": 5,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Os professores passam mais tempo conversando do que observando se os olhos est├úo fazendo corretos os exerc├¡cios. E, em rela├º├úo a manuten├º├úo de aparelhos e itens de higiene, respectivamente ├® muito demorado a manuten├º├úo. E os itens de limpeza como toalhinhas e ├ílcool quando acabam demoram uma eternidade pra repor. Ex atual. Estava fakatabdo ├ílcool ja h├í alguns dias e nada de reporem.",
+        "Score": 5,
+        "LeaderFeedback": "Em conversa com a cliene, a mesma gosta da unidade, elogiou o atendimento da recep├º├úo e da muscula├º├úo, por├®m informou que poderia ter uma aten├º├úo maior, agradeci o feedback e me coloquei a disposi├º├úo."
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 3,
+        "LeaderFeedback": "Em contato com a cliente, a mesma relatou que o espa├ºo do cardio esta precisando de manuten├º├úo e n├úo ve professores em sala, agradeci pelo feedback e me coloquei a disposi├º├úo."
+      },
+      {
+        "Comment": "A academia est├í abandonada!! N├úo temos porta no banheiro feminino e n├úo temos luz. Al├®m disso, os professores s├│ servem para ficar andando pela academia e conversando com alunos que nem est├úo fazendo exerc├¡cio, eles n├úo prestam aten├º├úo em quem precisa de ajuda, e tamb├®m n├úo costumam checar se os alunos est├úo fazendo o exerc├¡cio de forma correta, fora a demora que ocorre quando apertamos para pedir ajuda. Uma grande falta de profissionalismo!!",
+        "Score": 3,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Uma das bicicletas egoc├¬ntricas da qual a academia s├│ tem duas esta quebrada ha meses sem o reparo ou substitui├º├úo.",
+        "Score": 1,
+        "LeaderFeedback": "Em tr├¬s tentativas n├úo obtive sucesso, irei conversar com o mesmo pessoalmente.  1  2   (/reports/feedback_surveys/show? authenticity_token=jK9gsJBc1qywN7rqgbhJgMhb8DjF9cNUuxfnyfOtXGM%3D&commit=Enviar&feedback_surveys%5Bend_date%281i%29%5D=2026&feedback_surveys%5Ben 32&feedback_surveys%5Bstart_date%281i%29%5D=2025&feedback_surveys%5Bstart_date%282i%29%5D=12&feedback_surveys%5Bstart_date%283i%29%5D=30&feedback  Pr├│ximo ÔÇ║   (/reports/feedback_surveys/show? authenticity_token=jK9gsJBc1qywN7rqgbhJgMhb8DjF9cNUuxfnyfOtXGM%3D&commit=Enviar&feedback_surveys%5Bend_date%281i%29%5D=2026&feedback_surveys%5Ben 32&feedback_surveys%5Bstart_date%281i%29%5D=2025&feedback_surveys%5Bstart_date%282i%29%5D=12&feedback_surveys%5Bstart_date%283i%29%5D=30&feedback  ├Ültimo ┬╗   (/reports/feedback_surveys/show? authenticity_token=jK9gsJBc1qywN7rqgbhJgMhb8DjF9cNUuxfnyfOtXGM%3D&commit=Enviar&feedback_surveys%5Bend_date%281i%29%5D=2026&feedback_surveys%5Ben 32&feedback_surveys%5Bstart_date%281i%29%5D=2025&feedback_surveys%5Bstart_date%282i%29%5D=12&feedback_surveys%5Bstart_date%283i%29%5D=30&feedback"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCRPS02",
+    "UnitName": "SBRSPCRPS02",
+    "Surveys": [
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 4,
+        "LeaderFeedback": "Tentativa de contato sem sucesso"
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 5,
+        "LeaderFeedback": "Tentativa de contato sem sucesso"
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 6,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Os atendentes s├úo irrespons├íveis e fazem piadas de mal gosto, s├úo desrespeitosos. Quando chamamos os instrutores eles n├úo instruem direito e n├úo nos dar a devida aten├º├úo, principalmente para quem est├úo iniciando, o que deveriam ter uma aten├º├úo maior! Nem parecem que foram treinados corretamente para atender os clientes com cordialidade, respeito e aten├º├úo devida. N├úo gostei mesmo dessa unidade.",
+        "Score": 2,
+        "LeaderFeedback": "Tentativa de contato sem sucesso"
+      },
+      {
+        "Comment": "A manuten├º├úo dos equipamentos deixa muito a desejar.",
+        "Score": 3,
+        "LeaderFeedback": "Tentativa de contato sem sucesso"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCBUT01",
+    "UnitName": "SBRSPCBUT01",
+    "Surveys": [
+      {
+        "Comment": "Papel higi├¬nico fraco de baixa qualidade, teve uma vez q o banheiro estava super nojento bem sujo e com o vaso entupido e o secador de m├úos do lado esquerdo ├® super fraco e ruim de usar. Mesmo com as m├úos bem perto do aparelho ele mal liga e j├í logo desliga. E tbm colocar panos de limpeza e ├ílcool onde ficam os colchonetes. ├ë ruim ter q atravessar a academia inteira pra poder pegar esses panos de limpeza para higienizar o colchonete ap├│s o uso.",
+        "Score": 6,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCBUT03",
+    "UnitName": "SBRSPCBUT03",
+    "Surveys": [
+      {
+        "Comment": "Os gerentes n├úo toman posi├º├úo em favor do cliente quando o cliente reclama",
+        "Score": 5,
+        "LeaderFeedback": "Cliente veio falar comigo pessoalmente sobre a aula de Ginastica alta.... Alinhei com ele sobre, por├®m o mesmo n├úo quer entender."
+      },
+      {
+        "Comment": "Na segunda feira encontrei um professor muito pouco prestativo e disposto, o Jo├úo. Sinceramente fui embora antes de acabar o treino pois n├úo percebi muita disposi├º├úo de orientar",
+        "Score": 5,
+        "LeaderFeedback": "Encontrarei a cliente para conversar pessoalmente  Feedback 2:   Nao consegui contato telefonico, vou contatar a aluna pessoalmente"
+      },
+      {
+        "Comment": "Acredito que ├® poss├¡vel melhorar a estrutura f├¡sica. Ar condicionado Arrumar as goteiras da WC feminino",
+        "Score": 6,
+        "LeaderFeedback": "Cliente ainda nao tinha ciencia de como eram as m├®tricas do NPS, expliquei e ela nao teve nenhuma reclama├º├úo do atendimento em si, apenas da estrutura. Foi informada que os devidos cuidados de manuten├º├úo e estrutura est├úo passando por uma avalia├º├úo para melhoria."
+      },
+      {
+        "Comment": "Os banheiros devem ser limpos (principalmente a ├írea de duchas) falta refrigera├º├úo e/ou ventila├º├úo. Algumas unidades tem luminosidade muito alta e outras mant├®m luz do sol direta, deixando o ambiente ainda mais quente",
+        "Score": 6,
+        "LeaderFeedback": "cliente nao autorizou o contato"
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 5,
+        "LeaderFeedback": "Cliente nao autorizou contato"
+      },
+      {
+        "Comment": "Vagas para carro insuficiente , professores n├úo prestam aten├º├úo e n├úo orientam as pessoas, bicicletas constantemente quebradas",
+        "Score": 3,
+        "LeaderFeedback": "cliente nao autorizou contato"
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 5,
+        "LeaderFeedback": "cliente nao autorizou contato"
+      },
+      {
+        "Comment": "Banheiro feminino ruim, n├úo funciona o ar que seca as m├úos, portas encrencadas. Tamb├®m faltam mais pesinhos no andar de cima, nunca tem o de 6k, 7k quando preciso usar. No andar de baixo tem poucos tamb├®m; precisa comprar mais. O peso de 10k de eleva├º├úo p├®lvica furou ├® vazou areia e nunca foi reposto. As bicicletas ergom├®tricas n├úo s├úo do modelo recomendado para quem tem h├®rnia; em outras unidades da smart fit t├¬m bicicletas excelentes. Precisa adquirir bikes com esse prop├│sito. H├í poucos simuladores de escada e s├úo endurecidos, al├®m de n├úo funcionar o bot├úo de frequ├¬ncia card├¡aca. Precisa arrumar. As cadeiras de massagem s├úo muito inferiores ├ás de outras unidades, s├úo fracas e mal massageiam.",
+        "Score": 4,
+        "LeaderFeedback": "numero programado para nao receber liga├º├Áes"
+      },
+      {
+        "Comment": "Melhorias precisam ser realizadas nessa unidade, como a inclus├úo de mais equipamentos e mais modernos, at├® o treinamento dos instrutores para uma atua├º├úo mais ativa e participativa no treino dos alunos.",
+        "Score": 5,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Equipamentos velhos e prec├írios, faltam equipamentos que tem em outras smartfits. Muito lotada e um pouco desorganizado. Os funcion├írios s├úo sempre muito atenciosos e prestativos.",
+        "Score": 6,
+        "LeaderFeedback": "telefone indispon├¡vel, tentarei novamente mais tarde  Feedback 2:   Chamada n├úo atendida. Vou abordar o aluno de forma presencial"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCRPS01",
+    "UnitName": "SBRSPCRPS01",
+    "Surveys": [
+      {
+        "Comment": "Houve um problema no sistema da catraca no qual poderia ter prejudicado o trabalho da minha m├úe. Gra├ºas a Deus pelo fato dela ser uma excelente funcion├íria ela apenas levou uma bronca . Mas meu namorado ganhou uma advert├¬ncia e at├® isso se resolver gerou um transtorno muito grande .",
+        "Score": 0,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Falta atualiza├º├úo dos aparelhos, principalmente na ├írea de pernas, as unidades do Tabo├úo e da Corifeu est├úo mais atualizadas. E tamb├®m n├úo tem aulas coletivas de fitdance ou outras op├º├Áes, n├úo tem pq eu indicar esta unidade, est├í equiparada a uma academia de bairro.",
+        "Score": 0,
+        "LeaderFeedback": "Primeira tentativa de contato sem sucesso. Farei nova tentativa.  Feedback 2:   Em contato por telefone, aluna relatou que gosta da unidade, por├®m se incomoda com os problemas estruturais que temos hoje como infiltra├º├Áes e o piso danificado. Fora isso, ela elogia o atendimento e diz gostar de frequentar a unidade"
+      },
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 1,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Academia com p├®ssima infra estrutura. Pisos danificados, baixa ventila├º├úo, equipamentos sempre em manuten├º├úo, aparelhos sujos, banheiros f├®tidos...",
+        "Score": 0,
+        "LeaderFeedback": "Primeira tentativa de contato, encaminhada diretamente para a caixa postal. Feedback 2:   Segunda tentativa de contato sem sucesso. Farei nova tentativa  Feedback 3:   Ap├│s 3 tentativas de contato, agradeci o feedback da aluna por e-mail me colocando ├á disposi├º├úo e convidando para uma conversa pessoalmente na unidade."
+      },
+      {
+        "Comment": "Tem v├írios equipamentos quebrado nao tem.maus professor",
+        "Score": 6,
+        "LeaderFeedback": "Em conversa com aluno, expliquei sobre as manuten├º├Áes e sobre a dificuldade de contrata├º├úo. Aluno satisfeito com atendimento"
+      },
+      {
+        "Comment": "Falta de manuten├º├úo",
+        "Score": 2,
+        "LeaderFeedback": "Primeira tentativa de contato sem sucesso. Farei nova tentativa  Feedback 2:   Segunda tentativa de contato sem sucesso. Farei nova tentativa  Feedback 3:   Ap├│s 3 tentativas de contato sem sucesso, encaminhei e-mail agradecendo o feedback e convidando o aluno para uma conversa pessoalmente na unidade."
+      },
+      {
+        "Comment": "Quantidade de aparelhos reduzidos Muitos aparelhos em manuten├º├úo e demora no conserto",
+        "Score": 6,
+        "LeaderFeedback": "Primeira tentativa de contato encaminhada para a caixa postal. Farei nova tentativa  Feedback 2:   Segunda tentativa de contato sem sucesso. Farei nova tentativa  Feedback 3:   Ap├│s 3 tentativas de contato sem sucesso, encaminhei e-mail agradecendo o feedback e convidando a aluna para uma conversa pessoalmente na unidade."
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCBUT06",
+    "UnitName": "SBRSPCBUT06",
+    "Surveys": [
+      {
+        "Comment": "Academia muito cheia",
+        "Score": 6,
+        "LeaderFeedback": "Liga├º├Áes n├úo atendidas. Entrarei em contato com ele em sala, e j├í enviei tamb├®m email falando sobre a lota├º├úo linkada com a ├®poca do ano."
+      },
+      {
+        "Comment": "Ela ├® um pouco pequena demais para o tanto de gente que a utiliza",
+        "Score": 4,
+        "LeaderFeedback": "cliente nao autorizou contato"
+      },
+      {
+        "Comment": "A academia ├® bacana, os profissionais s├úo legais, o que falta ├® maior agilidade nas manuten├º├Áes de equipamentos, por exemplo, vi uma das bicicletas do tipo das de spinning ficar em manuten├º├úo mais de 30 dias e agora uma das cadeiras de massagem est├úo em manuten├º├úo desde o ano passado, sei que ├® um per├¡odo complicado, mas dado o tamanho da rede, precisa pra ser mais ├ígil.",
+        "Score": 6,
+        "LeaderFeedback": "cliente nao autorizou o contato"
+      },
+      {
+        "Comment": "O ar condicionado n├úo d├í vaz├úo a depender da qtd de pessoas na academia, precisaria fechar a entrada do segundo andar com vidro para manter o ar fresco dentro do ambiente. Essa semana a entrada estava com cheiro de esgoto impossibilitando o uso dos aparelhos de cardio devido ao mal cheiro.",
+        "Score": 6,
+        "LeaderFeedback": "Liga├º├Áes n├úo atendidas, entrarei em contato pessoalmente para conversar com o cliente"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCJAG02",
+    "UnitName": "SBRSPCJAG02",
+    "Surveys": [
+      {
+        "Comment": "Pela impontualidade do professor e pelo descaso da Smartfit com o cliente. Frequento a academia no primeiro hor├írio, a partir da abertua. Entre novembro e dezembro houveram 5 atrasos do professor e, devido ├á minha agenda, caso eu n├úo consiga iniciar meu treino pontualmente as 05:30 eu n├úo terei como concluir meu treino. Mas, independente da minha situa├º├úo em espec├¡fico, se a empresa se prop?e a abrir em um determinado hor├írio, ela tem a responsabilidade de cumprir. O pior de tudo ├® o descaso do sac smartfit que aparentemente n├úo funciona e que, ao relatar tais episodios, sempre informam que s├úo eventos pontuais. Infelizmente a unidade Assai Jaguar├® ├® a mais pr├│xima mas j├í estamos estudando outras op├º├Áes de academia na regi├úo.",
+        "Score": 0,
+        "LeaderFeedback": "J├í alinhado com os colaboradores da manh├ú sobre atrasos."
+      },
+      {
+        "Comment": "Academia muito lotada, e n├úo pega o 3g do celular",
+        "Score": 6,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Ha dias eu n├óo tinha tempo para ir, ontem dia 10/01 estava finalizando meu treino 10:56 e fomos surpreendidos, alguem apagou completamente as luzes! Um completo absurdo e falta de educao , entendo o cansa├ºo dos funcionarios , mais nao precisam agir dessa forma.",
+        "Score": 3,
+        "LeaderFeedback": "Primeiro contato sem sucesso  Feedback 2:   Segundo contato sem sucesso  Feedback 3:   Obs: Tivemos queda de energia na unidade no mesmo hor├írio ontem .  Feedback 4:   Terceiro contato : Sem sucesso . Tentarei falar com mesmo via telefone ou pessoalmente"
+      },
+      {
+        "Comment": "Peco muito tempo esperando desocupar aparelho",
+        "Score": 5,
+        "LeaderFeedback": "Primeiro contato: Caixa Postal  Feedback 2:   Ol├í, Alex, tudo bem ?? Aqui ├® da unidade Smart Fit Jaguar├®! Sou a Tatiana gerente da unidade e esse e-mail ├® um dos nossos canais de comunica├º├úo! Espero que voc├¬ alcance todos os seus objetivos e que sua experi├¬ncia conosco seja sempre boa! Obs: Sobre sua nota referente a perder muito tempo para desculpar o aparelho. Em alguns hor├írios o fluxo da unidade ├® mais alto , por├®m todos os professores est├úo dispon├¡veis para te orientar e se for preciso ajustar seus treino . Estou ├á disposi├º├úo para qualquer feedback"
+      },
+      {
+        "Comment": "Geralmente l├í ├® muito quente e abafado, parece at├® que n├úo ligam o ar-condicionado. N├úo pega sinal de celular o que complica demais o treino. Os professores n├úo s├úo firmes com alunos que usam aparelhos de forma indevida como por exemplo o agachamento Smith que tem o adesivo informando que n├úo deve ser utilizado para outros exerc├¡cios, muitos usam pra fazer peito e ningu├®m fala nada. No primeiro dia o professor montou meu treino, quando fui renovar tava sempre ocupado demais e com o tempo desisti. Me sinto numa unidade que s├│ tem aparelhos, entre a├¡ e fa├ºa o que quiser... Tem vezes tamb├®m que faltando ainda 40 minutos para o fechamento e eles fecham (interditam) o banheiro para agilizar o fechamento da unidade.",
+        "Score": 2,
+        "LeaderFeedback": "Ol├í, Rafael , tudo bem ?? Aqui ├® da unidade Smart Fit Jaguar├®! Sou a Tatiana gerente da unidade e esse e-mail ├® um dos nossos canais de comunica├º├úo! Espero que voc├¬ alcance todos os seus objetivos e que sua experi├¬ncia conosco seja sempre boa! Obs: Sobre seus feedbacks : Ar condicionado: O mesmo fica em uma temperatura padr├úo de 21 /22 graus. Agachamento Smith - O mesmo por ser multi pode fazer tanto superior como inferior . Treino : O senhor pode renovar com qualquer professor que tiver em sala , caso o mesmo esteja atendendo outro cliente pode ir at├® a recep├º├úo e conversar com um dos mesmo para passar para o professor . Aqui temos regras e procedimentos de utiliza├º├úo, eu l├¡der estou aqui em todos os hor├írios praticamente . Sobre o vesti├írio Masculino : Foi passado para os respons├íveis pelo ocorrido e ser├úo tomadas as devidas provid├¬ncias perante o mesmo . Estou ├á disposi├º├úo para qualquer feedback"
+      },
+      {
+        "Comment": "Embora raramente necessite de suporte administrativo para minhas atividades na unidade, recentemente, ao solicitar informa├º├Áes ao colaborador J├║nior/J├║lio (recep├º├úo - per├¡odo vespertino), fui atendida de maneira desdenhosa e pouco resolutiva. Ao questionar sobre a possibilidade de reportar o ocorrido a um respons├ível presente, fui informada pelo pr├│prio funcion├írio que n├úo havia ningu├®m dispon├¡vel para o atendimento e que eu deveria formalizar minha insatisfa├º├úo via SAC. Diante do exposto, registro esta avalia├º├úo para que o colaborador seja devidamente orientado acerca dos fluxos operacionais e do padr├úo de atendimento esperado, uma vez que demonstrou desconhecimento t├®cnico ao responder 'n├úo sei' a todos os meus questionamentos.",
+        "Score": 1,
+        "LeaderFeedback": "Irei conversar com o mesmo hoje para entender o que ocorreu . Pois estou sempre na unidade em todos os per├¡odos"
+      },
+      {
+        "Comment": "A smart ├® uma academia boa, porem as outras j├í est├úo se igualando a Smart, por isso e dif├¡cil voc├¬ recomendar,",
+        "Score": 4,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPIGRA01",
+    "UnitName": "SBRSPIGRA01",
+    "Surveys": [
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 5,
+        "LeaderFeedback": "Cliente n├úo autorizou contato"
+      },
+      {
+        "Comment": "Os aparelhos est├úo muito gastos e precisam de manuten├º├úo e lubrifica├º├úo. V├írios aparelhos apresentam folga nas engrenagens devido a desgaste das pe├ºas. Sinto em alguns casos o aparelho estalar, ou chiar e dar tranco. E n├úo uso muita carga, minhas s├®ries s├úo leves, sempre acompanhado pelo meu personal trainer. Em alguns casos, percebo falta de lubrifica├º├úo, em outros percebo pe├ºas desgastadas que necessitam de reposi├º├úo e ainda outras precisam de regulagem. Em uma m├íquina de cadeira flexora, a pe├ºa de ajuste de posi├º├úo apresenta enorme folga e ├® vis├¡vel o desgaste. As tape├ºarias das m├íquinas tamb├®m est├úo gastas, deformadas e velhas. ├ë not├│ria a falta de cuidado com as m├íquinas que precisam ser renovadas, ou pelo menos de uma manuten├º├úo ou restaura├º├úo cuidadosa. Nunca vi algum t├®cnico examinando ou regulando aparelhos na sala. Realmente a academia est├í em estado de obsolesc├¬ncia. O vesti├írio tamb├®m merece aten├º├úo, os arm├írios est├úo em mau estado, portas desalinhadas, dobradi├ºas quebradas, pe├ºas sanit├írias velhas e gastas. O soprador da pia do banheiro est├í quebrado h├í semanas. O sensor da impress├úo digital no controle de acesso n├úo funciona bem e muitas vezes est├í quebrado. No entanto a limpeza da unidade ├® impec├ível, todos os ambientes limpos e organizados. Meu plano vence em breve e n├úo sei se permane├ºo na unidade ou troco de unidade. Chego a avaliar a possibilidade de mudar de academia. Existem v├írias academias novas na regi├úo atualmente. Outro ponto que poderia melhorar ├® o limite de tempo de 1h30 para o estacionamento. Acredito que 2h atenderia melhor a maioria dos alunos. Em resumo, a impress├úo que fica ├® de uma academia velha, surrada, sem muito cuidado. Gosto muito da unidade, mas na minha opini├úo precisa de mais cuidado e aten├º├úo. Estou prestes a conhecer a unidade S├úo Camilo, mas j├í percebi que ela tamb├®m sofre de um defeito cr├┤nico recorrente da smartfit: estacionamento ruim porque as vagas s├úo pequenas.",
+        "Score": 5,
+        "LeaderFeedback": "Tive a oportunidade de conversar pessoalmente com o aluno, momento em que o aluno se sentiu ├á vontade para compartilhar um feedback construtivo visando a melhoria da academia. Reforcei que suas sugest├Áes foram registradas e me coloquei ├á disposi├º├úo para quaisquer necessidades."
+      },
+      {
+        "Comment": "Aparelhos s├úo ok, frequento a academia h├í anos e houve pouca mudan├ºa - ainda faltam equipamentos como hack, supino declinado e aparelhos para abdominais. O atendimento da recep├º├úo ├® ruim e os professores quase inexistentes (uma ou outra exce├º├úo).",
+        "Score": 4,
+        "LeaderFeedback": "Caixa postal, irei tentar falar com o aluno pessoalmente."
+      },
+      {
+        "Comment": "Infelizmente hoje n├úo ├® somente a muscula├º├úo que conta em uma academia, a unidade da granja viana, n├úo tem aulas como ritmo, funcional e etc, hoje as pessoas querem fazer mais coisas em um lugar s├│, o que fica dif├¡cil quando a unidade disponibiliza s├│ uma atividade (muscula├º├úo)",
+        "Score": 5,
+        "LeaderFeedback": "tentei contato com a aluna, porem n├úo obtive sucesso."
+      },
+      {
+        "Comment": "Aparelhagem completamente obsoleta e fora do padr├úo de todas as outras SmartFit que eu j├í frequentei. Al├®m disso, academia muito cheia.",
+        "Score": 0,
+        "LeaderFeedback": "N├úo consegui contato com aluno, tentei ligar diversas vezes"
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCBUT04",
+    "UnitName": "SBRSPCBUT04",
+    "Surveys": [
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 6,
+        "LeaderFeedback": "Cliente nao autorizou contato"
+      },
+      {
+        "Comment": "Bom dia! Estamos sem aula de dan├ºa a 2 meses porque a smart est├í sem caixa de som e isso ├® um absurdo como pode uma rede de academia t├úo grande e nem tem suporte pra comprar uma caixa de som ,e as vezes temos porque os pr├│prios alunos levam pra termos aulas, antes n├úo estava tendo aulas porque n├úo tinha professor agora temos e nada de caixa de som e um descaso com a professora e n├│s alunos, j├í foram feitas v├írias reclama├º├Áes e nada por favor . E est├í um dif├¡cil fazer bike porque est├úo todas quebradas e nada de trocar pelo amor Deus e tudo um absurdo .",
+        "Score": 5,
+        "LeaderFeedback": "em contato com a aluna informa que isso n├úo poderia estar acontecendo em uma rede deste tabanho, informei que estou voltando de ferias hoje e j├í irei verificar como estamos com este procedimento. me coloquei a disposi├º├úo."
+      }
+    ]
+  },
+  {
+    "UnitCode": "SBRSPCBUT05",
+    "UnitName": "SBRSPCBUT05",
+    "Surveys": [
+      {
+        "Comment": "[Sem Coment├írio V├ílido]",
+        "Score": 5,
+        "LeaderFeedback": "Cliente n├úo autoriza contato"
+      }
+    ]
+  }
+]

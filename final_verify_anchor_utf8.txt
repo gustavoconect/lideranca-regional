@@ -1,0 +1,77 @@
+﻿Lendo arquivo: C:\Users\Gustavo\Desktop\Projeto Regional\_backup_nextjs\data\feedbacks.pdf
+Extraindo texto do PDF...
+Texto extra├¡do. Total caracteres: 29964
+Separando por unidade...
+Total de unidades encontradas: 10
+
+--- RESULTADOS POR UNIDADE ---
+
+[DEBUG RAW TEXT SBRSPCBNF01] ---------------------
+SBRSPCBNF01   Andre   (/people/15194549)   E-mail   30/12/25 06:15   30/12/25 09:40   0   Sem contato  Coment├írio   Os aparelhos quebram e levam semanas pra serem reparados, deixando treinos mais longos ou for├ºando alunos a mudar seu plano de treino porque o aparelho que deveria estar funcional n├úo est├í. Neste momento (29/12/2025), unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de trans
+---------------------------------------------------
+
+
+UNIDADE: SBRSPCBNF01
+Coment├írios extra├¡dos: 8
+Exemplos:
+  1. "Os aparelhos quebram e levam semanas pra serem reparados, deixando treinos mais longos ou for├ºando alunos a mudar seu plano de treino porque o aparelho que deveria estar funcional n├úo est├í. Neste momento (29/12/2025), unidade Bonfiglioli s├│ tem 2 cadeiras abdutoras, e uma delas est├í quebrada a pelo menos 15 dias. Um ├║nico aparelho de Gr├íviton, tamb├®m quebrado. Os aparelhos de transport, quase TODOS est├úo com as carenagens pl├ísticas onde voc├¬ coloca o p├® QUEBRADOS/RACHADOS - se n├úo me engano tem um ├║nico aparelho que n├úo est├í assim. Aparelho de abdominal com couro sint├®tico rasgados, banco articulado sem pino, e por a├¡ vai. A a sensa├º├úo ├® que esta unidade, para a Bioritmo, n├úo vale investir em um ├║nico centavo. E que ├® melhor deixar largada, apodrecendo, at├® os aparelhos virarem ferro velho e depois passar o ponto pra frente quando deixar de ser rent├ível. Talvez em 2026 seja hora de mudar pra outra academia, se a unidade continuar largada desse jeito. Pra n├úo dizer que nada melhorou, pelo menos o ar condicionado agora funciona. Vivia quebrado ou desligado."
+  2. "Esteiras muito antigas, precisa renovar os equipamentos. Existem outras Smarts que est├úo com equipamentos muito melhores."
+  3. "treino sempre ├ás 5h da manh├ú, e ontem cheguei na academia e a porta de a├ºo estava toda aberta e a de vidro s├│ encostada. Ent├úo, entrei na academia, quando o funcion├írio Jamil me abordou e falou pra eu sair pq a academia ainda n├úo estava aberta, usando um modo grosseiro ao me mandar sair. Na sequ├¬ncia ele abaixou a porta de a├ºo e eu fiquei esperando do lado de fora. Ao entrar na academia eu perguntei o nome dele, pois n├úo sabia, e ao final do meu treino ele me abordou para se desculpar pelo ocorrido. Espero que n├úo aconte├ºa mais esse tipo de coisa desagrad├ível. Outra experi├¬ncia ruim que tive foi com a funcion├íria Thalia, que sempre se intromete, fazendo coment├írios desagrad├íveis e falando muito. Obrigada"
+
+UNIDADE: SBRSPCRPS02
+Coment├írios extra├¡dos: 3
+Exemplos:
+  1. "coment├írio."
+  2. "Os atendentes s├úo irrespons├íveis e fazem piadas de mal gosto, s├úo desrespeitosos. Quando chamamos os instrutores eles n├úo instruem direito e n├úo nos dar a devida aten├º├úo, principalmente para quem est├úo iniciando, o que deveriam ter uma aten├º├úo maior! Nem parecem que foram treinados corretamente para atender os clientes com cordialidade, respeito e aten├º├úo devida. N├úo gostei mesmo dessa unidade."
+  3. "A manuten├º├úo dos equipamentos deixa muito a desejar."
+
+UNIDADE: SBRSPCBUT01
+Coment├írios extra├¡dos: 1
+Exemplos:
+  1. "Papel higi├¬nico fraco de baixa qualidade, teve uma vez q o banheiro estava super nojento bem sujo e com o vaso entupido e o secador de m├úos do lado esquerdo ├® super fraco e ruim de usar. Mesmo com as m├úos bem perto do aparelho ele mal liga e j├í logo desliga. E tbm colocar panos de limpeza e ├ílcool onde ficam os colchonetes. ├ë ruim ter q atravessar a academia inteira pra poder pegar esses panos de limpeza para higienizar o colchonete ap├│s o uso."
+
+UNIDADE: SBRSPCBUT03
+Coment├írios extra├¡dos: 9
+Exemplos:
+  1. "Os gerentes n├úo toman posi├º├úo em favor do cliente quando o cliente reclama"
+  2. "Na segunda feira encontrei um professor muito pouco prestativo e disposto, o Jo├úo. Sinceramente fui embora antes de acabar o treino pois n├úo percebi muita disposi├º├úo de orientar"
+  3. "Acredito que ├® poss├¡vel melhorar a estrutura f├¡sica. Ar condicionado Arrumar as goteiras da WC feminino"
+
+UNIDADE: SBRSPCRPS01
+Coment├írios extra├¡dos: 7
+Exemplos:
+  1. "Houve um problema no sistema da catraca no qual poderia ter prejudicado o trabalho da minha m├úe. Gra├ºas a Deus pelo fato dela ser uma excelente funcion├íria ela apenas levou uma bronca . Mas meu namorado ganhou uma advert├¬ncia e at├® isso se resolver gerou um transtorno muito grande ."
+  2. "Falta atualiza├º├úo dos aparelhos, principalmente na ├írea de pernas, as unidades do Tabo├úo e da Corifeu est├úo mais atualizadas. E tamb├®m n├úo tem aulas coletivas de fitdance ou outras op├º├Áes, n├úo tem pq eu indicar esta unidade, est├í equiparada a uma academia de bairro."
+  3. "coment├írio."
+
+UNIDADE: SBRSPCBUT06
+Coment├írios extra├¡dos: 4
+Exemplos:
+  1. "Academia muito cheia"
+  2. "Ela ├® um pouco pequena demais para o tanto de gente que a utiliza"
+  3. "A academia ├® bacana, os profissionais s├úo legais, o que falta ├® maior agilidade nas manuten├º├Áes de equipamentos, por exemplo, vi uma das bicicletas do tipo das de spinning ficar em manuten├º├úo mais de 30 dias e agora uma das cadeiras de massagem est├úo em manuten├º├úo desde o ano passado, sei que ├® um per├¡odo complicado, mas dado o tamanho da rede, precisa pra ser mais ├ígil."
+
+UNIDADE: SBRSPCJAG02
+Coment├írios extra├¡dos: 7
+Exemplos:
+  1. "Pela impontualidade do professor e pelo descaso da Smartfit com o cliente. Frequento a academia no primeiro hor├írio, a partir da abertua. Entre novembro e dezembro houveram 5 atrasos do professor e, devido ├á minha agenda, caso eu n├úo consiga iniciar meu treino pontualmente as 05:30 eu n├úo terei como concluir meu treino. Mas, independente da minha situa├º├úo em espec├¡fico, se a empresa se prop?e a abrir em um determinado hor├írio, ela tem a responsabilidade de cumprir. O pior de tudo ├® o descaso do sac smartfit que aparentemente n├úo funciona e que, ao relatar tais episodios, sempre informam que s├úo eventos pontuais. Infelizmente a unidade Assai Jaguar├® ├® a mais pr├│xima mas j├í estamos estudando outras op├º├Áes de academia na regi├úo."
+  2. "Academia muito lotada, e n├úo pega o 3g do celular"
+  3. "Ha dias eu n├óo tinha tempo para ir, ontem dia 10/01 estava finalizando meu treino 10:56 e fomos surpreendidos, alguem apagou completamente as luzes! Um completo absurdo e falta de educao , entendo o cansa├ºo dos funcionarios , mais nao precisam agir dessa forma."
+
+UNIDADE: SBRSPIGRA01
+Coment├írios extra├¡dos: 5
+Exemplos:
+  1. "coment├írio."
+  2. "Os aparelhos est├úo muito gastos e precisam de manuten├º├úo e lubrifica├º├úo. V├írios aparelhos apresentam folga nas engrenagens devido a desgaste das pe├ºas. Sinto em alguns casos o aparelho estalar, ou chiar e dar tranco. E n├úo uso muita carga, minhas s├®ries s├úo leves, sempre acompanhado pelo meu personal trainer. Em alguns casos, percebo falta de lubrifica├º├úo, em outros percebo pe├ºas desgastadas que necessitam de reposi├º├úo e ainda outras precisam de regulagem. Em uma m├íquina de cadeira flexora, a pe├ºa de ajuste de posi├º├úo apresenta enorme folga e ├® vis├¡vel o desgaste. As tape├ºarias das m├íquinas tamb├®m est├úo gastas, deformadas e velhas. ├ë not├│ria a falta de cuidado com as m├íquinas que precisam ser renovadas, ou pelo menos de uma manuten├º├úo ou restaura├º├úo cuidadosa. Nunca vi algum t├®cnico examinando ou regulando aparelhos na sala. Realmente a academia est├í em estado de obsolesc├¬ncia. O vesti├írio tamb├®m merece aten├º├úo, os arm├írios est├úo em mau estado, portas desalinhadas, dobradi├ºas quebradas, pe├ºas sanit├írias velhas e gastas. O soprador da pia do banheiro est├í quebrado h├í semanas. O sensor da impress├úo digital no controle de acesso n├úo funciona bem e muitas vezes est├í quebrado. No entanto a limpeza da unidade ├® impec├ível, todos os ambientes limpos e organizados. Meu plano vence em breve e n├úo sei se permane├ºo na unidade ou troco de unidade. Chego a avaliar a possibilidade de mudar de academia. Existem v├írias academias novas na regi├úo atualmente. Outro ponto que poderia melhorar ├® o limite de tempo de 1h30 para o estacionamento. Acredito que 2h atenderia melhor a maioria dos alunos. Em resumo, a impress├úo que fica ├® de uma academia velha, surrada, sem muito cuidado. Gosto muito da unidade, mas na minha opini├úo precisa de mais cuidado e aten├º├úo. Estou prestes a conhecer a unidade S├úo Camilo, mas j├í percebi que ela tamb├®m sofre de um defeito cr├┤nico recorrente da smartfit: estacionamento ruim porque as vagas s├úo pequenas."
+  3. "Aparelhos s├úo ok, frequento a academia h├í anos e houve pouca mudan├ºa - ainda faltam equipamentos como hack, supino declinado e aparelhos para abdominais. O atendimento da recep├º├úo ├® ruim e os professores quase inexistentes (uma ou outra exce├º├úo)."
+
+UNIDADE: SBRSPCBUT04
+Coment├írios extra├¡dos: 2
+Exemplos:
+  1. "coment├írio."
+  2. "Bom dia! Estamos sem aula de dan├ºa a 2 meses porque a smart est├í sem caixa de som e isso ├® um absurdo como pode uma rede de academia t├úo grande e nem tem suporte pra comprar uma caixa de som ,e as vezes temos porque os pr├│prios alunos levam pra termos aulas, antes n├úo estava tendo aulas porque n├úo tinha professor agora temos e nada de caixa de som e um descaso com a professora e n├│s alunos, j├í foram feitas v├írias reclama├º├Áes e nada por favor . E est├í um dif├¡cil fazer bike porque est├úo todas quebradas e nada de trocar pelo amor Deus e tudo um absurdo ."
+
+UNIDADE: SBRSPCBUT05
+Coment├írios extra├¡dos: 1
+Exemplos:
+  1. "coment├írio."

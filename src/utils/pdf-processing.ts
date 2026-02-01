@@ -63,7 +63,7 @@ export function extractSurveys(rawText: string): Survey[] {
     const unitPattern = /(SBRSP[A-Z0-9]+)/
 
     // Status comuns para ajudar na ancoragem da nota
-    const statusAnchors = ['Sem contato', 'Contato realizado', 'Cliente não', 'Não houve', 'Respondido', 'Em andamento']
+    // const statusAnchors = ['Sem contato', 'Contato realizado', 'Cliente não', 'Não houve', 'Respondido', 'Em andamento']
 
     for (const block of blocks) {
         // Ignora blocos muito pequenos ou sem unidade

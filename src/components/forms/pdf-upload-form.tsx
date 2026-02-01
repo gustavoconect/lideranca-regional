@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { Loader2, CheckCircle, Sparkles, Calendar, FileText, Info } from 'lucide-react'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import * as pdfjsLib from 'pdfjs-dist'
@@ -17,28 +16,7 @@ import * as pdfjsLib from 'pdfjs-dist'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-import { splitTextByUnit, sanitizeComments } from '@/utils/pdf-processing'
-
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY || '')
-
-const MIN_COMMENTS_FOR_ANALYSIS = 3
-
-interface UnitData {
-    code: string
-    name: string
-    comments: string[]
-    // Dados do CSV (banco)
-    currentNps: number | null
-    previousNps: number | null
-    npsVariation: number | null
-    feedbackCount: number
-}
-
-interface AnalysisProgress {
-    current: number
-    total: number
-    currentUnit: string
-}
+import { splitTextByUnit } from '@/utils/pdf-processing'
 
 interface PdfUploadFormProps {
     onImportComplete?: () => void
@@ -73,7 +51,6 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
     const [loading, setLoading] = useState(false)
     const [step, setStep] = useState<'idle' | 'extracting' | 'processing' | 'analyzing' | 'macro'>('idle')
     const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0])
-    const [progress, setProgress] = useState<AnalysisProgress | null>(null)
     const [results, setResults] = useState<{ saved: number; skipped: string[] } | null>(null)
     const [fileName, setFileName] = useState<string>('')
 
@@ -94,7 +71,6 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
 
         setLoading(true)
         setStep('extracting')
-        setProgress(null)
         setResults(null)
 
         try {
@@ -103,7 +79,7 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
 
             const rawText = await extractTextFromPdf(file)
 
-            const { data: dataSource, error: sourceError } = await supabase
+            const { error: sourceError } = await supabase
                 .from('data_sources')
                 .insert({
                     filename: file.name,

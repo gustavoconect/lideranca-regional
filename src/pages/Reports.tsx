@@ -325,6 +325,13 @@ export default function ReportsPage() {
                     lider_id: t.unit_leader_id
                 }))))
 
+            // Instanciar o modelo (garantindo que a chave existe)
+            const apiKey = import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY
+            if (!apiKey) throw new Error('Chave de API do Google não configurada.')
+
+            const genAI = new GoogleGenerativeAI(apiKey)
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
+
             const result = await model.generateContent(finalPrompt)
             const response = await result.response
             const text = response.text()

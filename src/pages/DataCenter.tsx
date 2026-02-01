@@ -327,7 +327,7 @@ export default function DataCenter() {
                                                                 <span className="text-[11px] font-black text-white uppercase tracking-tight truncate max-w-[180px]">
                                                                     {source.filename}
                                                                 </span>
-                                                                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">Processado via IA</span>
+                                                                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">Extração OK</span>
                                                             </div>
                                                             <div className="flex items-center gap-1">
                                                                 <Button
@@ -373,7 +373,7 @@ export default function DataCenter() {
                             <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Dica Elite</span>
                         </div>
                         <p className="text-[10px] font-bold text-white/40 uppercase leading-relaxed tracking-wider">
-                            Para melhores análises qualitativas, tente fazer o upload de PDFs que contenham pelo menos 10 feedbacks detalhados por unidade. Use o ícone de olho para validar a extração.
+                            Use o ícone de olho para validar se todos os comentários foram extraídos corretamente. Depois, vá para o menu "Relatórios" para gerar os insights com IA.
                         </p>
                     </div>
                 </div>

@@ -16,7 +16,7 @@ import * as pdfjsLib from 'pdfjs-dist'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-import { splitTextByUnit, extractSurveys } from '@/utils/pdf-processing'
+import { extractSurveys } from '@/utils/pdf-processing'
 
 interface PdfUploadFormProps {
     onImportComplete?: () => void

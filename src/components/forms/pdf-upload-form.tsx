@@ -16,7 +16,7 @@ import * as pdfjsLib from 'pdfjs-dist'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-import { splitTextByUnit } from '@/utils/pdf-processing'
+import { splitTextByUnit, extractSurveys } from '@/utils/pdf-processing'
 
 interface PdfUploadFormProps {
     onImportComplete?: () => void
@@ -99,9 +99,9 @@ export function PdfUploadForm({ onImportComplete }: PdfUploadFormProps) {
 
             setStep('processing')
             // Validação visual rápida para o usuário
-            const unitTexts = splitTextByUnit(rawText)
+            const surveys = extractSurveys(rawText)
 
-            setResults({ saved: unitTexts.size, skipped: [] })
+            setResults({ saved: surveys.length, skipped: [] })
             toast.success('Arquivo processado e salvo na Central de Dados com sucesso!')
             onImportComplete?.()
 

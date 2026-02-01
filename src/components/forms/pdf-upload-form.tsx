@@ -27,7 +27,11 @@ interface PdfUploadFormProps {
  */
 async function extractTextFromPdf(file: File): Promise<string> {
     const arrayBuffer = await file.arrayBuffer()
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
+    const pdf = await pdfjsLib.getDocument({
+        data: arrayBuffer,
+        useSystemFonts: true,
+        disableFontFace: true
+    }).promise
 
     let fullText = ''
     for (let i = 1; i <= pdf.numPages; i++) {

@@ -330,7 +330,7 @@ export default function ReportsPage() {
             if (!apiKey) throw new Error('Chave de API do Google não configurada.')
 
             const genAI = new GoogleGenerativeAI(apiKey)
-            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" })
+            const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" })
 
             const result = await model.generateContent(finalPrompt)
             const response = await result.response

@@ -237,7 +237,13 @@ export default function ReportsPage() {
 
             // Formatar para o Prompt como JSON Estruturado
             // Filtra unidades que não têm surveys para não poluir o prompt com dados vazios
-            const validUnitsPayload = Object.values(groupedSurveys).filter(u => u.Surveys.length > 0)
+            // ADAPTIVE LOGIC: Unidades com < 5 feedbacks recebem relatório "summary" (resumido). >= 5 recebem "deep".
+            const validUnitsPayload = Object.values(groupedSurveys)
+                .filter(u => u.Surveys.length > 0)
+                .map(u => ({
+                    ...u,
+                    ReportType: u.Surveys.length < 5 ? 'summary' : 'deep'
+                }))
 
             const pdfTexts = validUnitsPayload.length > 0
                 ? JSON.stringify(validUnitsPayload, null, 2)
@@ -252,8 +258,8 @@ export default function ReportsPage() {
                 .single()
 
             const basePrompt = promptData?.prompt_text || `
-            VOCÊ É UM CIÊNTISTA DE DADOS E CONSULTOR ESTRATÉGICO DE CX (CUSTOMER EXPERIENCE). 
-            Sua missão é gerar um DOSSIÊ EXECUTIVO DE ALTA PRECISÃO. Você deve cruzar métricas numéricas com evidências textuais de forma EXAUSTIVA.
+            VOCÊ É UM CIÊNTISTA DE DADOS E CONSULTOR ESTRATÉGICO DE CX (CUSTOMER EXPERIENCE).
+            Sua missão é gerar relatórios adaptados ao volume de dados de cada unidade.
 
             DADOS DISPONÍVEIS:
             ---
@@ -263,34 +269,45 @@ export default function ReportsPage() {
             MÉTRICAS NPS RECENTES E METAS (QUANTITATIVO):
             {{metrics}}
 
-            FEEDBACKS BRUTOS EXTRAÍDOS DE PDFS (QUALITATIVO):
+            FEEDBACKS BRUTOS ESTRUTURADOS (JSON):
             {{pdfTexts}}
 
             COMPLIANCE OPERACIONAL (TAREFAS CONCLUÍDAS):
             {{tasks}}
             ---
 
-            TAREFA 1: RELATÓRIO REGIONAL CONSOLIDADO
+            TAREFA 1: RELATÓRIO REGIONAL CONSOLIDADO (MACRO)
             - MAPA DE CALOR: Tabela Markdown com as unidades nas linhas e o total de menções a "Manutenção", "Atendimento/Equipe" e "Limpeza" nas colunas.
             - AUDITORIA DE CONTATO: Analise a coluna "Resolução/Feedback 1". Calcule o % de eficácia de contato (contatado vs. sem sucesso).
             - COMPLIANCE VS NPS: Correlacione o % de tarefas concluídas com a média de NPS da rede.
             - INSIGHT ESTRATÉGICO: Qual o maior risco sistêmico para a meta de 75.0?
 
-            TAREFA 2: DOSSIÊ INDIVIDUAL POR UNIDADE (Obrigatório para cada unidade com dados)
-            Você deve analisar cada unidade INDIVIDUALMENTE e EXAUSTIVAMENTE. Esperamos relatórios LONGOS e detalhados.
-            - DIAGNÓSTICO DE CAUSA RAIZ: Use "5 Porquês" baseados no texto real. Vá fundo no problema técnico.
-            - ADERÊNCIA OPERACIONAL: Analise se as tarefas concluídas pela unidade coincidem com as dores relatadas nos feedbacks (Ex: Se há reclamação de limpeza e a tarefa de 'Auditoria de Higiene' foi ignorada, aponte isso).
-            - EVIDÊNCIAS: Cite múltiplos fragmentos de comentários relevantes.
-            - PLANO DE AÇÃO 5W2H COMPLETO: Crie uma tabela Markdown 5W2H para cada ofensor identificado. Seja ultra-específico nos processos.
-            - CORRELAÇÃO: Explique matematicamente como os problemas citados no PDF estão impedindo a unidade de atingir a meta de 75.0.
+            TAREFA 2: DOSSIÊ INDIVIDUAL POR UNIDADE (ADAPTATIVO)
+            ATENÇÃO: Cada unidade no JSON de "FEEDBACKS" possui um campo "ReportType" ("deep" ou "summary").
+            
+            >>> SE ReportType == "deep" (Muitos dados):
+            Gere uma análise EXAUSTIVA e LONGA.
+            - DIAGNÓSTICO DE CAUSA RAIZ (5 PORQUÊS): Baseado nos textos.
+            - ADERÊNCIA OPERACIONAL: Cruzar com tarefas.
+            - EVIDÊNCIAS: Citar múltiplos fragmentos.
+            - PLANO DE AÇÃO 5W2H: Tabela completa.
+            - CORRELAÇÃO MATEMÁTICA: Impacto na meta.
+            - Tamanho esperado: 400-600 palavras.
 
-            REGRAS DE OURO:
+            >>> SE ReportType == "summary" (Poucos dados):
+            Gere uma análise DIRETA e RESUMIDA (Quick Wins).
+            - DIAGNÓSTICO RÁPIDO: 1 parágrafo identificando o principal ofensor.
+            - EVIDÊNCIA CHAVE: Cite apenas 1 feedback representativo.
+            - AÇÃO IMEDIATA: 1 bullet point com a ação mais óbvia a ser tomada.
+            - Tamanho esperado: 100-150 palavras.
+            - NÃO GERE TABELAS 5W2H PARA ESTES CASOS, use apenas texto corrido e bullets.
+
+            REGRAS GERAIS:
             - NÃO use nomes de pessoas.
-            - SEJA IMPLACÁVEL. Se o gerente não está conseguindo falar com detratores, aponte como uma falha crítica de liderança.
-            - Escreva pelo menos 300-500 palavras de análise técnica por unidade que possua feedbacks.
-            - Use tabelas Markdown dentro do campo "markdown_report" para organizar os planos de ação.
+            - SEJA IMPLACÁVEL com falhas de liderança.
+            - Use tabelas Markdown dentro do campo "markdown_report".
 
-            SAÍDA: Retorne APENAS um JSON válido:
+            SAÍDA ESPERADA (JSON):
             {
                 "regional": { 
                     "total_feedbacks": number, 
@@ -303,8 +320,9 @@ export default function ReportsPage() {
                      "unit_id": "ID",
                      "nps_at_time": number,
                      "feedback_count": number,
-                     "priority_level": "alta|média|baixa", 
-                     "markdown_report": "# ANÁLISE EXAUSTIVA - [NOME]\\n..." 
+                     "priority_level": "alta|média|baixa",
+                     "report_depth": "deep|summary",
+                     "markdown_report": "# RELATÓRIO [NOME]\\n..." 
                    }
                 ]
             }
@@ -388,7 +406,7 @@ export default function ReportsPage() {
                             feedback_count: unitAnalysis.feedback_count || 0,
                             priority_level: unitAnalysis.priority_level || 'média',
                             markdown_report: unitAnalysis.markdown_report || '',
-                            report_depth: 'deep'
+                            report_depth: unitAnalysis.report_depth || 'deep'
                         }
                     })
                     if (unitError) console.error(`Erro ao salvar unidade ${unit.name}:`, unitError)
@@ -764,6 +782,58 @@ export default function ReportsPage() {
                                                         {selectedReport.ai_summary.markdown_report}
                                                     </ReactMarkdown>
                                                 </div>
+                                            </div>
+                                        ) : selectedReport.ai_summary?.executive_summary ? (
+                                            // LEGACY REPORT RENDERER
+                                            <div className="space-y-8">
+                                                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                                                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Resumo Executivo (Legado)</h4>
+                                                    <p className="text-slate-700 leading-relaxed font-medium">
+                                                        {selectedReport.ai_summary.executive_summary}
+                                                    </p>
+                                                </div>
+
+                                                {selectedReport.ai_summary.highlights && (
+                                                    <div className="space-y-4">
+                                                        <h4 className="text-xs font-black uppercase tracking-widest text-emerald-600">Destaques Positivos</h4>
+                                                        <ul className="grid gap-3">
+                                                            {selectedReport.ai_summary.highlights.map((item, i) => (
+                                                                <li key={i} className="flex gap-3 text-sm text-slate-600">
+                                                                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                                                                    {item}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+
+                                                {selectedReport.ai_summary.risks && (
+                                                    <div className="space-y-4">
+                                                        <h4 className="text-xs font-black uppercase tracking-widest text-amber-600">Pontos de Atenção</h4>
+                                                        <ul className="grid gap-3">
+                                                            {selectedReport.ai_summary.risks.map((item, i) => (
+                                                                <li key={i} className="flex gap-3 text-sm text-slate-600">
+                                                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
+                                                                    {item}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+
+                                                {selectedReport.ai_summary.action_plan && (
+                                                    <div className="space-y-4">
+                                                        <h4 className="text-xs font-black uppercase tracking-widest text-indigo-600">Plano de Ação Sugerido</h4>
+                                                        <ul className="grid gap-3">
+                                                            {selectedReport.ai_summary.action_plan.map((item, i) => (
+                                                                <li key={i} className="flex gap-3 text-sm text-slate-600">
+                                                                    <div className="h-1.5 w-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+                                                                    {item}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
                                             </div>
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-20 text-slate-300 gap-4">
